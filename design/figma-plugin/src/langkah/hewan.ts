@@ -1,15 +1,11 @@
 // Langkah: base plate hewan (satu hewan per panggilan) di page "mob base plate".
 // Data bentuk dari design/hewan/<id>.json (dibuat tools/buat_hewan.mjs). Butuh ID wajah.
 import { EMOSI, W, bingkai, putar, siapkanFont, siapkanHalaman, solid, svgNode, teks } from '../lib';
-import beruang from '../../../hewan/beruang.json';
-import kelinci from '../../../hewan/kelinci.json';
-import kucing from '../../../hewan/kucing.json';
 
 // induk: nama tulang yang menjadi induk (mis. telinga di dalam kepala). Kotak dan sendi selalu
 // dalam koordinat komponen; diubah ke koordinat induk saat dipasang.
 type Bagian = { nama: string; induk?: string; kotak: number[]; sendi: number[]; svg: string };
 type Hewan = { id: string; nama: string; ukuran: number[]; wajah: { x: number; y: number; skala: number }; bagian: Bagian[] };
-const DATA: Record<string, Hewan> = { beruang, kelinci, kucing } as Record<string, Hewan>;
 
 // Sudut tiap tulang per pose (derajat berlawanan jarum jam) dan geser badan.
 const POSE: Record<string, { tulang: Record<string, number>; dy: number }> = {
@@ -64,9 +60,11 @@ function rakit(h: Hewan, pose: string, wajah: ComponentNode) {
   return c;
 }
 
-export async function utama(ID: { wajah: Record<string, string>; hewan: string; y: number }) {
+// Data hewan (isi design/hewan/<id>.json) dikirim lewat ID.data oleh tools/skrip_hewan.mjs,
+// supaya skrip tidak membawa data semua hewan.
+export async function utama(ID: { wajah: Record<string, string>; data: Hewan; y: number }) {
   await siapkanFont();
-  const h = DATA[ID.hewan];
+  const h = ID.data;
   const page = await siapkanHalaman('mob base plate', ['base plate', 'contoh emosi', `hewan/${h.id}`]);
   const wajah: Record<string, ComponentNode> = {};
   for (const e of EMOSI) wajah[e] = (await figma.getNodeByIdAsync(ID.wajah[e])) as ComponentNode;
