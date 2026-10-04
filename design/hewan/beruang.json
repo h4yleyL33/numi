@@ -2,98 +2,98 @@
  "id": "beruang",
  "nama": "Beruang",
  "ukuran": [
-  220,
-  240
+  203,
+  220.5
  ],
  "wajah": {
-  "x": 110,
-  "y": 92,
-  "skala": 1.75
+  "x": 100.1,
+  "y": 79.1,
+  "skala": 1.92
  },
  "bagian": [
   {
    "nama": "badan",
    "kotak": [
-    44,
-    118,
-    132,
-    110
+    40.6,
+    116.2,
+    118.3,
+    93.8
    ],
    "sendi": [
-    110,
-    222
+    99.75,
+    207.9
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"132\" height=\"110\" viewBox=\"44 118 132 110\"><path d=\"M58 206 C46 158 70 124 110 124 C150 124 174 158 162 206 C148 226 72 226 58 206 Z\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"110\" cy=\"186\" rx=\"30\" ry=\"25\" fill=\"#F5D9AE\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"118.3\" height=\"93.8\" viewBox=\"196 372 338 268\"><path d=\"M236 378 C206 440 202 540 230 634 L500 634 C528 540 524 440 494 378 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"365\" cy=\"520\" rx=\"68\" ry=\"92\" fill=\"#FADBA0\"/></svg>"
   },
   {
    "nama": "kaki-kiri",
    "kotak": [
-    40,
-    190,
-    60,
-    42
+    3.5,
+    156.8,
+    86.8,
+    60.2
    ],
    "sendi": [
-    78,
-    200
+    52.5,
+    161
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"42\" viewBox=\"40 190 60 42\"><ellipse cx=\"70\" cy=\"211\" rx=\"26\" ry=\"17\" transform=\"rotate(-18 70 211)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"64\" cy=\"212\" rx=\"12\" ry=\"9\" transform=\"rotate(-18 64 212)\" fill=\"#F5D9AE\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"86.8\" height=\"60.2\" viewBox=\"90 488 248 172\"><path d=\"M224 494 C160 496 100 522 98 576 C96 630 148 654 214 652 L332 648 C322 600 282 522 224 494 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"138\" cy=\"578\" rx=\"33\" ry=\"46\" transform=\"rotate(-10 138 578)\" fill=\"#FADBA0\"/>\n<path d=\"M176 522 C186 528 194 536 200 548\" fill=\"none\" stroke=\"#1F1A17\" stroke-width=\"8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
   },
   {
    "nama": "kaki-kanan",
    "kotak": [
-    120,
-    190,
-    60,
-    42
+    109.2,
+    156.8,
+    86.8,
+    60.2
    ],
    "sendi": [
-    142,
-    200
+    147,
+    161
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"42\" viewBox=\"120 190 60 42\"><ellipse cx=\"150\" cy=\"211\" rx=\"26\" ry=\"17\" transform=\"rotate(18 150 211)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"156\" cy=\"212\" rx=\"12\" ry=\"9\" transform=\"rotate(18 156 212)\" fill=\"#F5D9AE\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"86.8\" height=\"60.2\" viewBox=\"392 488 248 172\"><path d=\"M506 494 C570 496 630 522 632 576 C634 630 582 654 516 652 L398 648 C408 600 448 522 506 494 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"592\" cy=\"578\" rx=\"33\" ry=\"46\" transform=\"rotate(10 592 578)\" fill=\"#FADBA0\"/>\n<path d=\"M554 522 C544 528 536 536 530 548\" fill=\"none\" stroke=\"#1F1A17\" stroke-width=\"8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
   },
   {
    "nama": "lengan-kiri",
    "kotak": [
-    62,
-    146,
-    36,
-    60
+    41.3,
+    115.5,
+    56.7,
+    97.3
    ],
    "sendi": [
-    84,
-    152
+    63.7,
+    126
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"60\" viewBox=\"62 146 36 60\"><ellipse cx=\"80\" cy=\"176\" rx=\"13\" ry=\"25\" transform=\"rotate(10 80 176)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"56.7\" height=\"97.3\" viewBox=\"198 370 162 278\"><path d=\"M236 378 C206 440 204 522 238 578 C258 610 300 630 352 632 C350 604 336 564 316 524 C302 494 296 462 300 396 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<path d=\"M314 614 C320 628 328 636 336 640 M332 606 C340 620 348 628 354 632\" fill=\"none\" stroke=\"#1F1A17\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
   },
   {
    "nama": "lengan-kanan",
    "kotak": [
-    122,
-    146,
-    36,
-    60
+    101.5,
+    115.5,
+    56.7,
+    97.3
    ],
    "sendi": [
-    136,
-    152
+    135.8,
+    126
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"60\" viewBox=\"122 146 36 60\"><ellipse cx=\"140\" cy=\"176\" rx=\"13\" ry=\"25\" transform=\"rotate(-10 140 176)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"56.7\" height=\"97.3\" viewBox=\"370 370 162 278\"><path d=\"M494 378 C524 440 526 522 492 578 C472 610 430 630 378 632 C380 604 394 564 414 524 C428 494 434 462 430 396 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<path d=\"M416 614 C410 628 402 636 394 640 M398 606 C390 620 382 628 376 632\" fill=\"none\" stroke=\"#1F1A17\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
   },
   {
    "nama": "kepala",
    "kotak": [
-    34,
-    20,
-    152,
-    124
+    28,
+    4.9,
+    142.8,
+    129.5
    ],
    "sendi": [
-    110,
-    136
+    99.75,
+    126
    ],
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"152\" height=\"124\" viewBox=\"34 20 152 124\"><circle cx=\"60\" cy=\"46\" r=\"21\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"60\" cy=\"47\" r=\"10\" fill=\"#EDB57A\"/>\n<circle cx=\"160\" cy=\"46\" r=\"21\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"160\" cy=\"47\" r=\"10\" fill=\"#EDB57A\"/>\n<path d=\"M110 30 C158 30 178 60 177 90 C176 122 148 140 110 140 C72 140 44 122 43 90 C42 60 62 30 110 30 Z\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"110\" cy=\"114\" rx=\"25\" ry=\"17\" fill=\"#F5D9AE\"/>\n<ellipse cx=\"110\" cy=\"104\" rx=\"6.5\" ry=\"4.5\" fill=\"#3D2B1F\"/></svg>"
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"142.8\" height=\"129.5\" viewBox=\"160 54 408 370\"><circle cx=\"236\" cy=\"122\" r=\"62\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"230\" cy=\"116\" rx=\"32\" ry=\"38\" fill=\"#FADBA0\"/>\n<circle cx=\"494\" cy=\"122\" r=\"62\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"500\" cy=\"116\" rx=\"32\" ry=\"38\" fill=\"#FADBA0\"/>\n<path d=\"M365 96 C470 96 556 160 558 262 C560 354 476 412 365 412 C254 412 170 354 172 262 C174 160 260 96 365 96 Z\" fill=\"#D99B62\" stroke=\"#1F1A17\" stroke-width=\"10\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"368\" cy=\"330\" rx=\"70\" ry=\"52\" fill=\"#FADBA0\"/>\n<path d=\"M342 296 C342 288 394 288 394 296 C394 310 378 320 368 320 C358 320 342 310 342 296 Z\" fill=\"#1F1A17\"/></svg>"
   }
  ]
 }
