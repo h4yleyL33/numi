@@ -60,7 +60,8 @@ export async function utama(ID: { wajah: Record<string, string>; hewan: string; 
   const label = teks(`${h.nama}`, 28, { tebal: true });
   wadah.appendChild(label);
 
-  const set = figma.combineAsVariants(Object.keys(POSE).map((p) => rakit(h, p, wajah.senang)), wadah);
+  const set = figma.combineAsVariants(// ponytail: baru pose idle; pose lain menunggu bentuk lengan khusus rig.
+    ['idle'].map((p) => rakit(h, p, wajah.senang)), wadah);
   set.name = `mob/${h.id}`;
   set.description = `Base plate ${h.nama}. Pose lewat properti "pose", wajah lewat properti "emosi". Tulang: rig/root > rig/badan, rig/kaki-*, rig/lengan-*, rig/kepala (berisi slot/wajah).`;
   set.layoutMode = 'HORIZONTAL';
