@@ -1,0 +1,33 @@
+<style>
+  body { font: 13px Inter, sans-serif; margin: 16px; color: #232347; }
+  h3 { margin: 0 0 12px; }
+  label { display: block; margin: 6px 0; }
+  button { margin-top: 12px; width: 100%; padding: 10px; border: 0; border-radius: 8px; background: #FFB547; font-weight: 700; cursor: pointer; }
+  button:disabled { opacity: .5; }
+  #log { margin-top: 12px; white-space: pre-wrap; font-size: 12px; max-height: 170px; overflow: auto; color: #6C6C8A; }
+  .kecil { font-size: 11px; color: #6C6C8A; }
+</style>
+<h3>Numi Builder</h3>
+<label><input type="checkbox" id="mob" checked> mob base plate (wajah + rig)</label>
+<label><input type="checkbox" id="emote" checked> anim emote</label>
+<label><input type="checkbox" id="bg" checked> bg animasi</label>
+<label><input type="checkbox" id="item" checked> item / 7 tema barang</label>
+<label class="kecil"><input type="checkbox" id="timpa"> timpa page yang dulu dibuat plugin ini (page buatanmu tidak pernah disentuh)</label>
+<button id="jalan">Buat page</button>
+<div id="log"></div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  $('jalan').onclick = () => {
+    $('jalan').disabled = true;
+    $('log').textContent = 'Membuat... (bisa 10-30 detik)\n';
+    const pilih = {};
+    for (const k of ['mob', 'emote', 'bg', 'item']) pilih[k] = $(k).checked;
+    parent.postMessage({ pluginMessage: { pilih, timpa: $('timpa').checked } }, '*');
+  };
+  onmessage = (e) => {
+    const m = e.data.pluginMessage;
+    if (!m) return;
+    $('log').textContent += m.log + '\n';
+    if (m.log === 'Selesai.' || m.log.startsWith('✗ Gagal')) $('jalan').disabled = false;
+  };
+</script>

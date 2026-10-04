@@ -41,6 +41,9 @@ numi/
     cerita/               alur cerita Samudra Angka
     maskot/               SVG sebelas ekspresi Numi dan panduannya
     aset/                 SVG pulau, mercusuar, lencana, ikon, benda hitung, api streak
+    wajah/                SVG 11 wajah emosi untuk base plate mob
+    barang/barang.json    136 barang esensial dalam 7 tema
+    figma-plugin/         plugin Numi Builder: page mob, emote, bg animasi, item
     pratinjau-aset.html   semua aset dalam satu halaman
     tools/buat_svg.mjs    pembuat aset SVG
   prd/                    PRD, kajian UI anak, kurikulum kelas 1-3 dan 4-6, redesign UI dan mockup

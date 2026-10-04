@@ -59,6 +59,13 @@ function maskot(ekspresi) {
   el.push(`<circle cx="${cx}" cy="${f(cy)}" r="${f(r)}" fill="url(#badan)"/>`);
   el.push(`<ellipse cx="${cx}" cy="${f(cy + r * 0.35)}" rx="${f(r * 0.55)}" ry="${f(r * 0.4)}" fill="#FFF1C1" fill-opacity="0.9"/>`);
 
+  el.push(...wajahEl(ekspresi, cx, cy, r));
+  return svg(s, s, el);
+}
+
+// wajah: mata, alis, pipi, mulut. Dipakai maskot dan base plate mob di Figma.
+function wajahEl(ekspresi, cx, cy, r) {
+  const el = [];
   // mata
   const my = cy - r * 0.15;
   const jarak = r * 0.38;
@@ -154,7 +161,11 @@ function maskot(ekspresi) {
       break;
   }
 
-  return svg(s, s, el);
+  return el;
+}
+
+function wajah(ekspresi) {
+  return svg(120, 120, wajahEl(ekspresi, 60, 60, 37));
 }
 
 // pulau skill map
@@ -306,6 +317,7 @@ function benda(nama) {
 }
 
 mkdirSync('maskot', { recursive: true });
+mkdirSync('wajah', { recursive: true });
 mkdirSync('aset/lencana', { recursive: true });
 mkdirSync('aset/ikon', { recursive: true });
 mkdirSync('aset/benda', { recursive: true });
@@ -319,6 +331,7 @@ writeFileSync('aset/bintang-xp.svg', bintangXp());
 writeFileSync('aset/kabut-lupa.svg', kabut());
 writeFileSync('aset/perahu.svg', perahu());
 for (const e of ['senang', 'berpikir', 'semangat', 'sedih', 'mengantuk', 'bangga', 'terkejut', 'tertawa', 'kagum', 'tidur', 'mengedip']) {
+  writeFileSync(`wajah/wajah-${e}.svg`, wajah(e));
   writeFileSync(`maskot/numi-${e}.svg`, maskot(e));
 }
 for (const st of ['terkunci', 'belum', 'latihan', 'dikuasai']) {

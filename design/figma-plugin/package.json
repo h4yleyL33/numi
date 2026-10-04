@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --loader:.svg=text --target=es2017 --outfile=code.js",
+    "cek": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.100.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0"
+  }
+}

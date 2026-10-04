@@ -1,0 +1,33 @@
+// Aset SVG dari design/, dibundel ke code.js oleh esbuild (loader text).
+import maskot_senang from '../../maskot/numi-senang.svg';
+import wajah_senang from '../../wajah/wajah-senang.svg';
+import maskot_berpikir from '../../maskot/numi-berpikir.svg';
+import wajah_berpikir from '../../wajah/wajah-berpikir.svg';
+import maskot_semangat from '../../maskot/numi-semangat.svg';
+import wajah_semangat from '../../wajah/wajah-semangat.svg';
+import maskot_sedih from '../../maskot/numi-sedih.svg';
+import wajah_sedih from '../../wajah/wajah-sedih.svg';
+import maskot_mengantuk from '../../maskot/numi-mengantuk.svg';
+import wajah_mengantuk from '../../wajah/wajah-mengantuk.svg';
+import maskot_bangga from '../../maskot/numi-bangga.svg';
+import wajah_bangga from '../../wajah/wajah-bangga.svg';
+import maskot_terkejut from '../../maskot/numi-terkejut.svg';
+import wajah_terkejut from '../../wajah/wajah-terkejut.svg';
+import maskot_tertawa from '../../maskot/numi-tertawa.svg';
+import wajah_tertawa from '../../wajah/wajah-tertawa.svg';
+import maskot_kagum from '../../maskot/numi-kagum.svg';
+import wajah_kagum from '../../wajah/wajah-kagum.svg';
+import maskot_tidur from '../../maskot/numi-tidur.svg';
+import wajah_tidur from '../../wajah/wajah-tidur.svg';
+import maskot_mengedip from '../../maskot/numi-mengedip.svg';
+import wajah_mengedip from '../../wajah/wajah-mengedip.svg';
+import aset_perahu from '../../aset/perahu.svg';
+import aset_apel from '../../aset/benda/apel.svg';
+import aset_ikan from '../../aset/benda/ikan.svg';
+import aset_kerang from '../../aset/benda/kerang.svg';
+import aset_kue from '../../aset/benda/kue.svg';
+import aset_bintang from '../../aset/bintang-xp.svg';
+
+export const MASKOT: Record<string, string> = { senang: maskot_senang, berpikir: maskot_berpikir, semangat: maskot_semangat, sedih: maskot_sedih, mengantuk: maskot_mengantuk, bangga: maskot_bangga, terkejut: maskot_terkejut, tertawa: maskot_tertawa, kagum: maskot_kagum, tidur: maskot_tidur, mengedip: maskot_mengedip };
+export const WAJAH: Record<string, string> = { senang: wajah_senang, berpikir: wajah_berpikir, semangat: wajah_semangat, sedih: wajah_sedih, mengantuk: wajah_mengantuk, bangga: wajah_bangga, terkejut: wajah_terkejut, tertawa: wajah_tertawa, kagum: wajah_kagum, tidur: wajah_tidur, mengedip: wajah_mengedip };
+export const ASET: Record<string, string> = { perahu: aset_perahu, apel: aset_apel, ikan: aset_ikan, kerang: aset_kerang, kue: aset_kue, bintang: aset_bintang };
