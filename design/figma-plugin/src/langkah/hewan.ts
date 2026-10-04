@@ -105,9 +105,9 @@ export async function utama(ID: { wajah: Record<string, string>; data: Hewan; y:
     const inst = idle.createInstance();
     inst.setProperties({ [prop]: wajah[e].id });
     inst.rescale(0.8);
-    inst.x = i * 190; inst.y = contohY + 36;
+    inst.x = i * 230; inst.y = contohY + 36;
     wadah.appendChild(inst);
   });
-  wadah.resize(Math.max(set.width, 11 * 190), contohY + 36 + 200);
+  wadah.resize(Math.max(set.width, 11 * 230), contohY + 36 + 200);
   return { set: set.id, prop, tinggi: wadah.height };
 }

@@ -180,6 +180,42 @@ const HEWAN = {
 <path d="M533 372 C515 410 490 460 462 509"/>` },
     ],
   },
+  monyet: {
+    nama: 'Monyet',
+    asal: [18, 15, 665, 860],
+    skala: 0.28,
+    garis: 14,
+    warnaGaris: '#3A1F2A',
+    warna: { bulu: '#7A4A35', kulit: '#F9CBA7', pink: '#F48A8A', bayang: '#5E3527', garis: '#3A1F2A' },
+    wajah: { x: 351, y: 302, skala: 6 },
+    bagian: (w) => [
+      { nama: 'ekor', kotak: [28, 342, 128, 474], sendi: [130, 600], isi: `<path d="M135 600 C105 585 82 560 70 530 C58 500 44 455 50 410 C54 380 76 358 105 360 C130 362 146 390 138 420 C132 448 118 470 100 472 C84 472 80 452 92 444 C100 440 108 442 112 448" stroke-width="18"/>
+<path d="M122 700 C95 712 72 728 60 750 C50 772 62 798 90 802 L112 800" stroke-width="18"/>` },
+      { nama: 'kaki-kiri', kotak: [86, 524, 172, 336], sendi: [205, 580], isi: `<path d="M202 572 C180 556 150 552 135 557 C115 565 104 585 100 640 C98 670 102 700 107 700 C112 720 118 730 125 735 L245 780 L250 600 Z" fill="${w.bulu}"/>
+<path d="M155 620 C170 612 185 615 192 628 L212 720 L172 736 C160 700 155 660 155 620 Z" fill="${w.bayang}" stroke="none"/>
+<path d="M125 727 C110 726 98 734 100 745 C101 752 110 754 118 752 C104 756 96 764 98 772 C100 780 110 781 116 778 C104 784 98 794 102 802 C106 808 116 808 120 806 C110 812 106 822 112 830 C120 840 140 846 160 848 C190 850 214 843 228 834 C240 822 246 800 245 780 C232 762 180 738 125 727 Z" fill="${w.kulit}"/>` },
+      { nama: 'kaki-kanan', kotak: [442, 518, 174, 330], sendi: [495, 570], isi: `<path d="M498 547 C520 536 540 530 550 532 C576 535 596 548 602 605 C604 640 596 670 590 675 C584 695 578 708 570 715 L460 780 L455 600 Z" fill="${w.bulu}"/>
+<path d="M522 578 C534 572 546 584 548 604 L548 698 L516 714 Z" fill="${w.bayang}" stroke="none"/>
+<path d="M540 712 C556 710 566 718 566 728 C566 736 560 738 556 738 C572 734 590 738 596 750 C600 760 594 766 586 766 C598 768 604 778 600 788 C596 796 586 796 580 794 C590 802 588 816 576 824 C562 834 536 836 512 832 C498 826 492 812 490 795 C490 785 492 775 495 768 C505 748 520 726 540 712 Z" fill="${w.kulit}"/>` },
+      { nama: 'badan', kotak: [188, 444, 324, 346], sendi: [350, 780], isi: `<path d="M210 455 C202 500 198 540 200 580 C202 630 210 670 222 700 C228 730 236 760 245 780 L470 780 C478 760 485 730 487 715 C495 680 500 640 500 600 C502 540 498 500 490 455 Z" fill="${w.bulu}"/>
+<ellipse cx="350" cy="625" rx="75" ry="108" fill="${w.kulit}" stroke="none"/>
+<path d="M270 510 C262 545 258 575 260 600 C262 625 268 640 280 650 C290 675 298 690 300 705 C306 725 314 740 320 750"/>
+<path d="M445 510 C440 545 440 575 440 605 C436 630 428 655 420 675 C412 700 404 720 400 735"/>` },
+      { nama: 'tangan-kiri', kotak: [234, 736, 118, 120], sendi: [290, 750], isi: `<path d="M250 772 C252 762 256 757 262 755 C270 748 278 746 286 747 C298 745 308 747 316 750 C326 754 334 760 338 768 C344 778 342 788 334 792 C340 800 340 812 332 818 C336 828 330 838 318 840 C300 846 282 847 268 845 C256 840 248 832 245 820 C242 805 245 785 250 772 Z" fill="${w.kulit}"/>
+<path d="M334 792 C326 792 318 790 312 786 M332 818 C324 818 316 814 312 810 M266 812 C268 822 269 830 270 838 M290 814 C292 824 294 832 296 838" stroke-width="9"/>` },
+      { nama: 'tangan-kanan', kotak: [348, 736, 118, 120], sendi: [410, 750], isi: `<path d="M450 772 C448 762 444 757 438 755 C430 748 422 746 414 747 C402 745 392 747 384 750 C374 754 366 760 362 768 C356 778 358 788 366 792 C360 800 360 812 368 818 C364 828 370 838 382 840 C400 846 418 847 432 845 C444 840 452 832 455 820 C458 805 455 785 450 772 Z" fill="${w.kulit}"/>
+<path d="M366 792 C374 792 382 790 388 786 M368 818 C376 818 384 814 388 810 M434 812 C432 822 431 830 430 838 M410 814 C408 824 406 832 404 838" stroke-width="9"/>` },
+      { nama: 'telinga-kiri', induk: 'kepala', kotak: [27, 177, 176, 178], sendi: [170, 265], isi: `<circle cx="115" cy="265" r="80" fill="${w.kulit}"/>
+<ellipse cx="115" cy="268" rx="45" ry="56" fill="${w.pink}" stroke="none" opacity="0.85"/>` },
+      { nama: 'telinga-kanan', induk: 'kepala', kotak: [404, 179, 174, 174], sendi: [530, 265], isi: `<circle cx="590" cy="265" r="78" fill="${w.kulit}"/>
+<ellipse cx="590" cy="268" rx="44" ry="55" fill="${w.pink}" stroke="none" opacity="0.85"/>` },
+      { nama: 'kepala', kotak: [148, 20, 404, 458], sendi: [350, 455], isi: `<path d="M368 92 C368 70 374 48 382 32 M392 82 C396 62 400 46 406 34 M420 92 C432 82 442 76 452 70" stroke-width="14"/>
+<path d="M350 75 C455 75 538 150 540 260 C541 290 540 305 540 318 L530 330 L540 342 C541 380 520 430 490 452 C440 468 260 468 210 452 C180 430 162 380 162 342 L172 330 L160 318 C160 300 160 285 162 260 C164 150 245 75 350 75 Z" fill="${w.bulu}"/>
+<path d="M350 215 C330 180 300 168 265 172 C215 180 200 230 205 290 C200 320 190 345 195 370 C200 410 240 445 300 455 C330 460 370 460 410 455 C460 445 500 410 503 370 C505 345 495 320 495 290 C500 230 485 180 435 172 C400 168 370 180 350 215 Z" fill="${w.kulit}" stroke="none"/>
+<ellipse cx="350" cy="333" rx="22" ry="11" fill="${w.pink}" stroke="none"/>
+<circle cx="336" cy="357" r="6" fill="${w.garis}" stroke="none"/><circle cx="363" cy="357" r="6" fill="${w.garis}" stroke="none"/>` },
+    ],
+  },
 };
 
 const f = (n) => Math.round(n * 100) / 100;
@@ -192,7 +228,7 @@ for (const [id, h] of Object.entries(HEWAN)) {
   const S = h.skala ?? SKALA;
   const ke = (x, y) => [f((x - ox) * S), f((y - oy) * S)];
   // Hewan yang digambar tanpa atribut garis per elemen memakai satu grup garis (h.garis = tebal).
-  const bungkus = (isi) => (h.garis ? `<g ${g(h.garis)} fill="none">${isi}</g>` : isi);
+  const bungkus = (isi) => (h.garis ? `<g ${g(h.garis).replace(GARIS, h.warnaGaris ?? GARIS)} fill="none">${isi}</g>` : isi);
   const bagian = h.bagian(h.warna).map((b) => ({ ...b, isi: bungkus(b.isi) }));
   const data = {
     id, nama: h.nama, ukuran: [f(ow * S), f(oh * S)],
