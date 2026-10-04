@@ -362,6 +362,27 @@ const HEWAN = {
 <path d="M398 145 C420 110 470 92 520 98 C580 105 625 160 632 235 C640 310 620 370 580 400 C540 425 470 428 430 405 C405 390 395 350 405 312" fill="${w.kulit}"/>` },
     ],
   },
+  panda: {
+    nama: 'Panda',
+    asal: [45, 50, 615, 405],
+    skala: 0.36,
+    garis: 11,
+    warna: { putih: '#FFFFFF', hitam: '#1F1A17' },
+    wajah: { x: 198, y: 262, skala: 4.6 },
+    bagian: (w) => [
+      { nama: 'ekor', kotak: [517, 145, 76, 76], sendi: [540, 200], isi: `<circle cx="555" cy="183" r="30" fill="${w.hitam}"/>` },
+      { nama: 'badan', kotak: [352, 118, 305, 290], sendi: [430, 390], isi: `<path d="M370 135 C420 125 480 130 520 150 C550 168 565 210 572 260 C576 290 578 315 575 330 L560 398 C520 395 470 393 430 388 L360 300 Z" fill="${w.putih}"/>
+<path d="M572 305 C600 318 630 335 645 355 C652 375 640 395 610 400 C590 402 570 400 552 395 C548 370 555 330 572 305 Z" fill="${w.hitam}"/>` },
+      { nama: 'lengan', kotak: [255, 115, 200, 335], sendi: [345, 150], isi: `<path d="M335 125 C365 140 385 175 405 215 C430 260 450 300 448 340 C445 380 420 420 375 437 C340 445 290 445 268 425 C255 410 265 385 290 372 C320 355 345 330 355 295 C365 250 362 200 345 160 Z" fill="${w.hitam}"/>` },
+      { nama: 'tangan-depan', kotak: [44, 344, 112, 96], sendi: [110, 360], isi: `<ellipse cx="100" cy="392" rx="50" ry="42" fill="${w.hitam}"/>` },
+      { nama: 'telinga-kiri', induk: 'kepala', kotak: [61, 69, 102, 102], sendi: [130, 150], isi: `<circle cx="112" cy="120" r="45" fill="${w.hitam}"/>` },
+      { nama: 'telinga-kanan', induk: 'kepala', kotak: [279, 54, 102, 102], sendi: [310, 140], isi: `<circle cx="330" cy="105" r="45" fill="${w.hitam}"/>` },
+      { nama: 'kepala', kotak: [45, 92, 340, 312], sendi: [220, 390], isi: `<path d="M70 210 C80 150 130 105 200 100 C270 98 330 120 355 170 C378 215 378 280 360 325 C340 365 290 390 220 395 C150 398 95 380 70 345 C55 320 52 295 60 270 C55 255 58 235 70 210 Z" fill="${w.putih}"/>
+<ellipse cx="124" cy="264" rx="28" ry="34" transform="rotate(-12 124 264)" fill="${w.hitam}"/>
+<ellipse cx="272" cy="265" rx="28" ry="34" transform="rotate(12 272 265)" fill="${w.hitam}"/>
+<path d="M178 284 C178 279 202 279 202 284 C202 290 194 295 190 295 C186 295 178 290 178 284 Z" fill="${w.hitam}" stroke="none"/>` },
+    ],
+  },
 };
 
 const f = (n) => Math.round(n * 100) / 100;

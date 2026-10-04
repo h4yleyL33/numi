@@ -1,0 +1,115 @@
+{
+ "id": "panda",
+ "nama": "Panda",
+ "ukuran": [
+  221.4,
+  145.8
+ ],
+ "wajah": {
+  "x": 55.08,
+  "y": 76.32,
+  "skala": 1.66
+ },
+ "bagian": [
+  {
+   "nama": "ekor",
+   "kotak": [
+    169.92,
+    34.2,
+    27.36,
+    27.36
+   ],
+   "sendi": [
+    178.2,
+    54
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"27.36\" height=\"27.36\" viewBox=\"517 145 76 76\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><circle cx=\"555\" cy=\"183\" r=\"30\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "badan",
+   "kotak": [
+    110.52,
+    24.48,
+    109.8,
+    104.4
+   ],
+   "sendi": [
+    138.6,
+    122.4
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"109.8\" height=\"104.4\" viewBox=\"352 118 305 290\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M370 135 C420 125 480 130 520 150 C550 168 565 210 572 260 C576 290 578 315 575 330 L560 398 C520 395 470 393 430 388 L360 300 Z\" fill=\"#FFFFFF\"/>\n<path d=\"M572 305 C600 318 630 335 645 355 C652 375 640 395 610 400 C590 402 570 400 552 395 C548 370 555 330 572 305 Z\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "lengan",
+   "kotak": [
+    75.6,
+    23.4,
+    72,
+    120.6
+   ],
+   "sendi": [
+    108,
+    36
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"72\" height=\"120.6\" viewBox=\"255 115 200 335\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M335 125 C365 140 385 175 405 215 C430 260 450 300 448 340 C445 380 420 420 375 437 C340 445 290 445 268 425 C255 410 265 385 290 372 C320 355 345 330 355 295 C365 250 362 200 345 160 Z\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "tangan-depan",
+   "kotak": [
+    -0.36,
+    105.84,
+    40.32,
+    34.56
+   ],
+   "sendi": [
+    23.4,
+    111.6
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40.32\" height=\"34.56\" viewBox=\"44 344 112 96\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><ellipse cx=\"100\" cy=\"392\" rx=\"50\" ry=\"42\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "telinga-kiri",
+   "induk": "kepala",
+   "kotak": [
+    5.76,
+    6.84,
+    36.72,
+    36.72
+   ],
+   "sendi": [
+    30.6,
+    36
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36.72\" height=\"36.72\" viewBox=\"61 69 102 102\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><circle cx=\"112\" cy=\"120\" r=\"45\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "telinga-kanan",
+   "induk": "kepala",
+   "kotak": [
+    84.24,
+    1.44,
+    36.72,
+    36.72
+   ],
+   "sendi": [
+    95.4,
+    32.4
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36.72\" height=\"36.72\" viewBox=\"279 54 102 102\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><circle cx=\"330\" cy=\"105\" r=\"45\" fill=\"#1F1A17\"/></g></svg>"
+  },
+  {
+   "nama": "kepala",
+   "kotak": [
+    0,
+    15.12,
+    122.4,
+    112.32
+   ],
+   "sendi": [
+    63,
+    122.4
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"122.4\" height=\"112.32\" viewBox=\"45 92 340 312\"><g stroke=\"#1F1A17\" stroke-width=\"11\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M70 210 C80 150 130 105 200 100 C270 98 330 120 355 170 C378 215 378 280 360 325 C340 365 290 390 220 395 C150 398 95 380 70 345 C55 320 52 295 60 270 C55 255 58 235 70 210 Z\" fill=\"#FFFFFF\"/>\n<ellipse cx=\"124\" cy=\"264\" rx=\"28\" ry=\"34\" transform=\"rotate(-12 124 264)\" fill=\"#1F1A17\"/>\n<ellipse cx=\"272\" cy=\"265\" rx=\"28\" ry=\"34\" transform=\"rotate(12 272 265)\" fill=\"#1F1A17\"/>\n<path d=\"M178 284 C178 279 202 279 202 284 C202 290 194 295 190 295 C186 295 178 290 178 284 Z\" fill=\"#1F1A17\" stroke=\"none\"/></g></svg>"
+  }
+ ]
+}
