@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "build": "esbuild src/main.ts --bundle --loader:.svg=text --target=es2017 --outfile=code.js",
-    "cek": "tsc --noEmit"
+    "cek": "tsc --noEmit",
+    "langkah": "node buat_langkah.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.100.0",

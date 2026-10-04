@@ -1,0 +1,99 @@
+{
+ "id": "beruang",
+ "nama": "Beruang",
+ "ukuran": [
+  220,
+  240
+ ],
+ "wajah": {
+  "x": 110,
+  "y": 92,
+  "skala": 1.75
+ },
+ "bagian": [
+  {
+   "nama": "badan",
+   "kotak": [
+    44,
+    118,
+    132,
+    110
+   ],
+   "sendi": [
+    110,
+    222
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"132\" height=\"110\" viewBox=\"44 118 132 110\"><path d=\"M58 206 C46 158 70 124 110 124 C150 124 174 158 162 206 C148 226 72 226 58 206 Z\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"110\" cy=\"186\" rx=\"30\" ry=\"25\" fill=\"#F5D9AE\"/></svg>"
+  },
+  {
+   "nama": "kaki-kiri",
+   "kotak": [
+    40,
+    190,
+    60,
+    42
+   ],
+   "sendi": [
+    78,
+    200
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"42\" viewBox=\"40 190 60 42\"><ellipse cx=\"70\" cy=\"211\" rx=\"26\" ry=\"17\" transform=\"rotate(-18 70 211)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"64\" cy=\"212\" rx=\"12\" ry=\"9\" transform=\"rotate(-18 64 212)\" fill=\"#F5D9AE\"/></svg>"
+  },
+  {
+   "nama": "kaki-kanan",
+   "kotak": [
+    120,
+    190,
+    60,
+    42
+   ],
+   "sendi": [
+    142,
+    200
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"42\" viewBox=\"120 190 60 42\"><ellipse cx=\"150\" cy=\"211\" rx=\"26\" ry=\"17\" transform=\"rotate(18 150 211)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"156\" cy=\"212\" rx=\"12\" ry=\"9\" transform=\"rotate(18 156 212)\" fill=\"#F5D9AE\"/></svg>"
+  },
+  {
+   "nama": "lengan-kiri",
+   "kotak": [
+    62,
+    146,
+    36,
+    60
+   ],
+   "sendi": [
+    84,
+    152
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"60\" viewBox=\"62 146 36 60\"><ellipse cx=\"80\" cy=\"176\" rx=\"13\" ry=\"25\" transform=\"rotate(10 80 176)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
+  },
+  {
+   "nama": "lengan-kanan",
+   "kotak": [
+    122,
+    146,
+    36,
+    60
+   ],
+   "sendi": [
+    136,
+    152
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"60\" viewBox=\"122 146 36 60\"><ellipse cx=\"140\" cy=\"176\" rx=\"13\" ry=\"25\" transform=\"rotate(-10 140 176)\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"
+  },
+  {
+   "nama": "kepala",
+   "kotak": [
+    34,
+    20,
+    152,
+    124
+   ],
+   "sendi": [
+    110,
+    136
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"152\" height=\"124\" viewBox=\"34 20 152 124\"><circle cx=\"60\" cy=\"46\" r=\"21\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"60\" cy=\"47\" r=\"10\" fill=\"#EDB57A\"/>\n<circle cx=\"160\" cy=\"46\" r=\"21\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"160\" cy=\"47\" r=\"10\" fill=\"#EDB57A\"/>\n<path d=\"M110 30 C158 30 178 60 177 90 C176 122 148 140 110 140 C72 140 44 122 43 90 C42 60 62 30 110 30 Z\" fill=\"#D9A066\" stroke=\"#3D2B1F\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n<ellipse cx=\"110\" cy=\"114\" rx=\"25\" ry=\"17\" fill=\"#F5D9AE\"/>\n<ellipse cx=\"110\" cy=\"104\" rx=\"6.5\" ry=\"4.5\" fill=\"#3D2B1F\"/></svg>"
+  }
+ ]
+}
