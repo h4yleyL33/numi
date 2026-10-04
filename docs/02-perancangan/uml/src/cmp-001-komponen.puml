@@ -1,0 +1,45 @@
+@startuml cmp-001-komponen
+!include _gaya.iuml
+title CMP-001 Component diagram (doktek 2.1 Komponen Sistem)
+
+package "App Siswa (Flutter)" {
+  [Tampilan\nfeatures/*] as UI
+  [NumiController\nstate/] as State
+  [Diagnostic Engine\nSesiDiagnostic] as Diag
+  [Skill Map Service] as Skill
+  [Learning Path Service] as Path
+  [Progress Service] as Prog
+  [Companion Service] as Comp
+  [Content Service\nGeneratorSoal, daftar topik, lesson] as Content
+  [LocalNumiRepository] as Local
+  interface NumiRepository as IRepo
+}
+package "Firebase (rencana)" {
+  [Firebase Authentication] as Auth
+  database "Cloud Firestore" as Store
+  [Cloud Functions\npemeriksa streak terjadwal] as Func
+  [Cloud Messaging] as FCM
+}
+database "SharedPreferences\n(perangkat)" as Prefs
+
+UI --> State
+State --> Diag
+State --> Skill
+State --> Path
+State --> Prog
+State --> Comp
+Diag --> Content
+UI --> Content
+State --> IRepo
+Local -up- IRepo
+Local --> Prefs
+IRepo ..> Store : FirestoreNumiRepository
+UI ..> Auth : login siswa (NFR-005)
+Func ..> FCM
+FCM ..> UI : notifikasi maskot
+
+note bottom of Local
+  Dipakai sekarang. Firestore menyusul
+  tanpa mengubah tampilan maupun logika.
+end note
+@enduml

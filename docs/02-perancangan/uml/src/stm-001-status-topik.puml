@@ -1,0 +1,19 @@
+@startuml stm-001-status-topik
+!include _gaya.iuml
+title STM-001 Status topik di skill map (FR-002, FR-007)
+
+[*] --> Terkunci : status awal
+[*] --> BelumDikuasai : diagnostic, 0 dari 2 benar
+[*] --> PerluLatihan : diagnostic, 1 dari 2 benar
+[*] --> Mastered : diagnostic, 2 dari 2 benar\natau di bawah titik uji
+
+Terkunci --> BelumDikuasai : semua prasyarat Mastered
+BelumDikuasai --> PerluLatihan : mulai lesson pertama
+PerluLatihan --> PerluLatihan : mastery test skor < 95
+PerluLatihan --> Mastered : mastery test skor >= 95
+BelumDikuasai --> Mastered : mastery test skor >= 95
+Mastered --> Mastered : mastery test diulang
+
+state Mastered : mercusuar menyala
+state PerluLatihan : cincin kemajuan terisi per lesson
+@enduml

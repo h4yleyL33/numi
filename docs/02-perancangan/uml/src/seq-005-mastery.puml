@@ -1,0 +1,38 @@
+@startuml seq-005-mastery
+!include _gaya.iuml
+title SEQ-005 Mengerjakan mastery test (UC-005, FR-007)
+autonumber
+
+actor Siswa
+participant "TopikSheet" as Sheet
+participant "LearningPathService" as Path
+participant "MasteryScreen" as UI
+participant "GeneratorSoal" as Gen
+participant "PemutarSoal" as Pemutar
+participant "NumiController" as Ctrl
+participant "SkillMapService" as Skill
+participant "NumiRepository" as Repo
+
+Siswa -> Sheet : buka pulau
+Sheet -> Path : siapMastery(topikId, data)
+Path --> Sheet : true bila kedua lesson selesai
+Siswa -> Sheet : Mulai Mastery Test
+Sheet -> UI : buka MasteryScreen(topik)
+Siswa -> UI : Nyalakan!
+UI -> Gen : buat(topikId, 5, tingkat: 2)
+Gen --> UI : List<Soal>
+UI -> Pemutar : jalankan soal dengan umpan balik
+Pemutar --> UI : onSelesai(List<Jawaban>)
+UI -> Ctrl : selesaiMastery(topikId, jawaban)
+Ctrl -> Ctrl : skor = benar x 100 / total
+Ctrl -> Skill : setelahMastery(status, lulus: skor >= 95)
+Ctrl -> Skill : bukaTopik(semua status)
+Skill --> Ctrl : status baru
+Ctrl -> Repo : simpan(DataBelajar)
+Ctrl --> UI : RingkasanSesi
+alt lulus
+  UI -> Siswa : mercusuar menyala dan konfeti
+else belum lulus
+  UI -> Siswa : ajakan berlatih lagi
+end
+@enduml

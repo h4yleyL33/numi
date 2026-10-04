@@ -1,0 +1,32 @@
+@startuml seq-004-pendaftaran
+!include _gaya.iuml
+title SEQ-004 Mendaftar dan mengisi profil (UC-008)
+autonumber
+
+actor "Siswa / Orang Tua" as Pengguna
+participant "main()" as Main
+participant "LocalNumiRepository" as Repo
+participant "SplashScreen" as Splash
+participant "OnboardingScreen" as Onb
+participant "NumiController" as Ctrl
+
+Main -> Repo : muat()
+Repo --> Main : DataBelajar
+Main -> Splash : runApp(ProviderScope)
+Splash -> Ctrl : baca state
+alt belum daftar
+  Splash -> Onb : buka OnboardingScreen
+  loop tiga layar cerita
+    Pengguna -> Onb : Lanjut
+  end
+  Pengguna -> Onb : isi nama, pilih umur 6 sampai 12
+  Pengguna -> Onb : Mulai Petualangan
+  Onb -> Ctrl : daftar(nama, usia)
+  Ctrl -> Repo : simpan(DataBelajar dengan Siswa baru)
+  Onb -> Pengguna : DiagnosticIntroScreen
+else sudah daftar, diagnostic belum
+  Splash -> Pengguna : DiagnosticIntroScreen
+else sudah daftar dan diagnostic selesai
+  Splash -> Pengguna : HomeShell
+end
+@enduml

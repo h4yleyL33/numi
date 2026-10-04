@@ -1,0 +1,16 @@
+@startuml stm-004-ekspresi-maskot
+!include _gaya.iuml
+title STM-004 Ekspresi maskot Numi (FR-009)
+
+[*] --> Senang
+Senang --> Berpikir : membuka diagnostic atau penjelasan lesson
+Berpikir --> Senang : penjelasan selesai
+Senang --> Bangga : jawaban benar, lesson selesai,\nlencana baru, level naik
+Senang --> Semangat : jawaban salah, lesson atau mastery gagal
+Senang --> Mengantuk : streak terancam
+Senang --> Sedih : tidak aktif 3 hari atau lebih
+Bangga --> Senang : pesan ditutup
+Semangat --> Senang : pesan ditutup
+Mengantuk --> Senang : siswa belajar hari ini
+Sedih --> Senang : siswa kembali belajar
+@enduml

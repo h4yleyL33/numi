@@ -1,0 +1,25 @@
+@startuml seq-006-progress
+!include _gaya.iuml
+title SEQ-006 Melihat progress belajar (UC-006, FR-008)
+autonumber
+
+actor "Siswa / Orang Tua" as Pengguna
+participant "HomeShell" as Home
+participant "ProgressScreen" as UI
+participant "NumiController" as Ctrl
+participant "ProgressService" as Prog
+
+Pengguna -> Home : ketuk tab Progres
+Home -> UI : tampilkan
+UI -> Ctrl : watch(numiControllerProvider)
+Ctrl --> UI : DataBelajar
+UI -> Prog : level(xp), xpDiLevel(xp)
+UI -> Prog : streak(streakLog, hariIni)
+Prog --> UI : InfoStreak
+UI --> Pengguna : level, XP, streak 7 hari, lencana
+Pengguna -> UI : ketuk kartu lencana
+UI --> Pengguna : kartu berbalik, syarat dan tanggal diperoleh
+opt orang tua membuka bagian "Untuk orang tua"
+  UI --> Pengguna : status 12 topik dan persentase jawaban benar
+end
+@enduml

@@ -1,0 +1,109 @@
+# Numi
+
+Platform belajar matematika adaptif berbasis gamifikasi untuk siswa SD usia 6 sampai 12 tahun.
+Numi mendeteksi learning gap numerasi dasar lewat diagnostic test, memetakan kemampuan siswa
+di skill map, lalu menyusun jalur belajar personal. Materi mengacu ke Capaian Pembelajaran
+Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025), dengan perlakuan berbeda untuk kelas kecil
+dan kelas besar.
+
+Proyek mata kuliah Rekayasa Perangkat Lunak, Teknik Informatika Unpad, semester ganjil 2026.
+Metodologi Waterfall, 13 minggu (7 September sampai 6 Desember 2026).
+
+## Tim
+
+| Nama | NPM | Peran |
+|---|---|---|
+| Yarfi Setya Nugraha | 140810240003 | Ketua |
+| Muhammad Andri Firmansyah | 140810240009 | Anggota |
+| Alfrandiano Immanuel Rionaldo Holle | 140810247001 | Anggota |
+| Khalit Putra Afana | 140810240007 | Anggota |
+| Nabil Rizky Aulia Utomo | 140810240045 | Anggota |
+
+Dosen: Dr. Mira Suryani, S.Pd., M.Kom.
+Asisten praktikum: Hafizh Fadhl Muhammad, Dafa Ghani Abdul Rabbani.
+
+## Isi folder
+
+```
+numi/
+  materi draft1/          bahan awal (proposal Bab 1, doktek, project charter, UCD canvas, link)
+  docs/
+    01-inisiasi/          minggu 1
+    02-perancangan/       minggu 2-3
+      kurikulum/          pemetaan CP Kurikulum Merdeka ke 12 topik
+      uml/                23 diagram UML dan ERD (sumber PlantUML, PNG, SVG)
+      doktek-bab2/        Bab 2 doktek v1.2 (Markdown dan .docx siap tempel)
+      imun Gantt Chart.xlsx
+    03-implementasi/      minggu 4-9
+    04-pengujian/         minggu 10-11
+    05-deployment/        minggu 12-13
+  design/
+    cerita/               alur cerita Samudra Angka
+    maskot/               SVG sebelas ekspresi Numi dan panduannya
+    aset/                 SVG pulau, mercusuar, lencana, ikon, benda hitung, api streak
+    pratinjau-aset.html   semua aset dalam satu halaman
+    tools/buat_svg.mjs    pembuat aset SVG
+  prd/                    PRD, kajian UI anak, kurikulum kelas 1-3 dan 4-6, redesign UI dan mockup
+  app/                    aplikasi Flutter
+  firebase/               rancangan aturan Firestore
+```
+
+Desain visual lengkap (aset, 20 layar, use case diagram, alur pengguna) ada di Figma:
+https://www.figma.com/design/yNC8dWGVTz3wedUvSwIAMW/numi
+
+## Struktur aplikasi
+
+```
+app/lib/
+  main.dart               memuat data, lalu menjalankan aplikasi
+  app.dart
+  core/                   konfigurasi, tema, utilitas, widget bersama
+  data/
+    models/               entitas sesuai ERD (Siswa, Topik, Soal, Jawaban, SkillMap, ...)
+    content/              12 topik, lesson, lencana, kalimat maskot, generator soal
+    repositories/         kontrak NumiRepository dan penyimpanan lokal
+  domain/                 diagnostic adaptif, skill map, learning path, progres, maskot
+  state/                  NumiController (Riverpod)
+  features/               layar per fitur
+app/test/                 48 pengujian otomatis
+```
+
+Tiap folder fitur bisa ditelusuri ke kebutuhan di SRS, sehingga baris RTM di Bab 5 doktek cukup
+menunjuk ke folder atau berkasnya.
+
+| Folder | Kebutuhan | Use case |
+|---|---|---|
+| `features/onboarding` | NFR-005, DATA-001 | UC-008 |
+| `features/diagnostic`, `domain/diagnostic_engine.dart` | FR-001 | UC-001 |
+| `features/skill_map`, `domain/skill_map_service.dart` | FR-002 | UC-002 |
+| `domain/learning_path_service.dart` | FR-003 | UC-009 |
+| `features/lesson`, `features/quiz`, `data/content/generator_soal.dart` | FR-004a, FR-004b | UC-003 |
+| `features/feedback` | FR-005 | UC-004 |
+| `domain/progress_service.dart` | FR-006 | UC-010 |
+| `features/mastery` | FR-007 | UC-005 |
+| `features/progress` | FR-008 | UC-006 |
+| `features/mascot`, `domain/companion_service.dart` | FR-009 | UC-007 |
+
+## Menjalankan
+
+Flutter 3.47 terpasang di `D:\khalee\flutter`. Dari folder `app`:
+
+```bash
+flutter pub get
+```
+
+```bash
+flutter test
+```
+
+```bash
+flutter run
+```
+
+Data saat ini disimpan di perangkat (`LocalNumiRepository`). Setelah proyek Firebase tim dibuat,
+jalankan `flutterfire configure` lalu tambahkan `FirestoreNumiRepository` yang memenuhi kontrak
+`NumiRepository`. Rancangan aturan keamanannya sudah ada di `firebase/firestore.rules`.
+
+## Tautan kerja
+
+Semua tautan Google Docs, Slides, Figma, dan Sheets ada di `materi draft1/link.txt`.

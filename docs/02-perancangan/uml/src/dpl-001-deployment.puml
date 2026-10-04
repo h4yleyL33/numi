@@ -1,0 +1,22 @@
+@startuml dpl-001-deployment
+!include _gaya.iuml
+title DPL-001 Deployment diagram
+
+node "Perangkat Android siswa" as HP {
+  artifact "numi.apk\n(Flutter, Android 7.0 ke atas)" as APK
+  database "SharedPreferences\nnumi.data_belajar.v1" as Lokal
+}
+cloud "Google Firebase (rencana)" {
+  node "Firebase Authentication" as Auth
+  database "Cloud Firestore\nusers/{uid}/..." as FS
+  node "Cloud Functions\ncek streak harian" as CF
+  node "Firebase Cloud Messaging" as FCM
+}
+
+APK --> Lokal : baca dan tulis JSON
+APK ..> Auth : HTTPS
+APK ..> FS : HTTPS / WebSocket, sinkronisasi
+CF ..> FS : baca streakLog
+CF ..> FCM : kirim pengingat
+FCM ..> APK : push notifikasi maskot
+@enduml

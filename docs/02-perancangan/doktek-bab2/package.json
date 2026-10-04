@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node buat_docx.mjs" },
+  "dependencies": { "docx": "^9.5.0" }
+}

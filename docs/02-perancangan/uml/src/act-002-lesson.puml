@@ -1,0 +1,49 @@
+@startuml act-002-lesson
+!include _gaya.iuml
+title ACT-002 Mengerjakan lesson dan menerima feedback (UC-003, UC-004, UC-010)
+
+|Siswa|
+start
+:Mengetuk pulau di peta;
+|Sistem|
+if (Pulau terkunci?) then (ya)
+  :Menampilkan pulau prasyarat yang belum dikuasai;
+  stop
+endif
+:Menampilkan sheet topik berisi dua lesson dan mercusuar;
+|Siswa|
+:Memilih lesson;
+|Sistem|
+:Mengubah status topik dari belum dikuasai menjadi perlu latihan;
+if (Lesson kenalan?) then (ya)
+  :Menampilkan penjelasan maskot satu per satu;
+endif
+:Membangkitkan lima soal dari templat topik;
+:Mulai menghitung durasi;
+repeat
+  :Menampilkan soal sesuai kelompok belajar;
+  |Siswa|
+  :Memilih atau menyeret jawaban lalu mengetuk Cek Jawaban;
+  |Sistem|
+  if (Jawaban benar?) then (ya)
+    :Banner hijau dan +10 XP;
+  else (tidak)
+    :Banner merah, jawaban benar, dan penjelasan;
+  endif
+  |Siswa|
+  :Mengetuk Lanjut;
+  |Sistem|
+repeat while (Masih ada soal?) is (ya)
+->tidak;
+if (Benar minimal 3 dari 5?) then (ya)
+  :Menandai lesson selesai dan menambah XP lesson;
+else (tidak)
+  :Menawarkan mengulang lesson;
+endif
+:Mencatat aktivitas hari ini untuk streak;
+:Memeriksa syarat lencana dan kenaikan level;
+:Memilih pesan maskot yang sesuai;
+:Menyimpan semua perubahan;
+:Menampilkan ringkasan hasil;
+stop
+@enduml

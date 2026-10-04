@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+<defs>
+  <radialGradient id="halo"><stop offset="0" stop-color="#FFB547" stop-opacity="0.45"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+  <radialGradient id="ekor"><stop offset="0" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="0.45" stop-color="#FFD98A" stop-opacity="0.9"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+  <radialGradient id="badan" cx="0.35" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFD166"/><stop offset="1" stop-color="#F4A340"/></radialGradient>
+</defs>
+<circle cx="120" cy="134.4" r="126" fill="url(#halo)"/>
+<ellipse cx="55.2" cy="80.4" rx="32.4" ry="19.8" transform="rotate(-34.4 80.4 94.8)" fill="#FFFFFF" fill-opacity="0.55" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.9"/>
+<ellipse cx="184.8" cy="80.4" rx="32.4" ry="19.8" transform="rotate(34.4 159.6 94.8)" fill="#FFFFFF" fill-opacity="0.55" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.9"/>
+<path d="M98.4 69.6 Q105.6 33.6 73.2 22.8" fill="none" stroke="#2A2350" stroke-width="5" stroke-linecap="round"/>
+<circle cx="73.2" cy="22.8" r="14.4" fill="#FFB547" fill-opacity="0.35"/>
+<circle cx="73.2" cy="22.8" r="7.9" fill="#FFD98A"/>
+<path d="M141.6 69.6 Q134.4 33.6 166.8 22.8" fill="none" stroke="#2A2350" stroke-width="5" stroke-linecap="round"/>
+<circle cx="166.8" cy="22.8" r="14.4" fill="#FFB547" fill-opacity="0.35"/>
+<circle cx="166.8" cy="22.8" r="7.9" fill="#FFD98A"/>
+<circle cx="120" cy="202.8" r="30.2" fill="url(#ekor)"/>
+<circle cx="120" cy="134.4" r="72" fill="url(#badan)"/>
+<ellipse cx="120" cy="159.6" rx="39.6" ry="28.8" fill="#FFF1C1" fill-opacity="0.9"/>
+<path d="M81.8 126.5 Q92.6 109.2 103.4 126.5" fill="none" stroke="#2A2350" stroke-width="5.8" stroke-linecap="round"/>
+<path d="M136.6 126.5 Q147.4 109.2 158.2 126.5" fill="none" stroke="#2A2350" stroke-width="5.8" stroke-linecap="round"/>
+<circle cx="75.4" cy="143" r="8.6" fill="#FF9AA2" fill-opacity="0.55"/>
+<circle cx="164.6" cy="143" r="8.6" fill="#FF9AA2" fill-opacity="0.55"/>
+<path d="M101.3 145.9 Q120 182.6 138.7 145.9 Z" fill="#2A2350"/>
+<ellipse cx="120" cy="162.5" rx="7.9" ry="4.3" fill="#FF7A85"/>
+</svg>

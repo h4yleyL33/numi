@@ -1,0 +1,22 @@
+@startuml stm-002-sesi-soal
+!include _gaya.iuml
+title STM-002 Sesi soal di PemutarSoal (FR-005)
+
+[*] --> MenungguJawaban
+MenungguJawaban --> JawabanDipilih : pilih, seret, atau pasangkan
+JawabanDipilih --> MenungguJawaban : ubah pilihan
+JawabanDipilih --> Dicek : Cek Jawaban
+
+state Dicek {
+  [*] --> Periksa
+  Periksa --> Benar : Soal.periksa() true
+  Periksa --> Salah : Soal.periksa() false
+}
+Dicek --> SoalBerikutnya : umpanBalik = false (diagnostic)
+Benar --> UmpanBalikTampil : banner hijau
+Salah --> UmpanBalikTampil : banner merah dan penjelasan
+UmpanBalikTampil --> SoalBerikutnya : Lanjut
+SoalBerikutnya --> MenungguJawaban : masih ada soal
+SoalBerikutnya --> Selesai : soal habis
+Selesai --> [*] : onSelesai(List<Jawaban>)
+@enduml

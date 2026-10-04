@@ -1,0 +1,14 @@
+@startuml stm-003-streak
+!include _gaya.iuml
+title STM-003 Streak harian (FR-006, FR-009)
+
+[*] --> Padam
+Padam --> AktifHariIni : menyelesaikan aktivitas\n(streak = 1)
+AktifHariIni --> AktifHariIni : aktivitas lain di hari yang sama
+AktifHariIni --> Terancam : pergantian hari
+Terancam --> AktifHariIni : aktivitas hari ini\n(streak + 1)
+Terancam --> Padam : satu hari terlewat\n(streak = 0)
+
+state Terancam : Numi mengantuk,\npesan streakTerancam
+state Padam : lencana Rajin dan Tekun\nperlu dimulai ulang
+@enduml

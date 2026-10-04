@@ -1,0 +1,45 @@
+@startuml ucd-001-use-case
+!include _gaya.iuml
+title UCD-001 Use Case Diagram Numi
+left to right direction
+
+actor "Siswa" as Siswa
+actor "Orang Tua / Wali" as Ortu
+actor "Penjadwal Notifikasi" as Penjadwal <<sistem>>
+
+rectangle "Aplikasi Numi" {
+  usecase "UC-008\nMendaftar dan mengisi profil" as UC008 #FFF0CF
+  usecase "UC-001\nMengerjakan diagnostic test" as UC001
+  usecase "UC-002\nMelihat skill map" as UC002
+  usecase "UC-003\nMengerjakan lesson" as UC003
+  usecase "UC-004\nMenerima feedback" as UC004
+  usecase "UC-005\nMengerjakan mastery test" as UC005
+  usecase "UC-006\nMelihat progress belajar" as UC006
+  usecase "UC-007\nMenerima pesan maskot" as UC007
+  usecase "UC-009\nMelihat rekomendasi learning path" as UC009 #FFF0CF
+  usecase "UC-010\nMemperoleh XP, streak, dan lencana" as UC010 #FFF0CF
+}
+
+Siswa -- UC008
+Siswa -- UC001
+Siswa -- UC002
+Siswa -- UC003
+Siswa -- UC005
+Siswa -- UC006
+Siswa -- UC007
+Ortu -- UC008
+Ortu -- UC006
+UC007 -- Penjadwal
+
+UC003 ..> UC004 : <<include>>
+UC005 ..> UC004 : <<include>>
+UC003 ..> UC010 : <<include>>
+UC005 ..> UC010 : <<include>>
+UC002 ..> UC009 : <<include>>
+UC007 ..> UC002 : <<extend>>
+
+note bottom of UC008
+  Use case berwarna kuning adalah tambahan
+  dari doktek v1.1.
+end note
+@enduml

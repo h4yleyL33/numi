@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="780" viewBox="0 0 360 780">
+<rect x="0" y="0" width="360" height="780" rx="0" fill="#FFF8EC" />
+<svg xmlns="http://www.w3.org/2000/svg" x="16" y="20" width="48" height="48" viewBox="0 0 96 96">
+<circle cx="48" cy="48" r="44" fill="#FFFFFF"/>
+<circle cx="48" cy="48" r="44" fill="none" stroke="#2A2350" stroke-opacity="0.12" stroke-width="4"/>
+<path d="M56 26 L34 48 L56 70" fill="none" stroke="#2A2350" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="288" y="16" width="56" height="56" viewBox="0 0 96 96">
+<circle cx="48" cy="48" r="44" fill="#FFFFFF"/>
+<circle cx="48" cy="48" r="44" fill="none" stroke="#2A2350" stroke-opacity="0.12" stroke-width="4"/>
+<path d="M26 42 H38 L54 28 V68 L38 54 H26 Z" fill="#2A2350"/><path d="M62 38 Q70 48 62 58 M68 30 Q82 48 68 66" fill="none" stroke="#2A2350" stroke-width="5" stroke-linecap="round"/>
+</svg>
+<circle cx="132" cy="44" r="6" fill="#FFB547"/><circle cx="156" cy="44" r="6" fill="#FFB547"/><circle cx="180" cy="44" r="8" fill="#FFD98A"/><circle cx="204" cy="44" r="6" fill="#E4DFD3"/><circle cx="228" cy="44" r="6" fill="#E4DFD3"/>
+<text x="180" y="130" font-family="Nunito, Arial, sans-serif" font-size="32" font-weight="900" fill="#232347" text-anchor="middle">Ada berapa apel?</text>
+<svg xmlns="http://www.w3.org/2000/svg" x="30" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="90" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="150" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="210" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="270" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="30" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="90" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="150" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<rect x="24" y="360" width="96" height="96" rx="24" fill="#FFFFFF" stroke="#E4DFD3" stroke-width="4"/>
+<text x="72" y="422" font-family="Nunito, Arial, sans-serif" font-size="40" font-weight="900" fill="#232347" text-anchor="middle">7</text>
+<rect x="132" y="360" width="96" height="96" rx="24" fill="#FFD98A" stroke="#FFB547" stroke-width="4"/>
+<text x="180" y="422" font-family="Nunito, Arial, sans-serif" font-size="40" font-weight="900" fill="#232347" text-anchor="middle">8</text>
+<rect x="240" y="360" width="96" height="96" rx="24" fill="#FFFFFF" stroke="#E4DFD3" stroke-width="4"/>
+<text x="288" y="422" font-family="Nunito, Arial, sans-serif" font-size="40" font-weight="900" fill="#232347" text-anchor="middle">9</text>
+<text x="180" y="520" font-family="Nunito, Arial, sans-serif" font-size="12" font-weight="600" fill="#6C6C8A" text-anchor="middle">Tombol Cek muncul setelah anak memilih</text>
+<rect x="20" y="674" width="320" height="72" rx="36" fill="#000000" fill-opacity="0.18"/><rect x="20" y="668" width="320" height="72" rx="36" fill="#1B1F4B" /><text x="180" y="712" font-family="Nunito, Arial, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">Cek</text>
+</svg>

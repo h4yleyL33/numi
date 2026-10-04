@@ -1,0 +1,41 @@
+@startuml pkg-001-paket
+!include _gaya.iuml
+title PKG-001 Package diagram struktur kode (app/lib)
+
+package "lib" {
+  package "core" {
+    package "config"
+    package "theme"
+    package "utils"
+    package "widgets"
+  }
+  package "data" {
+    package "models"
+    package "content"
+    package "repositories"
+  }
+  package "domain"
+  package "state"
+  package "features" {
+    package "onboarding"
+    package "diagnostic"
+    package "home"
+    package "skill_map"
+    package "lesson"
+    package "quiz"
+    package "feedback"
+    package "mastery"
+    package "progress"
+    package "mascot"
+  }
+}
+
+features ..> state : membaca dan memanggil
+features ..> core : memakai widget dan tema
+state ..> domain
+state ..> repositories
+domain ..> models
+domain ..> content
+content ..> models
+repositories ..> models
+@enduml

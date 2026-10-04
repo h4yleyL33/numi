@@ -1,0 +1,134 @@
+@startuml cls-002-aplikasi
+!include _gaya.iuml
+title CLS-002 Class diagram logika dan state aplikasi (domain, state, data)
+hide empty members
+
+interface NumiRepository {
+  +muat(): Future<DataBelajar>
+  +simpan(data): Future<void>
+  +hapus(): Future<void>
+}
+class LocalNumiRepository {
+  -_prefs: SharedPreferences
+  +muat(): Future<DataBelajar>
+  +simpan(data): Future<void>
+  +hapus(): Future<void>
+}
+class FirestoreNumiRepository <<rencana>> {
+  +muat(): Future<DataBelajar>
+  +simpan(data): Future<void>
+  +hapus(): Future<void>
+}
+NumiRepository <|.. LocalNumiRepository
+NumiRepository <|.. FirestoreNumiRepository
+
+class NumiController <<Notifier<DataBelajar>>> {
+  +build(): DataBelajar
+  +daftar(nama, usia)
+  +simpanDiagnostic(hasil, jawaban)
+  +mulaiLesson(topikId)
+  +selesaiLesson(lesson, jawaban, durasi): RingkasanSesi
+  +selesaiMastery(topikId, jawaban): RingkasanSesi
+  +periksaPesanMaskot(): CompanionMessage?
+  +tandaiPesanDibaca(id)
+  +mulaiUlang()
+}
+class RingkasanSesi {
+  +benar: int
+  +total: int
+  +lulus: bool
+  +xpDidapat: int
+  +levelSebelum: int
+  +levelSesudah: int
+  +lencanaBaru: List<Lencana>
+  +pesan: CompanionMessage
+  +skor: int
+  +levelNaik: bool
+}
+
+class SesiDiagnostic {
+  -_indeksAwal: int
+  -_indeks: int
+  -_turun: bool
+  +selesai: bool
+  +topikSekarang: Topik
+  +soalSekarang: List<Soal>
+  +indeksAwalUntukUsia(usia): int
+  +catat(jumlahBenar)
+  +hasilAkhir(): HasilAkhirDiagnostic
+}
+class HasilAkhirDiagnostic {
+  +hasilPerTopik: List<DiagnosticResult>
+  +statusAwal: Map<String, StatusTopik>
+  +kelompok: KelompokBelajar
+}
+class SkillMapService {
+  +bukaTopik(status): Map
+  +saatMulaiLesson(status): StatusTopik
+  +setelahMastery(status, lulus): StatusTopik
+  +prasyaratBelumDikuasai(topik, status): List<Topik>
+}
+class LearningPathService {
+  +rekomendasi(data): Rekomendasi?
+  +lessonBerikutnya(topikId, data): Lesson?
+  +siapMastery(topikId, data): bool
+}
+class Rekomendasi {
+  +topik: Topik
+  +lesson: Lesson?
+  +siapMastery: bool
+}
+class ProgressService {
+  +level(xp): int
+  +xpDiLevel(xp): int
+  +streak(log, hariIni): InfoStreak
+  +catatAktivitas(log, waktu): List<StreakLog>
+  +lencanaBaru(data, waktu, kejadian): List<Lencana>
+}
+class InfoStreak {
+  +sekarang: int
+  +terbaik: int
+  +aktifHariIni: bool
+  +terancam: bool
+}
+class KejadianSesi {
+  +lessonSelesai: bool
+  +sempurna: bool
+  +durasi: Duration?
+}
+class CompanionService {
+  +periksaSaatMembuka(data, sekarang): CompanionMessage?
+  +buat(jenis, nama, waktu): CompanionMessage
+}
+class GeneratorSoal {
+  -_rng: Random
+  +buat(topikId, jumlah, tingkat): List<Soal>
+}
+class AppConfig <<konstanta>> {
+  +masteryThreshold = 95
+  +soalPerLesson = 5
+  +minBenarLesson = 3
+  +soalMastery = 5
+  +soalDiagnosticPerTopik = 2
+  +maksTopikDiagnostic = 6
+  +xpPerBenar = 10
+  +xpLessonSelesai = 20
+  +xpMasteryLulus = 50
+  +xpPerLevel = 100
+}
+
+NumiController --> NumiRepository : menyimpan lewat
+NumiController --> SkillMapService
+NumiController --> ProgressService
+NumiController --> CompanionService
+NumiController ..> RingkasanSesi : membuat
+NumiController ..> HasilAkhirDiagnostic : menerima
+SesiDiagnostic --> GeneratorSoal
+SesiDiagnostic ..> HasilAkhirDiagnostic : membuat
+LearningPathService ..> Rekomendasi : membuat
+ProgressService ..> InfoStreak : membuat
+ProgressService ..> KejadianSesi : membaca
+CompanionService --> ProgressService
+NumiController ..> AppConfig
+SesiDiagnostic ..> AppConfig
+@enduml

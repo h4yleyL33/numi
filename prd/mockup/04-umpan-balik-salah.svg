@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="780" viewBox="0 0 360 780">
+<rect x="0" y="0" width="360" height="780" rx="0" fill="#FFF8EC" />
+<circle cx="132" cy="44" r="6" fill="#FFB547"/><circle cx="156" cy="44" r="6" fill="#FFB547"/><circle cx="180" cy="44" r="8" fill="#FFD98A"/><circle cx="204" cy="44" r="6" fill="#E4DFD3"/><circle cx="228" cy="44" r="6" fill="#E4DFD3"/>
+<text x="180" y="130" font-family="Nunito, Arial, sans-serif" font-size="32" font-weight="900" fill="#6C6C8A" text-anchor="middle">Ada berapa apel?</text>
+<svg xmlns="http://www.w3.org/2000/svg" x="30" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="90" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="150" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="210" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="270" y="170" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="30" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="90" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" x="150" y="240" width="56" height="56" viewBox="0 0 72 72">
+<circle cx="36" cy="44" r="24" fill="#FF6B6B"/>
+<circle cx="28" cy="36" r="6" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M36 20 Q38 12 44 10" fill="none" stroke="#6B4F3A" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="46" cy="16" rx="8" ry="4" transform="rotate(-25 46 16)" fill="#6CC47A"/>
+</svg>
+<rect x="0" y="470" width="360" height="310" rx="32" fill="#FFE1E1" />
+<svg xmlns="http://www.w3.org/2000/svg" x="16" y="470" width="120" height="120" viewBox="0 0 240 240">
+<defs>
+  <radialGradient id="halo_29"><stop offset="0" stop-color="#FFB547" stop-opacity="0.45"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+  <radialGradient id="ekor_29"><stop offset="0" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="0.45" stop-color="#FFD98A" stop-opacity="0.9"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+  <radialGradient id="badan_29" cx="0.35" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFD166"/><stop offset="1" stop-color="#F4A340"/></radialGradient>
+</defs>
+<circle cx="120" cy="134.4" r="126" fill="url(#halo_29)"/>
+<ellipse cx="55.2" cy="80.4" rx="32.4" ry="19.8" transform="rotate(-34.4 80.4 94.8)" fill="#FFFFFF" fill-opacity="0.55" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.9"/>
+<ellipse cx="184.8" cy="80.4" rx="32.4" ry="19.8" transform="rotate(34.4 159.6 94.8)" fill="#FFFFFF" fill-opacity="0.55" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.9"/>
+<path d="M98.4 69.6 Q105.6 33.6 73.2 22.8" fill="none" stroke="#2A2350" stroke-width="5" stroke-linecap="round"/>
+<circle cx="73.2" cy="22.8" r="14.4" fill="#FFB547" fill-opacity="0.35"/>
+<circle cx="73.2" cy="22.8" r="7.9" fill="#FFD98A"/>
+<path d="M141.6 69.6 Q134.4 33.6 166.8 22.8" fill="none" stroke="#2A2350" stroke-width="5" stroke-linecap="round"/>
+<circle cx="166.8" cy="22.8" r="14.4" fill="#FFB547" fill-opacity="0.35"/>
+<circle cx="166.8" cy="22.8" r="7.9" fill="#FFD98A"/>
+<circle cx="120" cy="202.8" r="30.2" fill="url(#ekor_29)"/>
+<circle cx="120" cy="134.4" r="72" fill="url(#badan_29)"/>
+<ellipse cx="120" cy="159.6" rx="39.6" ry="28.8" fill="#FFF1C1" fill-opacity="0.9"/>
+<ellipse cx="92.6" cy="123.6" rx="9.4" ry="12.2" fill="#2A2350"/>
+<circle cx="96.2" cy="118.6" r="3.6" fill="#FFFFFF"/>
+<ellipse cx="147.4" cy="123.6" rx="9.4" ry="12.2" fill="#2A2350"/>
+<circle cx="151" cy="118.6" r="3.6" fill="#FFFFFF"/>
+<path d="M81.1 97.7 A11.5 6.5 0 0 1 104.2 97.7" fill="none" stroke="#2A2350" stroke-width="5.8" stroke-linecap="round"/>
+<path d="M135.8 97.7 A11.5 6.5 0 0 1 158.9 97.7" fill="none" stroke="#2A2350" stroke-width="5.8" stroke-linecap="round"/>
+<circle cx="75.4" cy="143" r="8.6" fill="#FF9AA2" fill-opacity="0.55"/>
+<circle cx="164.6" cy="143" r="8.6" fill="#FF9AA2" fill-opacity="0.55"/>
+<path d="M102.7 147.4 Q120 177.6 137.3 147.4 Z" fill="#2A2350"/>
+<circle cx="120" cy="159.6" r="5" fill="#FF7A85"/>
+</svg>
+<text x="140" y="520" font-family="Nunito, Arial, sans-serif" font-size="26" font-weight="900" fill="#B23A3A" text-anchor="start">Hampir!</text>
+<text x="140" y="552" font-family="Nunito, Arial, sans-serif" font-size="20" font-weight="800" fill="#B23A3A" text-anchor="start">Jawabannya 8.</text>
+<text x="140" y="580" font-family="Nunito, Arial, sans-serif" font-size="16" font-weight="700" fill="#B23A3A" text-anchor="start">5 di atas, 3 di bawah.</text>
+<rect x="20" y="674" width="320" height="72" rx="36" fill="#000000" fill-opacity="0.18"/><rect x="20" y="668" width="320" height="72" rx="36" fill="#B23A3A" /><text x="180" y="712" font-family="Nunito, Arial, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">Lanjut</text>
+</svg>

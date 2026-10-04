@@ -1,0 +1,31 @@
+@startuml act-005-pesan-maskot
+!include _gaya.iuml
+title ACT-005 Pemicu pesan maskot (UC-007)
+
+|Penjadwal Notifikasi|
+start
+:Waktu pemeriksaan tiba atau siswa membuka aplikasi;
+|Sistem|
+if (Profil dan diagnostic sudah ada?) then (belum)
+  stop
+endif
+:Mencari tanggal aktivitas terakhir;
+if (Tidak aktif 3 hari atau lebih?) then (ya)
+  :Jenis pesan = lamaTidakAktif, ekspresi sedih;
+elseif (Streak hidup tapi hari ini belum belajar?) then (ya)
+  :Jenis pesan = streakTerancam, ekspresi mengantuk;
+else (tidak)
+  :Jenis pesan = sambutan, ekspresi senang;
+endif
+if (Pesan jenis ini sudah muncul hari ini?) then (ya)
+  stop
+endif
+:Memilih satu variasi kalimat dan mengisi nama siswa;
+:Menyimpan CompanionMessage;
+|Siswa|
+:Melihat Numi muncul dengan balon kata;
+:Mengetuk balon atau menunggu 7 detik;
+|Sistem|
+:Menandai pesan sudah dibaca;
+stop
+@enduml

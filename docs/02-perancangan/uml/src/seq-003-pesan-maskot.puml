@@ -1,0 +1,45 @@
+@startuml seq-003-pesan-maskot
+!include _gaya.iuml
+title SEQ-003 Pemicu pesan maskot (UC-007, FR-009)
+autonumber
+
+actor Siswa
+participant "HomeShell" as UI
+participant "NumiController" as Ctrl
+participant "CompanionService" as Comp
+participant "ProgressService" as Prog
+participant "NumiRepository" as Repo
+participant "MascotBubble" as Balon
+
+Siswa -> UI : membuka halaman utama
+UI -> Ctrl : periksaPesanMaskot()
+Ctrl -> Comp : periksaSaatMembuka(data, sekarang)
+Comp -> Prog : streak(streakLog, sekarang)
+Prog --> Comp : InfoStreak
+alt tidak aktif 3 hari atau lebih
+  Comp -> Comp : buat(lamaTidakAktif)
+else streak terancam
+  Comp -> Comp : buat(streakTerancam)
+else selain itu
+  Comp -> Comp : buat(sambutan)
+end
+alt jenis ini sudah muncul hari ini
+  Comp --> Ctrl : null
+  Ctrl --> UI : null
+else belum
+  Comp --> Ctrl : CompanionMessage
+  Ctrl -> Repo : simpan(DataBelajar)
+  Ctrl --> UI : CompanionMessage
+  UI -> Balon : tampilkan(isi, ekspresi)
+  Balon --> Siswa : Numi muncul dari bawah
+  Siswa -> Balon : ketuk atau tunggu 7 detik
+  UI -> Ctrl : tandaiPesanDibaca(id)
+  Ctrl -> Repo : simpan(DataBelajar)
+end
+
+note over Comp
+  Setelah Firebase aktif, pemeriksaan yang sama
+  dijalankan Cloud Function terjadwal lalu dikirim
+  lewat Cloud Messaging sebagai notifikasi.
+end note
+@enduml

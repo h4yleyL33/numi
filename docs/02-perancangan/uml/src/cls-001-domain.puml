@@ -1,0 +1,206 @@
+@startuml cls-001-domain
+!include _gaya.iuml
+title CLS-001 Class diagram model domain (app/lib/data/models)
+hide empty methods
+
+enum KelompokBelajar {
+  kecil
+  besar
+}
+enum Fase {
+  a
+  b
+  c
+}
+enum StatusTopik {
+  terkunci
+  belumDikuasai
+  perluLatihan
+  mastered
+}
+enum JenisSoal {
+  hitungBenda
+  pilihanGanda
+  seretKeKotak
+  pasangkan
+  bandingkan
+  pecahanGambar
+  soalCerita
+}
+enum TipeLesson {
+  kenalan
+  latihan
+}
+enum KonteksJawaban {
+  diagnostic
+  lesson
+  mastery
+}
+enum JenisTrigger {
+  sambutan
+  streakTerancam
+  lamaTidakAktif
+  lessonSelesai
+  lessonGagal
+  masteryLulus
+  masteryGagal
+  badgeBaru
+  levelNaik
+}
+enum EkspresiMaskot {
+  senang
+  berpikir
+  semangat
+  sedih
+  mengantuk
+  bangga
+}
+
+class Siswa {
+  +id: String
+  +nama: String
+  +usia: int
+  +kelompokBelajar: KelompokBelajar?
+  +dibuatPada: DateTime
+  +namaPanggilan: String
+  +copyWith(): Siswa
+}
+class Topik {
+  +id: String
+  +urutan: int
+  +nama: String
+  +namaPulau: String
+  +ikon: String
+  +fase: Fase
+  +kelompok: KelompokBelajar
+  +prasyarat: List<String>
+  +capaian: String
+}
+class Lesson {
+  +id: String
+  +topikId: String
+  +judul: String
+  +tipe: TipeLesson
+  +penjelasan: List<String>
+  +contoh: String?
+}
+class Soal {
+  +id: String
+  +topikId: String
+  +jenis: JenisSoal
+  +tingkat: int
+  +pertanyaan: String
+  +kalimat: String?
+  +pilihan: List<String>
+  +jawabanBenar: String
+  +penjelasan: String
+  +periksa(jawaban): bool
+}
+class Pecahan {
+  +pembilang: int
+  +penyebut: int
+}
+class PasanganSoal {
+  +kiri: String
+  +kanan: String
+}
+class Jawaban {
+  +soalId: String
+  +topikId: String
+  +jawaban: String
+  +benar: bool
+  +waktu: DateTime
+  +konteks: KonteksJawaban
+}
+class SkillMap {
+  +topikId: String
+  +status: StatusTopik
+  +diperbarui: DateTime
+}
+class DiagnosticResult {
+  +topikId: String
+  +benar: int
+  +total: int
+  +statusPenguasaan: StatusTopik
+  +skor: int
+}
+class LessonProgress {
+  +lessonId: String
+  +topikId: String
+  +selesai: bool
+  +skorTerbaik: int
+  +jumlahPercobaan: int
+  +waktu: DateTime
+}
+class MasteryResult {
+  +topikId: String
+  +skor: int
+  +lulus: bool
+  +waktu: DateTime
+}
+class Lencana <<Badge>> {
+  +id: String
+  +nama: String
+  +ikon: String
+  +syarat: String
+}
+class SiswaLencana <<Siswa_Badge>> {
+  +badgeId: String
+  +waktuDiperoleh: DateTime
+}
+class StreakLog {
+  +tanggal: String
+  +jumlahAktivitas: int
+}
+class CompanionMessage {
+  +id: String
+  +trigger: JenisTrigger
+  +isi: String
+  +ekspresi: EkspresiMaskot
+  +waktuKirim: DateTime
+  +dibaca: bool
+  +tandaiDibaca(): CompanionMessage
+}
+class DataBelajar {
+  +xp: int
+  +sudahDaftar: bool
+  +diagnosticSelesai: bool
+  +statusTopik(topikId): StatusTopik
+  +lessonSelesai(lessonId): bool
+  +punyaLencana(id): bool
+  +toJson(): Map
+  +fromJson(Map): DataBelajar
+}
+
+DataBelajar "1" o-- "0..1" Siswa
+DataBelajar "1" *-- "0..12" SkillMap
+DataBelajar "1" *-- "0..*" DiagnosticResult
+DataBelajar "1" *-- "0..*" LessonProgress
+DataBelajar "1" *-- "0..300" Jawaban
+DataBelajar "1" *-- "0..*" MasteryResult
+DataBelajar "1" *-- "0..*" SiswaLencana
+DataBelajar "1" *-- "0..*" StreakLog
+DataBelajar "1" *-- "0..50" CompanionMessage
+
+Topik "1" -- "2" Lesson : memiliki >
+Topik "1" -- "0..*" Soal : dibangkitkan untuk >
+Topik "0..*" -- "0..*" Topik : prasyarat >
+Soal *-- "0..1" Pecahan
+Soal *-- "0..3" PasanganSoal
+SkillMap "0..*" --> "1" Topik
+DiagnosticResult "0..*" --> "1" Topik
+LessonProgress "0..*" --> "1" Lesson
+MasteryResult "0..*" --> "1" Topik
+Jawaban "0..*" --> "1" Soal
+SiswaLencana "0..*" --> "1" Lencana
+
+note bottom of DataBelajar
+  Agregat seluruh data milik satu siswa.
+  Disimpan utuh oleh NumiRepository.
+end note
+note right of Lencana
+  Tabel Badge di ERD. Di kode dinamai
+  Lencana karena Badge bentrok dengan
+  widget bawaan Flutter.
+end note
+@enduml

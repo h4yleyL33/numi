@@ -1,0 +1,41 @@
+@startuml seq-001-diagnostic
+!include _gaya.iuml
+title SEQ-001 Mengerjakan diagnostic test (UC-001, FR-001)
+autonumber
+
+actor Siswa
+participant "DiagnosticScreen" as UI
+participant "SesiDiagnostic" as Sesi
+participant "GeneratorSoal" as Gen
+participant "PemutarSoal" as Pemutar
+participant "NumiController" as Ctrl
+participant "SkillMapService" as Skill
+participant "NumiRepository" as Repo
+
+Siswa -> UI : Ayo mulai
+UI -> Sesi : SesiDiagnostic(topik, usia)
+Sesi -> Sesi : indeksAwalUntukUsia(usia)
+Sesi -> Gen : buat(topikId, 2, tingkat: 1)
+Gen --> Sesi : List<Soal>
+loop sampai sesi.selesai
+  UI -> Pemutar : tampilkan soalSekarang (umpanBalik: false)
+  loop dua soal
+    Siswa -> Pemutar : pilih jawaban, Cek Jawaban
+    Pemutar -> Pemutar : Soal.periksa(jawaban)
+    note right of Pemutar : benar atau salah tidak ditampilkan
+  end
+  Pemutar --> UI : onSelesai(List<Jawaban>)
+  UI -> Sesi : catat(jumlahBenar)
+  alt naik, turun, atau belum selesai
+    Sesi -> Gen : buat(topik berikutnya, 2, tingkat: 1)
+  end
+end
+UI -> Sesi : hasilAkhir()
+Sesi --> UI : HasilAkhirDiagnostic(statusAwal, kelompok)
+UI -> Ctrl : simpanDiagnostic(hasil, jawaban)
+Ctrl -> Skill : bukaTopik(statusAwal)
+Skill --> Ctrl : status semua topik
+Ctrl -> Repo : simpan(DataBelajar)
+Repo --> Ctrl : selesai
+UI -> Siswa : DiagnosticResultScreen (kelompok belajar dan pulau)
+@enduml

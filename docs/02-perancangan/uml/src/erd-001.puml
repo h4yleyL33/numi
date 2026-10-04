@@ -1,0 +1,133 @@
+@startuml erd-001
+!include _gaya.iuml
+title ERD-001 Entity relationship diagram
+hide circle
+hide methods
+
+entity Siswa {
+  * id_siswa : string <<PK>>
+  --
+  nama : string
+  usia : int
+  kelompok_belajar : string
+  dibuat_pada : datetime
+}
+entity Topik {
+  * id_topik : string <<PK>>
+  --
+  urutan : int
+  nama_topik : string
+  nama_pulau : string
+  fase_kurikulum_merdeka : string
+  kelompok : string
+}
+entity Prasyarat_Topik {
+  * id_topik : string <<PK, FK>>
+  * id_prasyarat : string <<PK, FK>>
+}
+entity Lesson {
+  * id_lesson : string <<PK>>
+  --
+  id_topik : string <<FK>>
+  judul : string
+  tipe : string
+}
+entity Soal {
+  * id_soal : string <<PK>>
+  --
+  id_topik : string <<FK>>
+  jenis_latihan : string
+  tingkat_kesulitan : int
+  jawaban_benar : string
+}
+entity SkillMap {
+  * id_siswa : string <<PK, FK>>
+  * id_topik : string <<PK, FK>>
+  --
+  status : string
+  diperbarui : datetime
+}
+entity DiagnosticResult {
+  * id_siswa : string <<PK, FK>>
+  * id_topik : string <<PK, FK>>
+  --
+  benar : int
+  total : int
+  status_penguasaan : string
+}
+entity LessonProgress {
+  * id_siswa : string <<PK, FK>>
+  * id_lesson : string <<PK, FK>>
+  --
+  selesai : boolean
+  skor_terbaik : int
+  jumlah_percobaan : int
+  waktu : datetime
+}
+entity MasteryResult {
+  * id_mastery : string <<PK>>
+  --
+  id_siswa : string <<FK>>
+  id_topik : string <<FK>>
+  skor : int
+  lulus : boolean
+  waktu : datetime
+}
+entity Jawaban {
+  * id_jawaban : string <<PK>>
+  --
+  id_siswa : string <<FK>>
+  id_soal : string <<FK>>
+  jawaban : string
+  benar_salah : boolean
+  konteks : string
+  waktu : datetime
+}
+entity Badge {
+  * id_badge : string <<PK>>
+  --
+  nama : string
+  ikon : string
+  syarat_perolehan : string
+}
+entity Siswa_Badge {
+  * id_siswa : string <<PK, FK>>
+  * id_badge : string <<PK, FK>>
+  --
+  waktu_diperoleh : datetime
+}
+entity StreakLog {
+  * id_siswa : string <<PK, FK>>
+  * tanggal : date <<PK>>
+  --
+  jumlah_aktivitas : int
+}
+entity CompanionMessage {
+  * id_pesan : string <<PK>>
+  --
+  id_siswa : string <<FK>>
+  jenis_trigger : string
+  isi_pesan : string
+  ekspresi : string
+  waktu_kirim : datetime
+  dibaca : boolean
+}
+
+Siswa ||--o{ SkillMap
+Topik ||--o{ SkillMap
+Siswa ||--o{ DiagnosticResult
+Topik ||--o{ DiagnosticResult
+Topik ||--|{ Lesson
+Topik ||--o{ Soal
+Topik ||--o{ Prasyarat_Topik
+Siswa ||--o{ LessonProgress
+Lesson ||--o{ LessonProgress
+Siswa ||--o{ MasteryResult
+Topik ||--o{ MasteryResult
+Siswa ||--o{ Jawaban
+Soal ||--o{ Jawaban
+Siswa ||--o{ Siswa_Badge
+Badge ||--o{ Siswa_Badge
+Siswa ||--o{ StreakLog
+Siswa ||--o{ CompanionMessage
+@enduml

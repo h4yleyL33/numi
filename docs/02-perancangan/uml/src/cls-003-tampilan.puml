@@ -1,0 +1,90 @@
+@startuml cls-003-tampilan
+!include _gaya.iuml
+title CLS-003 Class diagram lapisan tampilan (app/lib/features)
+hide empty members
+
+package "onboarding" {
+  class SplashScreen
+  class OnboardingScreen
+}
+package "diagnostic" {
+  class DiagnosticIntroScreen
+  class DiagnosticScreen
+  class DiagnosticResultScreen
+}
+package "home" {
+  class HomeShell
+}
+package "skill_map" {
+  class SkillMapScreen
+  class PulauTopik
+  class TopikSheet
+}
+package "lesson" {
+  class LessonScreen
+  class HasilSesiView
+}
+package "mastery" {
+  class MasteryScreen
+}
+package "progress" {
+  class ProgressScreen
+  class KartuLencana
+}
+package "quiz" {
+  class PemutarSoal {
+    +soal: List<Soal>
+    +konteks: KonteksJawaban
+    +umpanBalik: bool
+    +onSelesai(List<Jawaban>)
+  }
+  class TampilanSoal {
+    +soal: Soal
+    +onPilih(String?)
+    +terkunci: bool
+    +tampilkanKunci: bool
+  }
+  class KartuPilihan
+}
+package "feedback" {
+  class BannerUmpanBalik
+}
+package "mascot" {
+  class NumiMascot {
+    +ekspresi: EkspresiMaskot
+    +ukuran: double
+  }
+  class MascotBubble {
+    +teks: String
+    +ekspresi: EkspresiMaskot
+  }
+}
+
+SplashScreen ..> OnboardingScreen
+SplashScreen ..> DiagnosticIntroScreen
+SplashScreen ..> HomeShell
+OnboardingScreen ..> DiagnosticIntroScreen
+DiagnosticIntroScreen ..> DiagnosticScreen
+DiagnosticScreen *-- PemutarSoal
+DiagnosticScreen ..> DiagnosticResultScreen
+DiagnosticResultScreen ..> HomeShell
+HomeShell *-- SkillMapScreen
+HomeShell *-- ProgressScreen
+HomeShell *-- MascotBubble
+SkillMapScreen *-- PulauTopik
+SkillMapScreen ..> TopikSheet
+TopikSheet ..> LessonScreen
+TopikSheet ..> MasteryScreen
+LessonScreen *-- PemutarSoal
+LessonScreen *-- HasilSesiView
+MasteryScreen *-- PemutarSoal
+MasteryScreen *-- HasilSesiView
+PemutarSoal *-- TampilanSoal
+PemutarSoal *-- BannerUmpanBalik
+TampilanSoal *-- KartuPilihan
+ProgressScreen *-- KartuLencana
+MascotBubble *-- NumiMascot
+BannerUmpanBalik *-- NumiMascot
+
+note "Semua layar membaca dan mengubah state\nlewat numiControllerProvider (Riverpod)." as N1
+@enduml

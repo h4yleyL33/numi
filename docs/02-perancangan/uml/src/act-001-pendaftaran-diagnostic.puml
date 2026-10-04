@@ -1,0 +1,52 @@
+@startuml act-001-pendaftaran-diagnostic
+!include _gaya.iuml
+title ACT-001 Pendaftaran sampai skill map awal (UC-008, UC-001)
+
+|Siswa / Orang Tua|
+start
+:Membuka aplikasi;
+|Sistem|
+:Memuat data dari penyimpanan;
+if (Profil sudah ada?) then (belum)
+  :Menampilkan tiga layar cerita pembuka;
+  |Siswa / Orang Tua|
+  :Mengisi nama dan memilih umur;
+  |Sistem|
+  :Menyimpan profil siswa;
+else (sudah)
+  if (Diagnostic sudah selesai?) then (sudah)
+    :Membuka peta pulau;
+    stop
+  endif
+endif
+:Menentukan topik awal dari umur;
+repeat
+  :Membuat dua soal untuk topik sekarang;
+  |Siswa / Orang Tua|
+  :Menjawab soal tanpa melihat benar atau salah;
+  |Sistem|
+  :Mencatat jumlah jawaban benar;
+  if (Dua-duanya benar?) then (ya)
+    if (Sedang turun mencari batas bawah?) then (ya)
+      :Tes selesai;
+    else (tidak)
+      :Naik ke topik berikutnya;
+    endif
+  else (tidak)
+    if (Masih di topik awal dan bukan topik pertama?) then (ya)
+      :Turun ke topik sebelumnya;
+    else (tidak)
+      :Tes selesai;
+    endif
+  endif
+repeat while (Tes belum selesai dan topik diuji kurang dari 6?) is (ya)
+->tidak;
+:Topik di bawah titik uji dianggap dikuasai;
+:Membuka topik yang prasyaratnya sudah dikuasai;
+:Menentukan kelompok belajar dari topik pertama yang belum dikuasai;
+:Menyimpan hasil diagnostic dan skill map;
+:Menampilkan hasil dan kelompok belajar;
+|Siswa / Orang Tua|
+:Membuka peta pulau;
+stop
+@enduml

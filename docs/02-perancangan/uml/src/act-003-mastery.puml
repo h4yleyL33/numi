@@ -1,0 +1,37 @@
+@startuml act-003-mastery
+!include _gaya.iuml
+title ACT-003 Mengerjakan mastery test (UC-005)
+
+|Siswa|
+start
+:Membuka sheet topik;
+|Sistem|
+if (Semua lesson topik selesai?) then (belum)
+  :Tombol mastery test nonaktif;
+  stop
+endif
+|Siswa|
+:Mengetuk Mulai Mastery Test;
+|Sistem|
+:Menampilkan mercusuar yang masih padam;
+:Membangkitkan lima soal tingkat 2;
+repeat
+  |Siswa|
+  :Menjawab soal;
+  |Sistem|
+  :Memberi feedback benar atau salah;
+repeat while (Masih ada soal?) is (ya)
+->tidak;
+:Menghitung skor dari jumlah jawaban benar;
+if (Skor minimal 95?) then (ya)
+  :Status topik menjadi dikuasai;
+  :Membuka topik yang prasyaratnya kini lengkap;
+  :Menambah XP mastery;
+  :Menampilkan mercusuar menyala;
+else (tidak)
+  :Status topik tetap perlu latihan;
+  :Menampilkan ajakan berlatih lagi;
+endif
+:Menyimpan hasil mastery, streak, dan lencana;
+stop
+@enduml

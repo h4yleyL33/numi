@@ -1,0 +1,42 @@
+@startuml seq-002-lesson-feedback
+!include _gaya.iuml
+title SEQ-002 Mengerjakan lesson dan menerima feedback (UC-003, UC-004, UC-010)
+autonumber
+
+actor Siswa
+participant "TopikSheet" as Sheet
+participant "LessonScreen" as UI
+participant "GeneratorSoal" as Gen
+participant "PemutarSoal" as Pemutar
+participant "BannerUmpanBalik" as Banner
+participant "NumiController" as Ctrl
+participant "SkillMapService" as Skill
+participant "ProgressService" as Prog
+participant "CompanionService" as Comp
+participant "NumiRepository" as Repo
+
+Siswa -> Sheet : ketuk Mulai pada lesson
+Sheet -> UI : buka LessonScreen(lesson)
+UI -> Ctrl : mulaiLesson(topikId)
+Ctrl -> Skill : saatMulaiLesson(status)
+Ctrl -> Repo : simpan(DataBelajar)
+UI -> Gen : buat(topikId, 5, tingkat)
+Gen --> UI : List<Soal>
+loop lima soal
+  Siswa -> Pemutar : jawab, Cek Jawaban
+  Pemutar -> Pemutar : Soal.periksa(jawaban)
+  Pemutar -> Banner : tampilkan(benar, penjelasan)
+  Banner --> Siswa : banner hijau atau merah
+  Siswa -> Banner : Lanjut
+end
+Pemutar --> UI : onSelesai(List<Jawaban>)
+UI -> Ctrl : selesaiLesson(lesson, jawaban, durasi)
+Ctrl -> Prog : catatAktivitas(streakLog, hariIni)
+Ctrl -> Prog : lencanaBaru(data, waktu, kejadian)
+Prog --> Ctrl : List<Lencana>
+Ctrl -> Comp : buat(trigger, namaPanggilan, waktu)
+Comp --> Ctrl : CompanionMessage
+Ctrl -> Repo : simpan(DataBelajar)
+Ctrl --> UI : RingkasanSesi
+UI -> Siswa : HasilSesiView (skor, XP, lencana, pesan maskot)
+@enduml

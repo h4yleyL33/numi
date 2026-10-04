@@ -1,0 +1,35 @@
+@startuml act-004-gamifikasi
+!include _gaya.iuml
+title ACT-004 Pembaruan XP, streak, dan lencana (UC-010)
+
+start
+:Sesi lesson atau mastery selesai;
+:XP = benar x 10;
+if (Lesson selesai?) then (ya)
+  :XP + 20;
+elseif (Mastery lulus?) then (ya)
+  :XP + 50;
+else (tidak)
+endif
+:Mencatat tanggal hari ini ke StreakLog;
+:Menghitung streak dari hari berturut-turut;
+fork
+  if (Level baru lebih tinggi?) then (ya)
+    :Tandai level naik;
+  endif
+fork again
+  :Periksa delapan syarat lencana;
+  if (Ada lencana baru?) then (ya)
+    :Simpan SiswaLencana dengan waktu diperoleh;
+  endif
+end fork
+if (Ada lencana baru?) then (ya)
+  :Pesan maskot jenis badgeBaru;
+elseif (Level naik?) then (ya)
+  :Pesan maskot jenis levelNaik;
+else
+  :Pesan maskot sesuai hasil sesi;
+endif
+:Menyimpan data belajar;
+stop
+@enduml
