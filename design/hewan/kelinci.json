@@ -1,0 +1,143 @@
+{
+ "id": "kelinci",
+ "nama": "Kelinci",
+ "ukuran": [
+  145.6,
+  234
+ ],
+ "wajah": {
+  "x": 44.72,
+  "y": 95.68,
+  "skala": 1.35
+ },
+ "bagian": [
+  {
+   "nama": "ekor",
+   "kotak": [
+    117,
+    172.38,
+    21.84,
+    21.84
+   ],
+   "sendi": [
+    123.5,
+    184.6
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21.84\" height=\"21.84\" viewBox=\"520 723 84 84\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><circle cx=\"562\" cy=\"765\" r=\"32\" fill=\"#FBF4E4\"/></g></svg>"
+  },
+  {
+   "nama": "badan",
+   "kotak": [
+    15.08,
+    123.5,
+    115.7,
+    109.2
+   ],
+   "sendi": [
+    67.6,
+    228.8
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"115.7\" height=\"109.2\" viewBox=\"128 535 445 420\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M180 560 L430 548 C470 600 520 660 545 740 C565 820 540 900 470 930 C420 945 340 945 270 940 L258 876 C230 868 200 850 184 826 C176 810 172 790 169 764 L148 750 C138 700 150 620 170 572 Z\" fill=\"#FBF4E4\" stroke=\"none\"/>\n<path d=\"M168 578 C150 640 138 700 148 750\"/>\n<path d=\"M430 550 C470 600 520 660 545 740 C565 820 540 900 470 930 C420 945 340 945 270 943\"/></g></svg>"
+  },
+  {
+   "nama": "kaki-belakang",
+   "kotak": [
+    44.2,
+    202.8,
+    42.9,
+    29.9
+   ],
+   "sendi": [
+    59.8,
+    213.2
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"42.9\" height=\"29.9\" viewBox=\"240 840 165 115\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M290 856 C330 858 360 876 388 900 L380 934 L272 934 C258 936 258 900 268 878 Z\" fill=\"#FBF4E4\" stroke=\"none\"/>\n<path d=\"M258 870 C252 862 262 856 290 856 C330 858 360 876 388 900\"/>\n<path d=\"M290 862 C268 878 258 900 258 922 C258 936 266 942 280 943\"/>\n<path d=\"M282 902 C280 910 278 918 277 925 M316 910 C314 916 312 922 310 928\" stroke-width=\"12\"/></g></svg>"
+  },
+  {
+   "nama": "kaki-depan",
+   "kotak": [
+    14.3,
+    179.4,
+    37.7,
+    41.6
+   ],
+   "sendi": [
+    36.4,
+    202.8
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"37.7\" height=\"41.6\" viewBox=\"125 750 145 160\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M180 826 C160 840 140 862 138 878 C136 892 150 896 175 896 C200 896 225 892 248 888 L240 860 Z\" fill=\"#FBF4E4\" stroke=\"none\"/>\n<path d=\"M180 826 C160 840 140 862 138 878 C136 892 150 896 175 896 C200 896 225 892 248 888\"/>\n<path d=\"M172 864 C168 870 166 876 164 882\" stroke-width=\"12\"/>\n<path d=\"M169 764 C172 790 176 810 184 826 C200 850 230 868 258 876\"/></g></svg>"
+  },
+  {
+   "nama": "lengan-kiri",
+   "kotak": [
+    16.12,
+    149.76,
+    32.5,
+    35.1
+   ],
+   "sendi": [
+    40.3,
+    153.4
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32.5\" height=\"35.1\" viewBox=\"132 636 125 135\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M146 728 C150 752 172 762 204 752\"/>\n<path d=\"M214 648 C218 660 224 672 228 680 M246 648 C242 660 234 672 228 680 M228 680 C224 700 218 724 213 742\"/></g></svg>"
+  },
+  {
+   "nama": "lengan-kanan",
+   "kotak": [
+    33.8,
+    158.08,
+    36.4,
+    29.12
+   ],
+   "sendi": [
+    67.08,
+    161.46
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36.4\" height=\"29.12\" viewBox=\"200 668 140 112\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M328 681 C300 712 272 746 252 762 C238 772 220 770 214 754\"/></g></svg>"
+  },
+  {
+   "nama": "telinga-belakang",
+   "induk": "kepala",
+   "kotak": [
+    43.68,
+    0,
+    41.6,
+    63.7
+   ],
+   "sendi": [
+    59.8,
+    58.5
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"41.6\" height=\"63.7\" viewBox=\"238 60 160 245\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M250 272 C258 210 285 125 340 88 C372 70 388 120 382 165 C376 210 352 255 340 290 Z\" fill=\"#FBF4E4\"/></g></svg>"
+  },
+  {
+   "nama": "telinga-depan",
+   "induk": "kepala",
+   "kotak": [
+    65,
+    7.28,
+    52,
+    68.12
+   ],
+   "sendi": [
+    80.6,
+    67.6
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"52\" height=\"68.12\" viewBox=\"320 88 200 262\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M335 286 C350 240 392 160 450 120 C490 96 512 118 508 175 C504 240 470 300 412 340 Z\" fill=\"#FBF4E4\"/>\n<path d=\"M402 300 C412 240 440 182 478 152 C490 192 484 240 458 272 Z\" fill=\"#F7B8C2\" stroke=\"none\"/></g></svg>"
+  },
+  {
+   "nama": "kepala",
+   "kotak": [
+    2.6,
+    52.52,
+    101.4,
+    87.1
+   ],
+   "sendi": [
+    53.3,
+    133.9
+   ],
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"101.4\" height=\"87.1\" viewBox=\"80 262 390 335\"><g stroke=\"#1F1A17\" stroke-width=\"16\" stroke-linejoin=\"round\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M195 572 C150 568 108 545 95 505 C86 475 92 448 106 430 C112 380 150 318 205 288 C250 268 310 272 345 288 C380 300 400 320 412 340 C440 375 458 430 456 475 C454 520 420 560 355 572 L270 590 Z\" fill=\"#FBF4E4\" stroke=\"none\"/>\n<path d=\"M195 572 C150 568 108 545 95 505 C86 475 92 448 106 430 C112 380 150 318 205 288 C250 268 310 272 345 288 C380 300 400 320 412 340 C440 375 458 430 456 475 C454 520 420 560 355 572\"/>\n<path d=\"M202 464 C204 458 236 458 240 464 C236 474 226 480 220 480 C214 480 204 472 202 464 Z\" fill=\"#F5A9B8\" stroke=\"none\"/></g></svg>"
+  }
+ ]
+}

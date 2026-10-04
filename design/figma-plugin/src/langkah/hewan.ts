@@ -2,10 +2,13 @@
 // Data bentuk dari design/hewan/<id>.json (dibuat tools/buat_hewan.mjs). Butuh ID wajah.
 import { EMOSI, W, bingkai, putar, siapkanFont, siapkanHalaman, solid, svgNode, teks } from '../lib';
 import beruang from '../../../hewan/beruang.json';
+import kelinci from '../../../hewan/kelinci.json';
 
-type Bagian = { nama: string; kotak: number[]; sendi: number[]; svg: string };
+// induk: nama tulang yang menjadi induk (mis. telinga di dalam kepala). Kotak dan sendi selalu
+// dalam koordinat komponen; diubah ke koordinat induk saat dipasang.
+type Bagian = { nama: string; induk?: string; kotak: number[]; sendi: number[]; svg: string };
 type Hewan = { id: string; nama: string; ukuran: number[]; wajah: { x: number; y: number; skala: number }; bagian: Bagian[] };
-const DATA: Record<string, Hewan> = { beruang };
+const DATA: Record<string, Hewan> = { beruang, kelinci } as Record<string, Hewan>;
 
 // Sudut tiap tulang per pose (derajat berlawanan jarum jam) dan geser badan.
 const POSE: Record<string, { tulang: Record<string, number>; dy: number }> = {
@@ -25,10 +28,16 @@ function rakit(h: Hewan, pose: string, wajah: ComponentNode) {
   c.clipsContent = false;
   const root = bingkai('rig/root', h.ukuran[0], h.ukuran[1]);
   c.appendChild(root);
-  for (const b of h.bagian) {
+  const tulangNya: Record<string, FrameNode> = {};
+  const anak: Record<string, number> = {};
+  // Induk dipasang dulu supaya anak bisa masuk ke dalamnya; urutan tumpukan tetap ikut data.
+  const urut = [...h.bagian.filter((b) => !b.induk), ...h.bagian.filter((b) => b.induk)];
+  for (const b of urut) {
     const [x, y, w, t] = b.kotak;
+    const induk = b.induk ? h.bagian.find((a) => a.nama === b.induk)! : null;
+    const [dx, dy] = induk ? [induk.kotak[0], induk.kotak[1]] : [0, 0];
     const tulang = bingkai(`rig/${b.nama}`, w, t);
-    tulang.x = x; tulang.y = y;
+    tulang.x = x - dx; tulang.y = y - dy;
     const bentuk = svgNode(b.svg, 'bentuk');
     tulang.appendChild(bentuk);
     bentuk.x = 0; bentuk.y = 0;
@@ -40,8 +49,15 @@ function rakit(h: Hewan, pose: string, wajah: ComponentNode) {
       s.y = h.wajah.y - 54.5 * h.wajah.skala - y;
       tulang.appendChild(s);
     }
-    root.appendChild(tulang);
-    putar(tulang, POSE[pose].tulang[b.nama] ?? 0, b.sendi[0], b.sendi[1]);
+    if (induk) {
+      // Anak ditaruh di belakang bentuk induknya, berurutan sesuai data.
+      tulangNya[induk.nama].insertChild(anak[induk.nama] ?? 0, tulang);
+      anak[induk.nama] = (anak[induk.nama] ?? 0) + 1;
+    } else {
+      root.appendChild(tulang);
+    }
+    tulangNya[b.nama] = tulang;
+    putar(tulang, POSE[pose].tulang[b.nama] ?? 0, b.sendi[0] - dx, b.sendi[1] - dy);
   }
   root.y = POSE[pose].dy;
   return c;

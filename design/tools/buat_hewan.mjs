@@ -58,29 +58,92 @@ const HEWAN = {
       },
     ],
   },
+  kelinci: {
+    nama: 'Kelinci',
+    asal: [70, 60, 560, 900],
+    skala: 0.26,
+    garis: 16,
+    warna: { bulu: '#FBF4E4', telinga: '#F7B8C2', hidung: '#F5A9B8' },
+    wajah: { x: 242, y: 428, skala: 5.2 },
+    bagian: (w) => [
+      {
+        nama: 'ekor', kotak: [520, 723, 84, 84], sendi: [545, 770],
+        isi: `<circle cx="562" cy="765" r="32" fill="${w.bulu}"/>`,
+      },
+      {
+        nama: 'badan', kotak: [128, 535, 445, 420], sendi: [330, 940],
+        isi: `<path d="M180 560 L430 548 C470 600 520 660 545 740 C565 820 540 900 470 930 C420 945 340 945 270 940 L258 876 C230 868 200 850 184 826 C176 810 172 790 169 764 L148 750 C138 700 150 620 170 572 Z" fill="${w.bulu}" stroke="none"/>
+<path d="M168 578 C150 640 138 700 148 750"/>
+<path d="M430 550 C470 600 520 660 545 740 C565 820 540 900 470 930 C420 945 340 945 270 943"/>`,
+      },
+      {
+        nama: 'kaki-belakang', kotak: [240, 840, 165, 115], sendi: [300, 880],
+        isi: `<path d="M290 856 C330 858 360 876 388 900 L380 934 L272 934 C258 936 258 900 268 878 Z" fill="${w.bulu}" stroke="none"/>
+<path d="M258 870 C252 862 262 856 290 856 C330 858 360 876 388 900"/>
+<path d="M290 862 C268 878 258 900 258 922 C258 936 266 942 280 943"/>
+<path d="M282 902 C280 910 278 918 277 925 M316 910 C314 916 312 922 310 928" stroke-width="12"/>`,
+      },
+      {
+        nama: 'kaki-depan', kotak: [125, 750, 145, 160], sendi: [210, 840],
+        isi: `<path d="M180 826 C160 840 140 862 138 878 C136 892 150 896 175 896 C200 896 225 892 248 888 L240 860 Z" fill="${w.bulu}" stroke="none"/>
+<path d="M180 826 C160 840 140 862 138 878 C136 892 150 896 175 896 C200 896 225 892 248 888"/>
+<path d="M172 864 C168 870 166 876 164 882" stroke-width="12"/>
+<path d="M169 764 C172 790 176 810 184 826 C200 850 230 868 258 876"/>`,
+      },
+      {
+        nama: 'lengan-kiri', kotak: [132, 636, 125, 135], sendi: [225, 650],
+        isi: `<path d="M146 728 C150 752 172 762 204 752"/>
+<path d="M214 648 C218 660 224 672 228 680 M246 648 C242 660 234 672 228 680 M228 680 C224 700 218 724 213 742"/>`,
+      },
+      {
+        nama: 'lengan-kanan', kotak: [200, 668, 140, 112], sendi: [328, 681],
+        isi: `<path d="M328 681 C300 712 272 746 252 762 C238 772 220 770 214 754"/>`,
+      },
+      {
+        nama: 'telinga-belakang', induk: 'kepala', kotak: [238, 60, 160, 245], sendi: [300, 285],
+        isi: `<path d="M250 272 C258 210 285 125 340 88 C372 70 388 120 382 165 C376 210 352 255 340 290 Z" fill="${w.bulu}"/>`,
+      },
+      {
+        nama: 'telinga-depan', induk: 'kepala', kotak: [320, 88, 200, 262], sendi: [380, 320],
+        isi: `<path d="M335 286 C350 240 392 160 450 120 C490 96 512 118 508 175 C504 240 470 300 412 340 Z" fill="${w.bulu}"/>
+<path d="M402 300 C412 240 440 182 478 152 C490 192 484 240 458 272 Z" fill="${w.telinga}" stroke="none"/>`,
+      },
+      {
+        nama: 'kepala', kotak: [80, 262, 390, 335], sendi: [275, 575],
+        isi: `<path d="M195 572 C150 568 108 545 95 505 C86 475 92 448 106 430 C112 380 150 318 205 288 C250 268 310 272 345 288 C380 300 400 320 412 340 C440 375 458 430 456 475 C454 520 420 560 355 572 L270 590 Z" fill="${w.bulu}" stroke="none"/>
+<path d="M195 572 C150 568 108 545 95 505 C86 475 92 448 106 430 C112 380 150 318 205 288 C250 268 310 272 345 288 C380 300 400 320 412 340 C440 375 458 430 456 475 C454 520 420 560 355 572"/>
+<path d="M202 464 C204 458 236 458 240 464 C236 474 226 480 220 480 C214 480 204 472 202 464 Z" fill="${w.hidung}" stroke="none"/>`,
+      },
+    ],
+  },
 };
 
 const f = (n) => Math.round(n * 100) / 100;
+// Pratinjau: bagian anak (induk) digambar tepat sebelum induknya, sama seperti di Figma.
+const urutGambar = (bagian) => bagian.filter((b) => !b.induk).flatMap((b) => [...bagian.filter((a) => a.induk === b.nama), b]);
 mkdirSync('hewan', { recursive: true });
 const wajahSenang = readFileSync('wajah/wajah-senang.svg', 'utf8').replace(/#2A2350/g, GARIS).replace(/<\/?svg[^>]*>/g, '');
 for (const [id, h] of Object.entries(HEWAN)) {
   const [ox, oy, ow, oh] = h.asal;
-  const ke = (x, y) => [f((x - ox) * SKALA), f((y - oy) * SKALA)];
-  const bagian = h.bagian(h.warna);
+  const S = h.skala ?? SKALA;
+  const ke = (x, y) => [f((x - ox) * S), f((y - oy) * S)];
+  // Hewan yang digambar tanpa atribut garis per elemen memakai satu grup garis (h.garis = tebal).
+  const bungkus = (isi) => (h.garis ? `<g ${g(h.garis)} fill="none">${isi}</g>` : isi);
+  const bagian = h.bagian(h.warna).map((b) => ({ ...b, isi: bungkus(b.isi) }));
   const data = {
-    id, nama: h.nama, ukuran: [f(ow * SKALA), f(oh * SKALA)],
-    wajah: { x: ke(h.wajah.x, h.wajah.y)[0], y: ke(h.wajah.x, h.wajah.y)[1], skala: f(h.wajah.skala * SKALA) },
+    id, nama: h.nama, ukuran: [f(ow * S), f(oh * S)],
+    wajah: { x: ke(h.wajah.x, h.wajah.y)[0], y: ke(h.wajah.x, h.wajah.y)[1], skala: f(h.wajah.skala * S) },
     bagian: bagian.map((b) => {
       const [x, y, w, t] = b.kotak;
       return {
-        nama: b.nama, kotak: [...ke(x, y), f(w * SKALA), f(t * SKALA)], sendi: ke(...b.sendi),
-        svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${f(w * SKALA)}" height="${f(t * SKALA)}" viewBox="${b.kotak.join(' ')}">${b.isi}</svg>`,
+        nama: b.nama, induk: b.induk, kotak: [...ke(x, y), f(w * S), f(t * S)], sendi: ke(...b.sendi),
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${f(w * S)}" height="${f(t * S)}" viewBox="${b.kotak.join(' ')}">${b.isi}</svg>`,
       };
     }),
   };
   writeFileSync(`hewan/${id}.json`, JSON.stringify(data, null, 1));
   const { x, y, skala } = h.wajah;
   const wajah = `<g transform="translate(${x - 60 * skala} ${y - 54.5 * skala}) scale(${skala})">${wajahSenang}</g>`;
-  writeFileSync(`hewan/${id}-pratinjau.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${f(ow * SKALA)}" height="${f(oh * SKALA)}" viewBox="${h.asal.join(' ')}">${bagian.map((b) => b.isi).join('\n')}${wajah}</svg>`);
+  writeFileSync(`hewan/${id}-pratinjau.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${f(ow * S)}" height="${f(oh * S)}" viewBox="${h.asal.join(' ')}">${urutGambar(bagian).map((b) => b.isi).join('\n')}${wajah}</svg>`);
 }
 console.log('selesai', Object.keys(HEWAN).join(', '));
