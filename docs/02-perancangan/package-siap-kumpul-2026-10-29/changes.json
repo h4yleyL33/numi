@@ -1,0 +1,65 @@
+{
+  "replacements": {
+    "104": "Jl. Raya Bandung-Sumedang Km. 21 Jatinangor 45363",
+    "154": "TUGAS REKAYASA PERANGKAT LUNAK",
+    "219": "KAJIAN PACKAGE DIAGRAM",
+    "307": "Tugas Kelompok",
+    "385": "Mata kuliah",
+    "399": "Rekayasa Perangkat Lunak",
+    "405": "Tahun",
+    "425": "2026",
+    "493": "Pokok pembahasan",
+    "514": "Pembagian paket dan dependensi aplikasi Numi",
+    "550": "Anggota Kelompok",
+    "856": "DAFTAR ISI",
+    "1132": "1  Tujuan dan ruang lingkup     3",
+    "1166": "2  Package diagram PKG-002     4",
+    "1199": "3  Tanggung jawab paket     5",
+    "1231": "4  Dependensi dan keputusan arsitektur     7",
+    "1276": "5  Contoh alur antarpaket     8",
+    "1654": "1.1 Gambaran aplikasi",
+    "1682": "Numi merupakan aplikasi pembelajaran numerasi untuk anak berusia 6 sampai 12 tahun.",
+    "1794": "Fungsi utamanya meliputi pengisian profil, pemetaan kemampuan awal, penyajian latihan, pemeriksaan penguasaan materi, dan pencatatan progres belajar. Fungsi-fungsi tersebut menjadi dasar pembagian tanggung jawab pada package diagram.",
+    "2076": "Profil menyimpan nama panggilan dan usia anak. Data profil, soal, jawaban, dan hasil belajar digunakan oleh beberapa bagian aplikasi sehingga ditempatkan dalam model yang dapat dipakai bersama. Usia tidak diwakili oleh kelas sekolah.",
+    "2414": "Package diagram PKG-002 menggambarkan pembagian kode Flutter di folder app/lib dan dependensi antarpaket. main.dart dan app.dart dikelompokkan sebagai bootstrap karena keduanya menyiapkan dan menjalankan aplikasi. bootstrap merupakan pengelompokan logis, sedangkan paket lainnya mengikuti struktur folder.",
+    "2791": "Kajian ini membahas isi setiap paket, alasan pemisahannya, serta arah hubungan yang diperlukan untuk menjalankan fungsi aplikasi. Contoh alur pada bagian 5 menjelaskan kerja sama antarpaket saat profil, soal, dan hasil belajar diproses.",
+    "3119": "1.3 Dasar pembagian paket",
+    "3144": "Paket dibagi menurut tanggung jawabnya. features menangani layar dan interaksi, state mengoordinasikan perubahan data, sedangkan domain memuat aturan belajar. Model, konten, dan penyimpanan dipisahkan dalam tiga subpaket data. Konfigurasi serta komponen bersama ditempatkan di core.",
+    "3497": "Pemisahan tersebut memperjelas bagian yang perlu diubah ketika suatu fungsi dikembangkan. Perubahan isi soal, misalnya, ditangani melalui data.content, sedangkan cara menyimpan data menjadi tanggung jawab data.repositories.",
+    "3736": "2 PACKAGE DIAGRAM PKG-002",
+    "3764": "Gambar 2.1 Package diagram aplikasi Numi",
+    "3824": "Kotak bertab menyatakan paket. Panah putus-putus dari A ke B menunjukkan bahwa A menggunakan elemen yang disediakan B. Arah panah menunjuk paket yang dipakai, bukan urutan eksekusi program. Pada gambar ini panah menyatakan dependency, tanpa notasi package import.",
+    "4103": "data.content, data.models, dan data.repositories merupakan subpaket dalam folder data. Diagram menampilkan hubungan utama agar susunan paket mudah dibaca. Dependensi yang lebih rinci ditunjukkan dalam matriks pada bagian 4.",
+    "4379": "3 TANGGUNG JAWAB PAKET",
+    "5681": "3 TANGGUNG JAWAB PAKET (LANJUTAN)",
+    "6126": "Paket ini memuat topik, lesson, lencana, pesan maskot, dan generator soal. Pemusatan konten membuat perubahan bahan belajar dapat dilakukan tanpa menuliskannya kembali pada setiap layar.",
+    "6419": "Paket ini menyediakan kontrak NumiRepository dengan operasi muat(), simpan(DataBelajar), dan hapus(). LocalNumiRepository menerapkan kontrak tersebut untuk menyimpan data berbentuk JSON melalui shared_preferences. Layanan aplikasi cukup menggunakan kontraknya tanpa menangani format penyimpanan secara langsung.",
+    "6701": "core memuat AppConfig, tema, utilitas tanggal, dan widget bersama. Komponen di sini digunakan oleh beberapa fitur. Widget chip_status bergantung pada model topik untuk menampilkan status, sehingga perubahan model tersebut juga perlu memperhatikan tampilan status.",
+    "7271": "Tabel 4.1 Matriks dependensi antarpaket. Baris menunjukkan paket pemakai dan kolom menunjukkan paket yang dipakai. Angka 1 menandai adanya import. Sel kosong berarti tidak ada import langsung, sedangkan X menunjukkan paket yang sama.",
+    "7849": "Hubungan pada matriks menunjukkan bahwa state menjadi penghubung utama antara tampilan, aturan belajar, dan penyimpanan. domain menggunakan model serta konten untuk menjalankan aturan aplikasi. core juga memakai data.models melalui widget status. Hubungan terakhir ini menunjukkan bahwa komponen bersama tertentu tetap terikat pada model aplikasi.",
+    "8212": "Kontrak NumiRepository membatasi hubungan antara pengelolaan data dan cara penyimpanannya. Perubahan mekanisme penyimpanan dapat dilakukan melalui implementasi repository selama operasi yang digunakan controller tetap tersedia.",
+    "8392": "5 CONTOH ALUR ANTARPAKET"
+  },
+  "removedRanges": [
+    {
+      "s": 9403,
+      "e": 14827,
+      "t": ""
+    },
+    {
+      "s": 1311,
+      "e": 1627,
+      "t": ""
+    },
+    {
+      "s": 886,
+      "e": 1132,
+      "t": ""
+    },
+    {
+      "s": 793,
+      "e": 856,
+      "t": ""
+    }
+  ]
+}

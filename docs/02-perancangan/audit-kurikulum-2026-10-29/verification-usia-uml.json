@@ -1,0 +1,55 @@
+{
+  "ages": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "schoolGradeInput": false,
+  "umlStyle": "black text and lines on white background",
+  "diagrams": [
+    {
+      "file": "act-006-alur-belajar-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "cls-004-model-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "cmp-002-batas-validasi.png",
+      "monochrome": true
+    },
+    {
+      "file": "erd-002-data-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "seq-007-diagnostic-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "seq-008-mastery-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "seq-009-checkpoint-target.png",
+      "monochrome": true
+    },
+    {
+      "file": "stm-005-bukti-dan-akses.png",
+      "monochrome": true
+    },
+    {
+      "file": "stm-006-sesi-tersimpan.png",
+      "monochrome": true
+    },
+    {
+      "file": "ucd-002-aktor-target.png",
+      "monochrome": true
+    }
+  ]
+}

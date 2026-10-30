@@ -1,0 +1,29 @@
+@startuml stm-005-bukti-dan-akses
+!include _target-style.iuml
+title STM-005 Bukti kemampuan terpisah dari akses materi
+
+state "Bukti per skill" as Bukti {
+ [*] --> BelumDiuji
+ BelumDiuji --> IndikasiLatihan : respons mengindikasikan kesulitan
+ BelumDiuji --> IndikasiSiap : bukti penyaringan awal
+ IndikasiLatihan --> IndikasiSiap : latihan dan pemeriksaan baru
+ IndikasiSiap --> TercapaiAwal : mastery blok memenuhi kebijakan pilot
+ TercapaiAwal --> PerluPeriksaUlang : waktu pemeriksaan ulang tiba
+ PerluPeriksaUlang --> Terkonfirmasi : bukti ulang memenuhi kebijakan
+ PerluPeriksaUlang --> IndikasiLatihan : bukti baru menunjukkan kebutuhan bantuan
+ Terkonfirmasi --> PerluPeriksaUlang : bukti perlu diperbarui
+}
+state "Akses materi" as Akses {
+ [*] --> BelumTersedia : konten/validasi belum siap
+ BelumTersedia --> Tersedia : konten disetujui dan dirilis
+ state Tersedia {
+  [*] --> Terkunci
+  Terkunci --> Terbuka : prasyarat relevan terpenuhi
+ }
+}
+note bottom of Akses
+ Tidak ada transisi Terkunci -> Dikuasai.
+ Usia tidak langsung menetapkan bukti kemampuan.
+end note
+
+@enduml

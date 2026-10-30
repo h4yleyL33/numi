@@ -1,0 +1,62 @@
+[
+  {
+    "id": "UCD-002",
+    "name": "UCD-002 Aktor dan tujuan pengguna target v3",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\ucd-002-aktor-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\ucd-002-aktor-target.png"
+  },
+  {
+    "id": "ACT-006",
+    "name": "ACT-006 Alur belajar target untuk usia 6-12 tahun",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\act-006-alur-belajar-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\act-006-alur-belajar-target.png"
+  },
+  {
+    "id": "SEQ-007",
+    "name": "SEQ-007 Diagnostic berbasis bukti per skill",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\seq-007-diagnostic-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\seq-007-diagnostic-target.png"
+  },
+  {
+    "id": "SEQ-008",
+    "name": "SEQ-008 Mastery dengan pembahasan setelah blok",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\seq-008-mastery-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\seq-008-mastery-target.png"
+  },
+  {
+    "id": "SEQ-009",
+    "name": "SEQ-009 Simpan respons dan lanjutkan sesi",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\seq-009-checkpoint-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\seq-009-checkpoint-target.png"
+  },
+  {
+    "id": "STM-005",
+    "name": "STM-005 Bukti kemampuan terpisah dari akses materi",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\stm-005-bukti-dan-akses.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\stm-005-bukti-dan-akses.png"
+  },
+  {
+    "id": "STM-006",
+    "name": "STM-006 Siklus sesi dan kegagalan simpan",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\stm-006-sesi-tersimpan.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\stm-006-sesi-tersimpan.png"
+  },
+  {
+    "id": "CLS-004",
+    "name": "CLS-004 Model target untuk usia cakupan dan bukti",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\cls-004-model-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\cls-004-model-target.png"
+  },
+  {
+    "id": "CMP-002",
+    "name": "CMP-002 Batas aplikasi dan validasi materi",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\cmp-002-batas-validasi.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\cmp-002-batas-validasi.png"
+  },
+  {
+    "id": "ERD-002",
+    "name": "ERD-002 Rancangan data target bukan migrasi aktif",
+    "source": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\src\\erd-002-data-target.puml",
+    "png": "E:\\belajar\\rpl\\numi\\docs\\02-perancangan\\uml\\target-v3-2026-10-29\\png\\erd-002-data-target.png"
+  }
+]

@@ -3,8 +3,9 @@
 Platform belajar matematika adaptif berbasis gamifikasi untuk siswa SD usia 6 sampai 12 tahun.
 Numi mendeteksi learning gap numerasi dasar lewat diagnostic test, memetakan kemampuan siswa
 di skill map, lalu menyusun jalur belajar personal. Materi mengacu ke Capaian Pembelajaran
-Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025), dengan perlakuan berbeda untuk kelas kecil
-dan kelas besar.
+Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025). Cakupan awal berisi 12 topik numerasi.
+Usia membantu menentukan titik awal, sementara rancangan pembelajaran mengikuti bukti
+kemampuan per keterampilan. Profil cukup berisi nama panggilan dan usia.
 
 Proyek mata kuliah Rekayasa Perangkat Lunak, Teknik Informatika Unpad, semester ganjil 2026.
 Metodologi Waterfall, 13 minggu (7 September sampai 6 Desember 2026).
@@ -31,9 +32,11 @@ numi/
     01-inisiasi/          minggu 1
     02-perancangan/       minggu 2-3
       kurikulum/          pemetaan CP Kurikulum Merdeka ke 12 topik
-      uml/                23 diagram UML dan ERD (sumber PlantUML, PNG, SVG)
+      uml/                diagram UML dan ERD (sumber PlantUML, PNG, SVG)
+        target-v3-2026-10-29/  sepuluh diagram rancangan terbaru
       doktek-bab2/        Bab 2 doktek v1.2 (Markdown dan .docx siap tempel)
       imun Gantt Chart.xlsx
+    03-presentasi/        presentasi RPL Numi di Figma dan pratinjau slide
     03-implementasi/      minggu 4-9
     04-pengujian/         minggu 10-11
     05-deployment/        minggu 12-13
@@ -49,10 +52,23 @@ numi/
   prd/                    PRD, kajian UI anak, kurikulum kelas 1-3 dan 4-6, redesign UI dan mockup
   app/                    aplikasi Flutter
   firebase/               rancangan aturan Firestore
+  output/                 PDF dokumen dan arsip UML
 ```
 
-Desain visual lengkap (aset, 20 layar, use case diagram, alur pengguna) ada di Figma:
-https://www.figma.com/design/yNC8dWGVTz3wedUvSwIAMW/numi
+Desain visual, aset, dan prototype Numi ada di [Figma](https://www.figma.com/design/y0iET9hEQwy0xMFtV95Pek/numi-lebih-lengkap).
+Presentasi RPL berisi 21 slide ada di halaman [04 Presentasi RPL Numi](https://www.figma.com/design/y0iET9hEQwy0xMFtV95Pek/numi-lebih-lengkap?node-id=2038-3126).
+
+## Dokumen dan UML
+
+- [Daftar UML beserta sumber dan hasil render](docs/02-perancangan/uml/README.md).
+- [UML target terbaru](docs/02-perancangan/uml/target-v3-2026-10-29/README.md).
+- [Keputusan kurikulum, usia, UI/UX, dan asesmen](docs/02-perancangan/audit-kurikulum-2026-10-29/keputusan-v3.md).
+- [Presentasi RPL Numi](docs/03-presentasi/figma-rpl-2026-10-30/README.md).
+- [PDF dokumen proyek](output/pdf/).
+
+Diagram target menjelaskan rancangan pengembangan. Sebagian aturan asesmen dan checkpoint
+per jawaban belum diterapkan pada kode. Materi luas, volume, geometri, serta data dan peluang
+belum termasuk 12 topik awal.
 
 ## Struktur aplikasi
 
@@ -68,7 +84,7 @@ app/lib/
   domain/                 diagnostic adaptif, skill map, learning path, progres, maskot
   state/                  NumiController (Riverpod)
   features/               layar per fitur
-app/test/                 48 pengujian otomatis
+app/test/                 pengujian logika dan widget, termasuk tampilan responsif
 ```
 
 Tiap folder fitur bisa ditelusuri ke kebutuhan di SRS, sehingga baris RTM di Bab 5 doktek cukup

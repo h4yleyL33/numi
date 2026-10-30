@@ -1,0 +1,30 @@
+@startuml cmp-002-batas-validasi
+!include _target-style.iuml
+title CMP-002 Batas aplikasi dan validasi materi
+
+top to bottom direction
+actor Guru
+rectangle "Proses di luar aplikasi" {
+ artifact "Peta CP dan ATP sekolah" as CP
+ artifact "Template butir dan rubrik" as T
+ artifact "Catatan validasi guru" as V
+ Guru --> T : periksa konsep dan instruksi
+ CP --> T
+ T --> V
+}
+rectangle "Aplikasi Numi target" {
+ component "Katalog konten terversi" as K
+ component "Layar siswa dan wali" as UI
+ component "Layanan bukti dan asesmen" as B
+ database "Penyimpanan lokal" as R
+ K --> B
+ UI --> B
+ B --> R
+}
+V ..> K : gerbang rilis konten
+note bottom of V
+ Diagram ini tidak menambahkan login guru atau CMS.
+ Fitur portal guru/admin memerlukan ruang lingkup dan FR tersendiri.
+end note
+
+@enduml

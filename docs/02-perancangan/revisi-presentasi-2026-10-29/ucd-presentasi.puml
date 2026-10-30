@@ -1,0 +1,26 @@
+@startuml
+skinparam monochrome true
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 20
+skinparam shadowing false
+skinparam roundCorner 0
+left to right direction
+actor Siswa
+actor "Orang tua / wali" as Wali
+rectangle "Numi pada perangkat keluarga" {
+ usecase "Mengisi profil\nusia 6–12 tahun" as P
+ usecase "Pemetaan awal\ndan rekomendasi" as D
+ usecase "Lesson dan\nbantuan belajar" as L
+ usecase "Mastery" as M
+ usecase "Melihat progres\ndan bukti skill" as R
+}
+Siswa -- P
+Siswa -- D
+Siswa -- L
+Siswa -- M
+Siswa -- R
+P -- Wali
+L -- Wali
+R -- Wali
+@enduml

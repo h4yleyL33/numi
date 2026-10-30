@@ -1,0 +1,34 @@
+@startuml act-006-alur-belajar-target
+!include _target-style.iuml
+title ACT-006 Alur belajar target untuk usia 6-12 tahun
+
+start
+if (Profil sudah ada?) then (belum)
+ :Siswa/wali mengisi nama panggilan;
+ :Pilih usia 6-12 tahun;
+ :Validasi rentang usia dan simpan profil;
+endif
+:Pilih dukungan tampilan awal;
+if (Ada checkpoint?) then (ya)
+ :Tawarkan Lanjutkan atau Mulai sesi baru;
+else (tidak)
+ :Pilih materi aktif dari katalog;
+ :Pemetaan awal pada skill yang relevan;
+ :Simpan respons pertama per butir;
+ :Tandai skill yang belum diuji;
+endif
+:Peta menampilkan bukti skill dan akses secara terpisah;
+:Tawarkan latihan sesuai kebutuhan dan prasyarat;
+:Lesson dengan bantuan dan feedback langsung;
+:Simpan checkpoint setelah setiap respons;
+if (Siap pemeriksaan mandiri?) then (ya)
+ :Mastery dengan butir baru tanpa feedback jawaban;
+ :Simpan respons dan posisi setiap butir;
+ :Nilai setelah blok selesai;
+ :Tampilkan bukti awal dan pembahasan;
+ :Jadwalkan pemeriksaan ulang sesuai kebijakan pilot;
+endif
+:Tampilkan progres bertanggal untuk siswa dan wali;
+stop
+
+@enduml

@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-29",
+  "documentUrl": "https://docs.google.com/document/d/1UzoljGfYWE1TbWRikJ7JCbGoUR9Kj-E2YZyS20PCd3Q",
+  "presentationUrl": "https://docs.google.com/presentation/d/1ezOODKHn9w5Uasykd3WNpgLs-vE_LWj8TKW-m7cYo4U",
+  "slides": 23,
+  "slideOrder": [
+    "p1",
+    "slide_s2",
+    "numi_ucdc_user",
+    "numi_ucdc_solution",
+    "p2",
+    "slide_s4",
+    "numi_req_target",
+    "p3",
+    "p4",
+    "p5",
+    "p6",
+    "numi_ux_decisions",
+    "numi_uml_usecase",
+    "numi_uml_sequence",
+    "p8",
+    "slide_s10",
+    "p7",
+    "p9",
+    "p10",
+    "slide_s14",
+    "numi_test_function",
+    "numi_test_quality",
+    "p12"
+  ],
+  "ageScope": "6–12",
+  "schoolGradeProfile": false,
+  "sectionsAdded": [
+    "1.9 Kajian Kurikulum dan Asesmen Berbasis Usia",
+    "4.7 Cakupan Pengujian Target dan Bukti Penerimaan"
+  ],
+  "coverage": {
+    "UCDC": [
+      3,
+      4
+    ],
+    "requirements": [
+      6,
+      7
+    ],
+    "UML": [
+      13,
+      14,
+      15
+    ],
+    "UIUX": [
+      11,
+      12
+    ],
+    "testing": [
+      20,
+      21,
+      22
+    ]
+  },
+  "documentPages": 45,
+  "slidesVisuallyReviewed": 23,
+  "issueCheckerErrors": 0,
+  "codeChanged": false,
+  "newTestsRun": false,
+  "baselineTests": {
+    "date": "2026-10-28",
+    "passed": 48
+  },
+  "pilotConducted": false,
+  "nativeReadback": {
+    "section19": true,
+    "section47": true,
+    "oldClassInput": false
+  },
+  "pdfCloud": "https://drive.google.com/file/d/1ng6B6l5D55gO0tmSlpKt5jrMPM_8D3g5/view?usp=drivesdk"
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "presentation": {
+    "id": "1ezOODKHn9w5Uasykd3WNpgLs-vE_LWj8TKW-m7cYo4U",
+    "title": "numi",
+    "revisionId": "BedBOS9iqhdCBw",
+    "slideCount": 23
+  },
+  "snapshotSha256": "0b3b41238d6f0a13efd083c546590de1ea0984d077851a79c75232f3a9274812",
+  "summary": {
+    "totalIssues": 0,
+    "reportedIssues": 0,
+    "truncated": false,
+    "bySeverity": {},
+    "byCode": {}
+  },
+  "issues": []
+}

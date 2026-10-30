@@ -1,0 +1,25 @@
+@startuml ucs-009-learning-path
+!include _gaya.iuml
+title UC-009 Melihat Rekomendasi Learning Path
+
+|Siswa|
+start
+note right
+  **Prasyarat:** bagian dari UC-002
+end note
+:Membuka peta pulau;
+|Sistem|
+if (Ada topik berstatus perlu latihan?) then (ya)
+  :Memilih topik yang sedang dilatih;
+else (tidak)
+  :Memilih topik terbuka dengan urutan paling awal;
+endif
+:Numi melayang di atas pulau terpilih;
+|Siswa|
+:Melihat pulau yang disarankan;
+note right
+  **Pascakondisi:** siswa tahu pulau yang
+  sebaiknya dikerjakan berikutnya
+end note
+stop
+@enduml

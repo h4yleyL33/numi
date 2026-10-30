@@ -1,0 +1,33 @@
+@startuml seq-008-mastery-target
+!include _target-style.iuml
+title SEQ-008 Mastery dengan pembahasan setelah blok
+
+autonumber
+actor Siswa
+participant "Layar mastery" as UI
+participant "Kebijakan asesmen" as Policy
+database "Repository lokal" as Repo
+UI -> Policy : siapkan 5 butir baru untuk skill sasaran
+Policy --> UI : versi butir, urutan tetap, versi kebijakan
+loop 5 respons pertama
+ UI -> Siswa : tampilkan butir
+ Siswa -> UI : pilih dan kirim jawaban
+ UI -> Repo : simpan respons + checkpoint secara atomik
+ Repo --> UI : berhasil atau gagal simpan
+ UI -> Siswa : konfirmasi kiriman tanpa kunci jawaban
+end
+UI -> Policy : nilai blok respons pertama
+alt memenuhi gerbang pilot 5/5
+ Policy --> UI : bukti awal tercapai, waktu, kebijakan
+else belum memenuhi
+ Policy --> UI : rekomendasi skill untuk latihan
+end
+UI -> Repo : simpan hasil terikat skill dan versi
+UI -> Siswa : hasil + pembahasan setelah blok
+note over Policy
+ Gerbang pilot belum tervalidasi.
+ Uji ulang 3-7 hari memakai butir sepadan baru.
+ Kelulusan satu skill tidak menguasakan seluruh fase.
+end note
+
+@enduml

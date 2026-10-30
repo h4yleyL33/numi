@@ -1,0 +1,29 @@
+@startuml ucs-006-progress
+!include _gaya.iuml
+title UC-006 Melihat Progress Belajar
+
+|Siswa / Orang Tua|
+start
+note right
+  **Prasyarat:** siswa sudah terdaftar
+end note
+:Membuka layar Progres;
+|Sistem|
+:Menampilkan level, XP, streak tujuh hari,
+statistik, dan lencana;
+|Siswa / Orang Tua|
+if (Membuka bagian Untuk orang tua?) then (ya)
+  |Sistem|
+  :Menampilkan status tiap topik dan
+  persentase jawaban benar;
+  note right: **Alur alternatif**
+else (tidak)
+endif
+|Siswa / Orang Tua|
+:Melihat capaian belajar;
+note right
+  **Pascakondisi:** pengguna mengetahui
+  capaian belajar
+end note
+stop
+@enduml

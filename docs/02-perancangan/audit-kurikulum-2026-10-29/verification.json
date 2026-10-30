@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-29",
+  "nativeDocuments": [
+    {
+      "document": "doktek",
+      "title": "Numi — Dokumentasi Teknis v2.2 — Usia 6–12 dan UML Target",
+      "url": "https://docs.google.com/document/d/1UzoljGfYWE1TbWRikJ7JCbGoUR9Kj-E2YZyS20PCd3Q",
+      "noPlaceholders": true,
+      "newRequirements": true,
+      "hasAudit": true
+    },
+    {
+      "document": "proposal",
+      "title": "Numi — Proposal PPL v2.2 — Usia 6–12 dan Kurikulum",
+      "url": "https://docs.google.com/document/d/1gYgMYdlTagCbejr2_isrqjIyPHRJDp9brfq4G1fPVCU",
+      "noPlaceholders": true,
+      "newRequirements": true,
+      "hasAudit": true
+    },
+    {
+      "document": "kurikulum",
+      "title": "Numi — Rencana Kurikulum v2.1 — Usia 6–12 Tahun",
+      "url": "https://docs.google.com/document/d/1h-Edcm0FCujOX1yMsT5pR9TwwBP4oKhZrb004fxJJjY",
+      "noPlaceholders": true,
+      "newRequirements": true,
+      "hasAudit": true
+    }
+  ],
+  "umlCount": 10,
+  "umlRender": "passed",
+  "auditPdfPages": 9,
+  "umlPdfPages": 10,
+  "figmaFile": "WPjmenzLKeV70VvggkDjjv",
+  "figmaPage": "4016:30",
+  "figmaScreens": 6,
+  "applicationCodeChanged": false,
+  "pilotConducted": false,
+  "remoteDocumentParsing": false,
+  "ages": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "schoolGradeInput": false,
+  "umlStyle": "black text and lines on white background"
+}

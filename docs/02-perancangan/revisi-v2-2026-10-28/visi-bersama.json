@@ -1,0 +1,5 @@
+{
+  "vision": "Membantu siswa SD menguatkan numerasi dasar melalui langkah belajar yang mengikuti kebutuhan tiap keterampilan.",
+  "scope": "Numi ditujukan bagi anak usia 6–12 tahun. Profil meminta nama panggilan dan usia, tanpa pilihan kelas sekolah. MVP mencakup dua belas topik yang dipetakan ke sebagian CP Matematika Fase A–C. Materi, bantuan, dan remedial mengikuti bukti tiap keterampilan dan prasyaratnya.",
+  "status": "Kode yang tersedia memakai Flutter, Riverpod, dan penyimpanan lokal melalui shared_preferences. Pemeriksaan 28 Oktober 2026 mencatat 51 berkas Dart dan 48 pengujian otomatis lulus. Aturan kurikulum v2, checkpoint setiap jawaban, dan integrasi Firebase masih memerlukan implementasi serta pengujian. Validasi guru dan pilot bersama anak belum dilakukan."
+}

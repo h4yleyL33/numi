@@ -1,5 +1,7 @@
 # Pemetaan Kurikulum Numi
 
+> Status 29 Oktober 2026: tabel di bawah mendokumentasikan baseline dua belas topik pada kode lama. Rancangan yang berlaku untuk pengembangan berikutnya terdapat di `../audit-kurikulum-2026-10-29/keputusan-v3.md`. Pengguna dibatasi pada usia 6–12 tahun; profil tidak memerlukan pilihan kelas sekolah. Penyajian dan materi mengikuti bukti per subketerampilan. Pembatasan gambar hanya untuk kelas kecil serta simbol hanya untuk kelas besar tidak digunakan sebagai aturan target. Luas/volume pada Fase B, keliling/luas/sudut/durasi pada Fase C, geometri, serta data dan peluang belum tercakup pada MVP ini. Semua materi tersebut perlu dicatat dalam katalog dan rencana perluasan, tanpa mengklaim sudah tersedia.
+
 Dokumen ini menjelaskan dari mana 12 topik di skill map Numi berasal, kenapa urutannya
 seperti itu, dan bagaimana pembagian kelas kecil dan kelas besar disesuaikan dengan
 Kurikulum Merdeka. Isinya dipakai langsung oleh aplikasi: daftar topik di
@@ -11,7 +13,7 @@ Kurikulum Merdeka. Isinya dipakai langsung oleh aplikasi: daftar topik di
 |---|---|---|---|
 | 1 | CP Matematika SD yang berlaku adalah Keputusan Kepala BSKAP No. 046/H/KR/2025 | Keputusan 2026 hanya mengubah CP Pendidikan Agama [1][2] | Semua topik diacu ke CP 046/2025 |
 | 2 | CP dibagi per fase: A (kelas 1-2), B (kelas 3-4), C (kelas 5-6) | Struktur fase dalam CP [1][3] | Tiap topik diberi label fase |
-| 3 | Proposal membatasi ruang lingkup ke numerasi dasar | Proposal Bab 1, bagian scope | Hanya elemen Bilangan yang diambil, ditambah makna tanda "=" dari elemen Aljabar |
+DD| 3 | Proposal membatasi ruang lingkup ke numerasi dasar | Proposal Bab 1, bagian scope | Hanya elemen Bilangan yang diambil, ditambah makna tanda "=" dari elemen Aljabar |
 | 4 | Pecahan setengah dan seperempat ada di Fase A, bukan kelas 4-6 | CP Fase A elemen Bilangan [3] | Pecahan sederhana masuk kelas kecil |
 | 5 | Perkalian dan pembagian sampai 100 ada di Fase B (kelas 3-4) | CP Fase B elemen Bilangan [3] | Keduanya jadi pintu masuk kelas besar |
 | 6 | Siswa SD belum bisa diberi soal yang sama untuk semua usia | Tahap operasional konkret Piaget, usia 7-11 [4] | Kelas kecil memakai soal visual dan benda, kelas besar memakai simbol dan soal cerita |

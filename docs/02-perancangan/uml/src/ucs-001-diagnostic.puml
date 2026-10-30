@@ -1,0 +1,40 @@
+@startuml ucs-001-diagnostic
+!include _gaya.iuml
+title UC-001 Mengerjakan Diagnostic Test
+
+|Siswa|
+start
+note right
+  **Prasyarat:** profil sudah terisi (UC-008)
+end note
+:Membuka pembuka diagnostic "Membaca Peta";
+|Sistem|
+:Memilih topik awal dari umur siswa;
+repeat
+  :Menampilkan dua soal topik ini;
+  |Siswa|
+  :Menjawab soal;
+  |Sistem|
+  :Mencatat jawaban tanpa menunjukkan benar atau salah;
+  if (Siswa keluar di tengah tes?) then (ya)
+    :Tes dimulai lagi dari awal saat aplikasi dibuka;
+    note right: **Alur alternatif**
+    stop
+  else (tidak)
+  endif
+  if (Dua soal benar?) then (ya)
+    :Naik ke topik berikutnya;
+  else (tidak)
+    :Turun ke topik sebelumnya;
+  endif
+repeat while (Topik dikuasai belum ditemukan dan belum 6 topik?) is (ya)
+->tidak;
+:Menyusun skill map awal;
+:Menentukan kelompok belajar (kecil atau besar);
+:Menyimpan hasil diagnostic;
+note right
+  **Pascakondisi:** skill map awal dan
+  kelompok belajar tersimpan
+end note
+stop
+@enduml

@@ -1,0 +1,323 @@
+{
+  "width": 1600,
+  "height": 900,
+  "nodes": [
+    {
+      "id": "bootstrap",
+      "x": 640,
+      "y": 35,
+      "w": 320,
+      "h": 110,
+      "title": "bootstrap",
+      "lines": [
+        "main.dart + app.dart"
+      ]
+    },
+    {
+      "id": "features",
+      "x": 40,
+      "y": 240,
+      "w": 410,
+      "h": 210,
+      "title": "features",
+      "lines": [
+        "onboarding / diagnostic / home",
+        "skill_map / lesson / quiz / feedback",
+        "mastery / progress / mascot"
+      ]
+    },
+    {
+      "id": "state",
+      "x": 640,
+      "y": 260,
+      "w": 320,
+      "h": 140,
+      "title": "state",
+      "lines": [
+        "NumiController",
+        "Riverpod providers"
+      ]
+    },
+    {
+      "id": "domain",
+      "x": 1150,
+      "y": 240,
+      "w": 410,
+      "h": 210,
+      "title": "domain",
+      "lines": [
+        "Diagnostic / SkillMap",
+        "LearningPath / Progress",
+        "Companion services"
+      ]
+    },
+    {
+      "id": "core",
+      "x": 40,
+      "y": 640,
+      "w": 410,
+      "h": 150,
+      "title": "core",
+      "lines": [
+        "config / theme / utils / widgets"
+      ]
+    },
+    {
+      "id": "data",
+      "x": 640,
+      "y": 580,
+      "w": 920,
+      "h": 230,
+      "title": "data",
+      "lines": []
+    },
+    {
+      "id": "models",
+      "x": 670,
+      "y": 660,
+      "w": 250,
+      "h": 110,
+      "title": "models",
+      "lines": [
+        "entitas + serialisasi"
+      ],
+      "nested": true
+    },
+    {
+      "id": "content",
+      "x": 960,
+      "y": 660,
+      "w": 250,
+      "h": 110,
+      "title": "content",
+      "lines": [
+        "generator + konten"
+      ],
+      "nested": true
+    },
+    {
+      "id": "repositories",
+      "x": 1250,
+      "y": 660,
+      "w": 280,
+      "h": 110,
+      "title": "repositories",
+      "lines": [
+        "kontrak + adapter lokal"
+      ],
+      "nested": true
+    }
+  ],
+  "edges": [
+    {
+      "id": "D01",
+      "pts": [
+        [
+          800,
+          145
+        ],
+        [
+          800,
+          190
+        ],
+        [
+          245,
+          190
+        ],
+        [
+          245,
+          240
+        ]
+      ],
+      "label": [
+        330,
+        168
+      ]
+    },
+    {
+      "id": "D02",
+      "pts": [
+        [
+          800,
+          145
+        ],
+        [
+          800,
+          260
+        ]
+      ],
+      "label": [
+        817,
+        215
+      ]
+    },
+    {
+      "id": "D03",
+      "pts": [
+        [
+          450,
+          330
+        ],
+        [
+          640,
+          330
+        ]
+      ],
+      "label": [
+        510,
+        307
+      ]
+    },
+    {
+      "id": "D04",
+      "pts": [
+        [
+          960,
+          330
+        ],
+        [
+          1150,
+          330
+        ]
+      ],
+      "label": [
+        1020,
+        307
+      ]
+    },
+    {
+      "id": "D05",
+      "pts": [
+        [
+          800,
+          400
+        ],
+        [
+          800,
+          500
+        ],
+        [
+          1390,
+          500
+        ],
+        [
+          1390,
+          660
+        ]
+      ],
+      "label": [
+        1405,
+        560
+      ]
+    },
+    {
+      "id": "D06",
+      "pts": [
+        [
+          1200,
+          450
+        ],
+        [
+          1200,
+          540
+        ],
+        [
+          795,
+          540
+        ],
+        [
+          795,
+          660
+        ]
+      ],
+      "label": [
+        820,
+        548
+      ]
+    },
+    {
+      "id": "D07",
+      "pts": [
+        [
+          1350,
+          450
+        ],
+        [
+          1350,
+          570
+        ],
+        [
+          1085,
+          570
+        ],
+        [
+          1085,
+          660
+        ]
+      ],
+      "label": [
+        1095,
+        606
+      ]
+    },
+    {
+      "id": "D08",
+      "pts": [
+        [
+          245,
+          450
+        ],
+        [
+          245,
+          640
+        ]
+      ],
+      "label": [
+        263,
+        554
+      ]
+    },
+    {
+      "id": "D09",
+      "pts": [
+        [
+          960,
+          715
+        ],
+        [
+          920,
+          715
+        ]
+      ],
+      "label": [
+        923,
+        635
+      ]
+    },
+    {
+      "id": "D10",
+      "pts": [
+        [
+          1390,
+          770
+        ],
+        [
+          1390,
+          840
+        ],
+        [
+          795,
+          840
+        ],
+        [
+          795,
+          770
+        ]
+      ],
+      "label": [
+        1060,
+        845
+      ]
+    }
+  ]
+}

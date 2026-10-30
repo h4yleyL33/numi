@@ -1,0 +1,22 @@
+@startuml
+skinparam monochrome true
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 22
+skinparam shadowing false
+skinparam roundCorner 0
+actor Siswa
+participant "Layar mastery" as UI
+database "Penyimpanan lokal" as Repo
+participant "Kebijakan asesmen" as Policy
+loop 5 butir baru, respons pertama
+ Siswa -> UI : pilih dan kirim jawaban
+ UI -> Repo : simpan respons + posisi sesi
+ Repo --> UI : konfirmasi tersimpan
+ UI --> Siswa : lanjut tanpa kunci jawaban
+end
+UI -> Policy : nilai blok respons
+Policy --> UI : bukti awal + rekomendasi
+UI -> Repo : simpan hasil, tanggal, versi
+UI --> Siswa : hasil dan pembahasan akhir blok
+@enduml

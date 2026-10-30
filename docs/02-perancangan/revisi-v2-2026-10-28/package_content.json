@@ -1,0 +1,165 @@
+{
+  "title": "Package Diagram Aplikasi Numi",
+  "date": "28 Oktober 2026",
+  "filename": "247001_240003_240007_240009_240045_Package Diagram.pdf",
+  "team": [
+    [
+      "Alfrandiano Imanuel Rionaldo Holle",
+      "140810247001"
+    ],
+    [
+      "Yarfi Setya Nugraha",
+      "140810240003"
+    ],
+    [
+      "Khalit Putra Afana",
+      "140810240007"
+    ],
+    [
+      "Muhammad Andri Firmansyah",
+      "140810240009"
+    ],
+    [
+      "Nabil Rizky Aulia Utomo",
+      "140810240045"
+    ]
+  ],
+  "purpose": "Membantu siswa SD menguatkan numerasi dasar melalui langkah belajar yang mengikuti kebutuhan tiap keterampilan. Numi ditujukan bagi anak usia 6–12 tahun. Profil meminta nama panggilan dan usia, tanpa pilihan kelas sekolah. MVP mencakup dua belas topik yang dipetakan ke sebagian CP Matematika Fase A–C. Materi, bantuan, dan remedial mengikuti bukti tiap keterampilan dan prasyaratnya.",
+  "scope": "Package diagram PKG-002 menunjukkan pembagian kode Flutter di app/lib dan hubungan antarpaketnya. Dua berkas awal, main.dart dan app.dart, dikelompokkan sebagai bootstrap. Nama ini dipakai untuk menjelaskan perannya, sehingga tidak ada folder bootstrap tersendiri. Paket lain mengikuti tanggung jawab kode yang sudah tersedia. Integrasi server masih berada pada tahap rencana.",
+  "legend": "Setiap kotak bertab mewakili sebuah paket. Nama data.content, data.models, dan data.repositories menandai subpackage data. Panah putus-putus dari A ke B berarti A memakai kode dari B. Gambar hanya menampilkan hubungan utama; seluruh hubungan import lokal dicatat dalam matriks. Panah dibaca sebagai dependency; relasi package import dalam UML memerlukan notasi tersendiri.",
+  "packages": [
+    [
+      "bootstrap",
+      "main.dart; app.dart",
+      "Aplikasi dimulai dari dua berkas ini. main.dart memuat SharedPreferences dan data awal, lalu memasang LocalNumiRepository pada ProviderScope. Setelah itu, app.dart menjalankan MaterialApp dan menampilkan layar awal."
+    ],
+    [
+      "features",
+      "onboarding, diagnostic, home, skill_map, lesson, quiz, feedback, mastery, progress, mascot",
+      "Paket ini berisi layar dan interaksi yang dilihat anak. PemutarSoal, misalnya, menampilkan pertanyaan dan menampung jawaban sementara sebelum meneruskannya melalui callback. Layar-layar tersebut memakai controller, model, dan konten belajar."
+    ],
+    [
+      "state",
+      "numi_controller.dart",
+      "Provider Riverpod dan NumiController berada di paket ini. Controller menerima tindakan dari layar, mengatur perubahan profil maupun hasil belajar, lalu menyimpan data melalui NumiRepository. Perhitungan progres dan reward juga dikoordinasikan dari sini."
+    ],
+    [
+      "domain",
+      "diagnostic_engine; skill_map_service; learning_path_service; progress_service; companion_service",
+      "Aturan belajar ditempatkan pada layanan domain, seperti pemetaan kemampuan, rekomendasi latihan, perhitungan progres, dan pemilihan pesan maskot. Layanan ini memakai model serta konten dari data, berikut konfigurasi dan utilitas dari core."
+    ],
+    [
+      "data.models",
+      "siswa; topik; soal; lesson; catatan_belajar; data_belajar; badge; companion_message",
+      "Model menyimpan bentuk data yang dipakai bersama oleh layar dan layanan aplikasi. Paket ini juga menangani serialisasi. DataBelajar menggabungkan data belajar yang akan disimpan pada perangkat."
+    ],
+    [
+      "data.content",
+      "daftar_topik; daftar_lesson; daftar_lencana; kalimat_maskot; generator_soal",
+      "Daftar topik, lesson, lencana, kalimat maskot, dan generator soal disimpan di sini. Konten awal sudah tersedia, tetapi soal, prasyarat, serta metadata bukti kemampuan masih perlu disesuaikan dengan rencana kurikulum v2."
+    ],
+    [
+      "data.repositories",
+      "numi_repository; local_numi_repository",
+      "Paket ini menyediakan kontrak NumiRepository dengan fungsi muat(), simpan(DataBelajar), dan hapus(). Saat ini LocalNumiRepository menyimpan data dalam bentuk JSON melalui shared_preferences. Adapter untuk Firestore belum tersedia."
+    ],
+    [
+      "core",
+      "config; theme; utils; widgets",
+      "Konfigurasi AppConfig, tema, utilitas tanggal, dan widget bersama dikumpulkan di sini. Paket core masih bergantung pada model tertentu karena widget chip_status mengimpor model topik."
+    ]
+  ],
+  "scenarios": [
+    [
+      "Profil dan pembukaan aplikasi",
+      "Saat aplikasi dibuka, bootstrap memuat data melalui repository dan menyiapkan ProviderScope. Layar onboarding menerima profil anak, kemudian memanggil state.daftar(). NumiController meneruskan data ke NumiRepository, dan LocalNumiRepository menyimpannya melalui SharedPreferences."
+    ],
+    [
+      "Diagnostic dan peta",
+      "Layar diagnostic membuat SesiDiagnostic. Layanan domain memakai GeneratorSoal dan model untuk menyiapkan pertanyaan. Setelah satu blok jawaban dinilai, state.simpanDiagnostic() memanggil SkillMapService dan menyimpan hasilnya melalui repository. Layar skill_map kemudian menampilkan peta kemampuan."
+    ],
+    [
+      "Lesson dan mastery",
+      "Layar lesson atau mastery memakai quiz/PemutarSoal untuk menjalankan soal. Jawaban ditampung sebagai model Jawaban. Ketika sesi selesai, callback meneruskan hasil ke NumiController untuk diproses oleh ProgressService, SkillMapService, dan CompanionService. Data kemudian disimpan, lalu hasil sesi dan progres ditampilkan."
+    ]
+  ],
+  "gaps": [
+    [
+      "Diagnostic",
+      "Kode saat ini dapat menganggap topik di bawah titik uji sudah dikuasai. Hasilnya juga dipakai untuk menetapkan kelompok belajar secara keseluruhan.",
+      "Penilaian perlu memakai bukti per keterampilan. Materi yang belum diuji tetap diberi status belum diuji, sedangkan akses materi dicatat terpisah."
+    ],
+    [
+      "Checkpoint",
+      "PemutarSoal masih menampung jawaban pada state widget. Controller menyimpan data ketika aktivitas atau sesi selesai.",
+      "Setiap jawaban dan posisi sesi perlu disimpan agar anak dapat melanjutkan setelah aplikasi tertutup. Perilaku ini harus diuji dengan menutup paksa lalu membuka kembali aplikasi."
+    ],
+    [
+      "Mastery",
+      "Konfigurasi masih memakai ambang 95, sementara MasteryScreen menampilkan feedback bawaan setelah setiap soal.",
+      "Gunakan penulisan 5/5 = 100 dan tampilkan pembahasan setelah blok tes selesai. Simpan respons pertama serta versi kebijakannya, lalu periksa kembali kemampuan setelah jeda."
+    ],
+    [
+      "Penyimpanan cloud",
+      "Dependensi yang aktif adalah Flutter, Riverpod, dan shared_preferences. Adapter Firestore belum ditemukan; firebase/firestore.rules masih berupa rancangan.",
+      "Integrasi Firebase perlu dikerjakan bertahap, termasuk penetapan kepemilikan data dan pengujian aturan akses. Sampai proses itu selesai, layanan cloud tetap dicatat sebagai rencana."
+    ],
+    [
+      "Validasi materi",
+      "Kode sudah memuat dua belas topik dan generator soal. Kesesuaian materi untuk pembelajaran anak belum divalidasi.",
+      "Guru perlu memeriksa materi, terutama transisi kelas 3, rubrik, dan miskonsepsi. Pilot bersama anak dan pendamping dilakukan setelah perbaikan tersebut."
+    ]
+  ],
+  "traceability": [
+    [
+      "FR-001 / UC-001",
+      "features/diagnostic, domain/diagnostic_engine.dart",
+      "Bukti per skill dan checkpoint diagnostic."
+    ],
+    [
+      "FR-002,003 / UC-002,009",
+      "features/skill_map, domain/skill_map_service.dart, learning_path_service.dart",
+      "Akses materi dan rekomendasi berdasarkan prasyarat."
+    ],
+    [
+      "FR-004a,004b,005 / UC-003,004",
+      "features/lesson, quiz, feedback; data/content",
+      "Lesson dan umpan balik konseptual."
+    ],
+    [
+      "FR-007 / UC-005",
+      "features/mastery; state; core/config",
+      "Tes mandiri, respons pertama, dan kebijakan kelulusan."
+    ],
+    [
+      "FR-006,008,009 / UC-006,007,010",
+      "domain/progress_service, companion_service; features/progress, mascot",
+      "Progres, XP, lencana, dan pesan pendamping."
+    ],
+    [
+      "DATA-001 / UC-008; NFR-003",
+      "bootstrap, state, data/models, data/repositories",
+      "Profil, pemuatan data, dan persistensi; checkpoint v2 masih pekerjaan lanjutan."
+    ]
+  ],
+  "references": [
+    [
+      "Proposal PPL revisi v2",
+      "https://docs.google.com/document/d/1gYgMYdlTagCbejr2_isrqjIyPHRJDp9brfq4G1fPVCU/edit"
+    ],
+    [
+      "Dokumentasi teknis revisi v2",
+      "https://docs.google.com/document/d/1UzoljGfYWE1TbWRikJ7JCbGoUR9Kj-E2YZyS20PCd3Q/edit"
+    ],
+    [
+      "Rencana kurikulum dan spesifikasi asesmen",
+      "https://docs.google.com/document/d/1h-Edcm0FCujOX1yMsT5pR9TwwBP4oKhZrb004fxJJjY/edit"
+    ],
+    [
+      "OMG UML 2.5.1 (acuan notasi)",
+      "https://www.omg.org/spec/UML/2.5.1/About-UML"
+    ]
+  ],
+  "submission": "Tugas ini meminta package diagram yang sesuai dengan proposal, disertai penjelasannya. Nama PDF memakai enam digit terakhir NPM setiap anggota. Project manager mengumpulkannya melalui Google Classroom paling lambat H-1 praktikum berikutnya pukul 23.59. Lampiran tugas belum menyebut tanggal kalender. Berkas ini masih perlu ditinjau tim sebelum dikumpulkan.",
+  "test_status": "Pada 28 Oktober 2026, perintah flutter test --no-pub --reporter expanded menghasilkan 48 pengujian otomatis lulus. Sebelumnya, cache dependensi dipulihkan melalui flutter pub get. Pengujian mencakup domain, state, generator soal, dan satu alur widget pada kode yang tersedia. Aturan v2, pemulihan sesi per respons, integrasi Firebase, pengujian menyeluruh pada perangkat, serta efektivitas belajar masih perlu diperiksa. Log tersimpan pada flutter-test.log. Penyuntingan dokumen ini tidak mengubah kode aplikasi."
+}

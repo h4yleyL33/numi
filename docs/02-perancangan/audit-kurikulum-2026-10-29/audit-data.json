@@ -1,0 +1,202 @@
+{
+  "title": "Audit Kurikulum UI UX dan UML Numi",
+  "date": "29 Oktober 2026",
+  "verdict": "Alur dasar Numi tetap ditujukan bagi anak usia 6–12 tahun. Profil cukup meminta nama panggilan dan usia; pilihan kelas sekolah tidak diperlukan. Perbaikan bukti per keterampilan, penyimpanan respons, asesmen, dan batas cakupan materi tetap menjadi target pengembangan.",
+  "findings": [
+    [
+      "Sesuai",
+      "Profil usia",
+      "05a/05b meminta umur 6–12 tahun, sesuai batas pengguna yang ditetapkan.",
+      "Pertahankan pilihan usia 6–12; hapus tambahan pilihan kelas sekolah."
+    ],
+    [
+      "P0",
+      "Hasil diagnostic",
+      "08 memberi label Kelas Kecil secara global dan tidak menampilkan Belum diuji.",
+      "Tampilkan bukti per skill; dua butir hanya indikasi awal."
+    ],
+    [
+      "P0",
+      "Mastery",
+      "Hi-Fi membuka kunci dan penjelasan setelah tiap butir mastery.",
+      "Simpan respons pertama; pembahasan setelah blok tes."
+    ],
+    [
+      "P0",
+      "Pemulihan sesi",
+      "Kode menyimpan hasil aktivitas, bukan checkpoint tiap respons.",
+      "Tulis respons dan posisi atomik; tangani gagal simpan dan resume."
+    ],
+    [
+      "P1",
+      "Cakupan materi",
+      "Peta 12 pulau belum mewakili seluruh Matematika SD.",
+      "Pisahkan materi aktif dari pengukuran, geometri, dan data/peluang yang direncanakan."
+    ],
+    [
+      "P1",
+      "Laporan wali",
+      "Terkunci tampil bersama status kemampuan; XP dan akurasi latihan dominan.",
+      "Pisahkan akses, bukti bertanggal, jumlah butir, bantuan, dan pemeriksaan ulang."
+    ],
+    [
+      "P1",
+      "Bantuan dan aksesibilitas",
+      "Latar bertekstur, teks kecil, dan pengelompokan kaku dapat membatasi bantuan.",
+      "Pertahankan panel teks, sediakan bantuan sesuai kebutuhan, serta uji suara/ketuk/fokus pada perangkat."
+    ]
+  ],
+  "fr": [
+    [
+      "FR-001",
+      "Penyaringan awal",
+      "Pilih jangkar pada skill dalam cakupan aktif; blok awal maksimum 12 butir, tanpa menyimpulkan seluruh fase.",
+      "UC-001 · SEQ-007",
+      "Tidak ada skill belum diuji yang otomatis lulus."
+    ],
+    [
+      "FR-002",
+      "Peta keterampilan",
+      "Tampilkan bukti skill dan akses materi secara terpisah.",
+      "UC-002 · STM-005",
+      "Belum diuji dapat tampil bersama akses terbuka."
+    ],
+    [
+      "FR-003",
+      "Rekomendasi",
+      "Gunakan prasyarat dan bukti skill; usia membantu titik awal tanpa menjadi pengunci materi.",
+      "UC-009 · ACT-006",
+      "Mengubah usia dalam rentang 6–12 tidak menghapus bukti atau menutup remedial."
+    ],
+    [
+      "FR-004a/b",
+      "Lesson sesuai kebutuhan",
+      "Bahasa dan kepadatan menyesuaikan kebutuhan anak usia 6–12 tahun; gambar, simbol, dan cerita tersedia sesuai kesiapan.",
+      "UC-003/012 · ACT-006",
+      "Anak usia 12 tahun tetap dapat memakai gambar dan fondasi."
+    ],
+    [
+      "FR-005",
+      "Feedback sesuai konteks",
+      "Feedback jawaban langsung hanya untuk lesson; diagnostic/mastery menundanya sampai blok selesai.",
+      "UC-004/005 · SEQ-008",
+      "Tidak ada kunci jawaban sebelum butir kelima dikirim."
+    ],
+    [
+      "FR-006",
+      "Reward aktivitas",
+      "XP, streak, dan lencana dipisahkan dari bukti kemampuan; pertimbangkan ulang reward kecepatan.",
+      "UC-010 · ACT-006",
+      "XP tinggi tidak mengubah status bukti skill."
+    ],
+    [
+      "FR-007",
+      "Pemeriksaan mandiri",
+      "Lima butir baru untuk skill sasaran, respons pertama, gerbang pilot 5/5, pembahasan akhir blok, dan uji ulang.",
+      "UC-005 · SEQ-008",
+      "4/5 belum melewati gerbang; 5/5 dicatat sebagai bukti awal bertanggal."
+    ],
+    [
+      "FR-008",
+      "Progres aktivitas",
+      "Tampilkan aktivitas, lesson selesai, dan reward dengan denominator hanya materi aktif.",
+      "UC-006 · ACT-006",
+      "Materi belum tersedia tidak dihitung sebagai kemampuan rendah."
+    ],
+    [
+      "FR-009",
+      "Pendamping dalam aplikasi",
+      "Maskot memberi pesan kontekstual di dalam aplikasi; notifikasi sistem tetap backlog bila belum diintegrasikan.",
+      "UC-007 · CMP-002",
+      "Tidak ada aktor scheduler eksternal tanpa integrasi nyata."
+    ],
+    [
+      "FR-010",
+      "Batas usia pengguna",
+      "Profil menyimpan usia bilangan bulat 6–12 tahun. Tidak ada isian kelas sekolah atau opsi di luar rentang.",
+      "UC-008 · CLS-004",
+      "Pilihan 6–12 dapat disimpan; nilai di luar rentang ditolak tanpa menghapus jejak belajar."
+    ],
+    [
+      "FR-011",
+      "Katalog cakupan",
+      "Tampilkan elemen, fase CP, prasyarat, serta status aktif atau direncanakan; tanpa filter wajib kelas sekolah.",
+      "UC-013 · CLS-004",
+      "Luas/volume yang belum dirilis diberi label Belum tersedia."
+    ],
+    [
+      "FR-012",
+      "Bukti per skill",
+      "Simpan status bukti, respons pertama, jumlah butir, bantuan, tanggal, sumber, dan versi kebijakan.",
+      "UC-001/005/006 · STM-005",
+      "Setiap kesimpulan dapat ditelusuri ke respons dan versi."
+    ],
+    [
+      "FR-013",
+      "Checkpoint dan resume",
+      "Simpan respons serta posisi secara atomik dan idempoten; muat urutan butir yang sama saat kembali.",
+      "UC-011 · SEQ-009/STM-006",
+      "Tutup paksa setelah respons lalu buka; jawaban tidak hilang atau terhitung dua kali."
+    ],
+    [
+      "FR-014",
+      "Bantuan fleksibel",
+      "Sediakan gambar, suara bila tersedia, pengulangan instruksi, dan alternatif ketuk; catat bantuan asesmen.",
+      "UC-012 · ACT-006",
+      "Kegagalan gesture dipisahkan dari kesalahan matematika."
+    ],
+    [
+      "FR-015",
+      "Laporan bukti untuk wali",
+      "Tampilkan bukti tiap skill, batas cakupan, waktu, jumlah butir, bantuan, dan rencana pemeriksaan ulang.",
+      "UC-006 · CLS-004",
+      "Wali dapat membedakan aktivitas, akses materi, dan bukti awal."
+    ],
+    [
+      "FR-016",
+      "Rilis konten tervalidasi",
+      "Hanya rilis butir dengan metadata CP, rubrik, versi, dan persetujuan validator yang tercatat di proses luar aplikasi.",
+      "UC-013 · CMP-002",
+      "Butir tanpa persetujuan guru tidak digunakan untuk keputusan pilot."
+    ]
+  ],
+  "sources": [
+    [
+      "CP BSKAP 046/H/KR/2025, PDF 111–116",
+      "https://bpmpbabel.kemendikdasmen.go.id/PPID/wp-content/uploads/2025/07/KepKaBSKAP-046_2025-ttg-CP.pdf"
+    ],
+    [
+      "Penegasan perubahan CP 2026 hanya Pendidikan Agama dan Budi Pekerti",
+      "https://www.kemendikdasmen.go.id/siaran-pers/15636-capaian-pembelajaran-baru-telah-terbit-yang-berubah-hanya-mata-pelajaran-agama-dan-budi-pekerti"
+    ],
+    [
+      "Panduan Matematika 2025, pembanding perencanaan",
+      "https://repositori.kemendikdasmen.go.id/33608/"
+    ],
+    [
+      "Figma sumber Med-Fi dan Hi-Fi",
+      "https://www.figma.com/design/y0iET9hEQwy0xMFtV95Pek/numi-lebih-lengkap?node-id=114-30"
+    ],
+    [
+      "Figma salinan revisi target v3 untuk usia 6–12 tahun",
+      "https://www.figma.com/design/WPjmenzLKeV70VvggkDjjv?node-id=4016-30"
+    ]
+  ],
+  "phaseCoverage": [
+    [
+      "A",
+      "Fondasi bilangan, tambah-kurang, pecahan awal, pola, bentuk, pengukuran dan data sederhana.",
+      "T01–T05 dan bagian aljabar dasar; cakupan elemen lain belum lengkap."
+    ],
+    [
+      "B",
+      "Pengembangan bilangan, kali-bagi, pecahan, pengukuran luas/volume, geometri, dan data.",
+      "T06–T09 dan bagian T12 sesuai prasyarat; pengukuran dan elemen lain direncanakan."
+    ],
+    [
+      "C",
+      "Operasi, uang, pecahan/desimal, proporsi, keliling/luas, sudut/durasi, ruang, serta data/peluang.",
+      "T10–T12 dan remedial fondasi; belum mencakup seluruh CP."
+    ]
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "replacements": {
+    "1194": "Daftar bagian revisi — gunakan panel Outline Google Docs untuk navigasi.",
+    "8403": "Diagnostic menyaring kemampuan awal per subketerampilan. Usia 6–12 tahun menjadi masukan profil dan penyajian awal; respons anak mengarahkan pemeriksaan lanjutan.",
+    "8682": "Interactive lesson menyediakan gambar, simbol, cerita, dan bantuan sesuai kesiapan tiap keterampilan bagi seluruh pengguna usia 6–12 tahun.",
+    "8806": "Feedback jawaban langsung pada lesson; pembahasan diagnostic dan mastery diberikan setelah blok asesmen selesai.",
+    "9071": "Variasi dukungan belajar berdasarkan kebutuhan:",
+    "10351": "Target pengguna: anak usia 6–12 tahun. Profil menyimpan usia bilangan bulat 6 sampai 12; aplikasi tidak meminta kelas sekolah atau menetapkan kemampuan dari kelas.",
+    "13231": "Target pilot: sedikitnya 80% peserta dapat menyelesaikan satu lesson tanpa bantuan navigasi orang dewasa; tombol pembacaan soal diperbolehkan bila tersedia. Catat usia, perangkat, bantuan, jumlah peserta, dan hasil tiap peserta. Periksa perbedaan menurut usia secara deskriptif; target ini belum merupakan hasil uji.",
+    "14634": "ID siswa, nama panggilan, usia 6–12 tahun, preferensi bantuan",
+    "16071": "Sebagai anak usia 6–12 tahun, saya ingin memakai gambar atau menghitung benda ketika membutuhkan bantuan agar konsep angka lebih mudah dipahami.",
+    "16261": "Sebagai anak usia 6–12 tahun, saya ingin mencoba soal cerita dan menjelaskan strategi ketika siap agar dapat memakai matematika dalam situasi sehari-hari.",
+    "16433": "Sebagai siswa, saya ingin menerima penjelasan langsung saat lesson dan melihat pembahasan setelah blok asesmen selesai agar dapat belajar dari kesalahan tanpa bocoran jawaban tes.",
+    "17175": "Siswa mengerjakan soal awal dalam cakupan aktif; usia menjadi masukan penyajian dan respons menghasilkan bukti tiap keterampilan.",
+    "17371": "Siswa mengikuti lesson sesuai rekomendasi keterampilan, prasyarat, dan kebutuhan bantuan.",
+    "17483": "Sistem memberi feedback langsung saat lesson; kunci serta pembahasan diagnostic/mastery ditunda sampai blok selesai.",
+    "17925": "Precondition: profil siswa berisi nama panggilan dan usia 6–12 tahun yang valid. Kelas sekolah tidak menjadi isian atau syarat asesmen.",
+    "23047": "Menyediakan materi lesson dan bantuan berdasarkan kebutuhan serta bukti tiap keterampilan pada pengguna usia 6–12 tahun.",
+    "23965": "Lesson menyajikan contoh, latihan, dan feedback melalui gambar, simbol, atau cerita. Pengenalan kali-bagi mengikuti kesiapan keterampilan; bantuan tetap tersedia pada seluruh rentang usia 6–12 tahun.",
+    "25635": "Adapter Firestore, checkpoint setiap respons, bukti per skill, feedback mastery setelah blok, dan transisi kali-bagi berdasarkan prasyarat adalah pekerjaan lanjutan. Catatan 48 pengujian otomatis yang lulus pada 28 Oktober 2026 belum membuktikan seluruh aturan target atau efektivitas pedagogis.",
+    "26823": "id_siswa, nama_panggilan, usia (bilangan bulat 6–12), preferensi_bantuan; bukti kemampuan dipisahkan dalam SkillEvidence. wali_uid hanya diperlukan bila integrasi akun wali ditetapkan.",
+    "30137": "Scope: validasi usia, pemilihan butir, prasyarat, penilaian, checkpoint, feedback, akses data, dan keterpakaian anak. Strategi meliputi uji unit/widget, integrasi, black-box, validasi konten guru, uji UX, serta pilot. Sasaran perangkat Android 8+/API 26 masih perlu diverifikasi. Baseline 48 tes pada 28 Oktober 2026 dicatat di 4.3; uji penerimaan aturan target tetap belum dijalankan. Rincian di 4.6 dan 4.7.",
+    "31444": "Rencana: melibatkan anak dengan variasi usia dalam rentang 6–12 tahun, kemampuan awal, dan pengalaman perangkat, dengan pendamping serta izin wali sesuai prosedur tim. Tidak merekrut atau membandingkan peserta berdasarkan kelas sekolah. Guru memeriksa konten terlebih dahulu. Catat usia, jumlah peserta, pemahaman instruksi, bantuan, interaksi, respons pertama, dan pemeriksaan ulang. Belum ada hasil evaluasi pengguna pada revisi ini.",
+    "33126": "Pemilihan materi mengikuti bukti per subketerampilan. Anak usia 11 tahun yang membutuhkan latihan nilai tempat tetap dapat menunjukkan kesiapan pada pecahan. Sistem tidak menetapkan kemampuan global dari usia atau satu topik yang lemah. Usia membantu penyajian awal dan tidak mengunci remedial atau materi secara permanen.",
+    "38034": "UC-008 Pendaftaran/profil: wali menyiapkan nama panggilan, usia 6–12 tahun, dan preferensi bantuan. Validasi umur mengikuti FR-010; autentikasi merupakan rancangan lanjutan NFR-005.",
+    "38726": "TC-L01 / FR-003,004a: anak usia 8 tahun siap membuat kelompok sama banyak → pengenalan perkalian dapat direkomendasikan tanpa menunggu tambah-kurang 1.000.",
+    "38864": "TC-L02 / FR-004b: anak usia 11 tahun kesulitan pecahan → model batang/garis bilangan tersedia tanpa mengubah bukti keterampilan lain atau memberi label kemampuan global."
+  },
+  "curriculum": [
+    [
+      "1.9 Kajian Kurikulum dan Asesmen Berbasis Usia",
+      "HEADING_2"
+    ],
+    [
+      "1.9.1 Batas pengguna dan dasar penilaian",
+      "HEADING_3"
+    ],
+    [
+      "Numi ditujukan bagi anak usia 6–12 tahun. Onboarding meminta nama panggilan dan usia; tidak ada pilihan kelas sekolah. Batas usia ini berlaku pada profil, persyaratan, model data, UI/UX, UML, dan perekrutan peserta pilot. Nilai di bawah 6 atau di atas 12 ditolak dengan pesan yang dapat dipahami tanpa menghapus data belajar yang sudah tersimpan.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "Usia dipakai sebagai konteks awal untuk bahasa, panjang instruksi, dan titik awal pemetaan yang perlu divalidasi. Usia tidak langsung menghasilkan label mampu atau belum mampu. Penilaian mengikuti respons pertama, penggunaan bantuan, variasi butir, prasyarat, dan bukti ulang pada keterampilan yang sedang diukur. Tidak ditetapkan persamaan tetap antara umur, kelas, dan tingkat kemampuan.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "1.9.2 Acuan kurikulum dan kajian pendekatan",
+      "HEADING_3"
+    ],
+    [
+      "Acuan kompetensi adalah CP Matematika BSKAP 046/H/KR/2025 [R1], dengan penegasan perubahan CP 2026 pada [R2]. Fase A, B, dan C dipakai untuk menelusuri tujuan serta keluasan materi. Pembagian fase dalam sumber kurikulum tidak diubah menjadi kolom kelas sekolah atau pengunci materi pada aplikasi. Rincian tujuan, prasyarat, dan metadata butir mengikuti Rencana Kurikulum v2.1 yang dirujuk pada bagian Referensi.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "IES/WWC [R3] menjadi acuan pengajaran sistematis, representasi, garis bilangan, dan soal cerita. EEF [R4] serta penelitian garis bilangan [R5] mendukung pemilihan bantuan menurut pemahaman yang terlihat. Penerapan pendekatan tersebut pada Numi tetap perlu diperiksa; hasil penelitian sumber tidak dapat dianggap sebagai hasil uji produk.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "Pembanding nonpemerintah meliputi langkah kecil White Rose [R6], hubungan konkret–gambar–simbol Maths — No Problem! [R7], gambaran kompetensi Cambridge Primary [R8], pemecahan keterampilan Khan Academy [R9], dan tugas penalaran NRICH [R10]. Tim mengambil prinsip penyusunan aktivitas dan variasi soal; kesesuaian konteks serta setiap butir diperiksa bersama guru.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "1.9.3 Cakupan MVP dan materi pengembangan",
+      "HEADING_3"
+    ],
+    [
+      "MVP memuat dua belas topik numerasi: bilangan sampai 20; bilangan sampai 100 dan nilai tempat; penjumlahan sampai 20; pengurangan sampai 20; setengah dan seperempat; tambah-kurang sampai 1.000; perkalian sampai 100; pembagian sampai 100; pecahan senilai dan perbandingan; operasi campuran; uang; serta KPK/FPB. Pemetaan ini mencakup sebagian kompetensi Fase A–C dan tidak mewakili seluruh Matematika SD.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "Pengukuran, geometri, data/peluang, perluasan bilangan, serta materi lain di luar dua belas topik dicatat sebagai rencana pengembangan. Luas dan volume telah muncul dalam acuan Fase B melalui pengukuran dan estimasi. Pada Fase C terdapat keliling/luas, durasi, sudut, dan kajian ruang. Setiap materi perlu diuraikan menjadi tujuan serta butir tervalidasi sebelum diaktifkan; aplikasi tidak boleh menampilkan materi rencana sebagai kemampuan rendah anak.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "1.9.4 Jenis soal dan rancangan asesmen",
+      "HEADING_3"
+    ],
+    [
+      "Bentuk soal dipilih menurut tujuan keterampilan: ketuk lambang atau banyak benda untuk pengenalan bilangan; kelompok sama banyak untuk kali-bagi; isian singkat untuk operasi; model batang atau garis bilangan untuk pecahan; serta soal cerita, alasan, dan analisis kesalahan untuk penerapan. Gambar dan bantuan tidak dibatasi untuk usia termuda. Seret tersedia hanya bila interaksinya telah diuji, dengan ketuk sebagai alternatif.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "Lesson memberi contoh, latihan terpandu, latihan mandiri, dan feedback langsung. Diagnostic memeriksa keterampilan jangkar dalam cakupan aktif, paling banyak 12 butir pada blok awal; hasilnya merupakan indikasi yang dapat dilanjutkan. Mastery menggunakan lima butir baru dengan pembahasan setelah blok selesai. Gerbang pilot 5/5 dan pemeriksaan ulang 3–7 hari adalah kebijakan rancangan yang masih memerlukan validasi.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "1.9.5 Implikasi terhadap requirement, UML, dan UI/UX",
+      "HEADING_3"
+    ],
+    [
+      "FR-010 memvalidasi usia 6–12; FR-001/003/012 menghubungkan respons dengan bukti dan rekomendasi per skill; FR-004a/b dan FR-014 menyediakan bantuan fleksibel; FR-011/016 mengendalikan cakupan serta rilis konten; FR-013 menangani penyimpanan sesi; FR-015 menjelaskan hasil kepada wali. Detail FR-010–016 berada pada lampiran audit target v3.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "UCD-002 menetapkan siswa dan wali sebagai aktor aplikasi. Guru memvalidasi materi di luar aplikasi. CLS-004 dan ERD-002 menyimpan usia serta bukti skill tanpa kelas sekolah. ACT-006, SEQ-007/008/009, dan STM-005/006 memisahkan latihan, asesmen, akses materi, bukti kemampuan, dan pemulihan sesi. UI menampilkan label belum diuji, materi belum tersedia, serta bantuan sesuai kebutuhan secara terpisah.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "1.9.6 Validasi dan batas kesimpulan",
+      "HEADING_3"
+    ],
+    [
+      "Sebelum pilot, guru memeriksa ketepatan CP, tujuan, prasyarat, bahasa, kunci/rubrik, representasi, dan pengecoh pada setiap templat. Uji UX melibatkan variasi usia 6–12 tahun serta mencatat bantuan yang dibutuhkan. Hasil pilot dilaporkan bersama ukuran sampel dan keterbatasannya. Keberhasilan navigasi, skor satu blok, XP, atau jumlah tes kode yang lulus tidak langsung membuktikan peningkatan kemampuan matematika.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "",
+      "NORMAL_TEXT"
+    ]
+  ],
+  "tests": [
+    [
+      "4.7 Cakupan Pengujian Target dan Bukti Penerimaan",
+      "HEADING_2"
+    ],
+    [
+      "Seluruh skenario di bawah merupakan rencana uji untuk rancangan terbaru. Hasilnya dicatat terpisah dari baseline pengujian otomatis pada 4.3. Setiap catatan memuat ID requirement, versi aplikasi/konten, usia peserta bila relevan, perangkat, langkah, hasil yang diharapkan, hasil aktual, dan bukti.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-U01–U03 / FR-010 — Profil: uji usia batas 6 dan 12, seluruh pilihan yang sah, input kosong, bukan angka, 5 dan 13. Profil sah tersimpan; input tidak sah ditolak dengan pesan jelas. Perubahan usia yang sah tidak menghapus bukti skill atau menutup remedial.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-A01–A03 / FR-001/002/003/012 — Pemetaan: periksa belum diuji, variasi jawaban antar-skill, serta rekomendasi berdasar prasyarat. Skill yang belum ditanya tidak otomatis gagal atau lulus; usia tidak menghasilkan label kemampuan global; akses materi tampil terpisah dari bukti.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-M04–M06 / FR-005/007 — Mastery: uji kirim tanpa pilihan, hasil 4/5 dan 5/5, serta pembahasan selama blok. Kiriman kosong dicegah; kunci tidak terbuka sebelum blok selesai; 5/5 hanya dicatat sebagai bukti awal menurut kebijakan pilot, dengan versi serta tanggal. Siapkan butir sepadan baru untuk pemeriksaan ulang.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-S01–S03 / FR-013, NFR-003 — Penyimpanan: tutup paksa setelah respons, kirim berulang, dan simulasi gagal simpan. Respons serta posisi sesi dipulihkan tanpa penghitungan ganda; kegagalan terlihat dan dapat dicoba ulang. Uji unit, integrasi, serta uji alur penuh diperlukan.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-X01–X03 / FR-014, NFR-001 — UI/UX: amati memahami instruksi, memakai bantuan, memilih jawaban, kembali, dan melanjutkan sesi pada variasi usia 6–12. Periksa keterbacaan, ukuran sasaran ketuk, fokus, suara bila tersedia, serta alternatif seret. Target 80% selesai satu lesson tanpa bantuan navigasi adalah target pilot, bukan hasil.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-Q01–Q03 / NFR-002/004/005/006 — Kualitas: ukur waktu respons terhadap target ≤2 detik pada perangkat uji, periksa tata letak serta penyimpanan pada sasaran Android 8+/RAM 2 GB dan 4 GB, dan pastikan alur belajar tanpa iklan. Periksa akses serta penghapusan data lokal. Pengujian akses akun dan aturan Firebase dilakukan bila integrasinya diterapkan, sebelum data nyata digunakan.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "TC-C02 / FR-016 dan evaluasi pengguna — Validasi guru memeriksa semua templat yang dipakai dalam pilot. Pilot dimulai setelah materi disetujui dan alur utama lolos penerimaan. Catat respons pertama, bantuan, jumlah bukti, serta pemeriksaan ulang; laporkan hasil secara deskriptif tanpa mengklaim efektivitas dari sampel kecil.",
+      "NORMAL_TEXT"
+    ],
+    [
+      "",
+      "NORMAL_TEXT"
+    ]
+  ]
+}

@@ -1,0 +1,42 @@
+@startuml ucd-002-aktor-target
+!include _target-style.iuml
+title UCD-002 Aktor dan tujuan pengguna target v3
+
+left to right direction
+actor Siswa as Anak
+actor "Orang tua / wali" as Wali
+rectangle "Numi pada perangkat keluarga" {
+ usecase "UC-008\nMengisi dan mengubah profil" as Profil
+ usecase "UC-001\nMengikuti pemetaan awal" as Diag
+ usecase "UC-002 / UC-009\nMelihat peta dan rekomendasi" as Peta
+ usecase "UC-003 / UC-004\nBerlatih dan memahami feedback" as Latihan
+ usecase "UC-005\nMemeriksa kemampuan mandiri" as Mastery
+ usecase "UC-011\nMelanjutkan sesi tersimpan" as Resume
+ usecase "UC-012\nMengatur bantuan belajar" as Bantuan
+ usecase "UC-013\nMelihat katalog dan cakupan materi" as Katalog
+ usecase "UC-006\nMelihat progres dan bukti belajar" as Laporan
+}
+Anak -- Profil
+Anak -- Diag
+Anak -- Peta
+Anak -- Latihan
+Anak -- Mastery
+Anak -- Resume
+Anak -- Bantuan
+Anak -- Katalog
+Anak -- Laporan
+Wali -- Profil
+Wali -- Bantuan
+Wali -- Katalog
+Wali -- Laporan
+note bottom of Laporan
+ Wali menggunakan bagian pendamping pada perangkat yang sama.
+ Belum ada akun wali atau portal guru terpisah.
+end note
+note bottom of Mastery
+ Guru memvalidasi materi di luar aplikasi.
+ Maskot, scheduler internal, controller, dan repository bukan aktor eksternal.
+ XP dan checkpoint merupakan perilaku internal yang ditelusuri melalui FR.
+end note
+
+@enduml

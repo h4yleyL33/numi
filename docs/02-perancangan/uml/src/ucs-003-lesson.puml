@@ -1,0 +1,37 @@
+@startuml ucs-003-lesson
+!include _gaya.iuml
+title UC-003 Mengerjakan Lesson
+
+|Siswa|
+start
+note right
+  **Prasyarat:** topik tidak terkunci
+end note
+:Memilih lesson di sheet topik;
+|Sistem|
+if (Lesson Kenalan?) then (ya)
+  :Menampilkan penjelasan maskot;
+else (Latihan)
+endif
+:Membangkitkan lima soal sesuai kelompok belajar;
+repeat
+  |Siswa|
+  :Menjawab soal dan menekan Cek Jawaban;
+  |Sistem|
+  :Memberi feedback (include UC-004);
+repeat while (Masih ada soal?) is (ya)
+->tidak;
+if (Benar minimal 3?) then (ya)
+  :Menandai lesson selesai;
+else (tidak)
+  :Lesson belum selesai;
+  :Menawarkan mengulang dengan soal baru;
+  note right: **Alur alternatif**
+endif
+:Memperbarui XP, streak, dan lencana (include UC-010);
+note right
+  **Pascakondisi:** progres lesson,
+  XP, dan streak tersimpan
+end note
+stop
+@enduml

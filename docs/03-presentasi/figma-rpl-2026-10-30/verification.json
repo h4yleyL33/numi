@@ -1,0 +1,55 @@
+{
+  "pageId": "2038:3116",
+  "pageName": "04 Presentasi RPL Numi",
+  "slideCount": 21,
+  "landscape": true,
+  "navigationCount": 40,
+  "navigationValid": true,
+  "fonts": [
+    "Mali",
+    "Cabin Sketch",
+    "Nunito"
+  ],
+  "counts": {
+    "RECTANGLE": 76,
+    "TEXT": 408,
+    "FRAME": 166,
+    "INSTANCE": 82,
+    "VECTOR": 2070,
+    "ELLIPSE": 178,
+    "GROUP": 2
+  },
+  "issues": [],
+  "firstSlide": "2038:3126",
+  "lastSlide": "2038:4106",
+  "sourcePages": [
+    {
+      "id": "0:1",
+      "name": "numi"
+    },
+    {
+      "id": "1:3",
+      "name": "User Flow"
+    },
+    {
+      "id": "104:30",
+      "name": "DokTek"
+    },
+    {
+      "id": "157:8545",
+      "name": "01 Wireframe"
+    },
+    {
+      "id": "114:30",
+      "name": "02 Mockup"
+    },
+    {
+      "id": "157:8546",
+      "name": "03 Prototype"
+    },
+    {
+      "id": "2038:3116",
+      "name": "04 Presentasi RPL Numi"
+    }
+  ]
+}

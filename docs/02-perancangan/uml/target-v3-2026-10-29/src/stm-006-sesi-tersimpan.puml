@@ -1,0 +1,21 @@
+@startuml stm-006-sesi-tersimpan
+!include _target-style.iuml
+title STM-006 Siklus sesi dan kegagalan simpan
+
+[*] --> Disiapkan
+Disiapkan --> Menjawab : item dan versi sudah ditetapkan
+Menjawab --> Menyimpan : kirim respons pertama
+Menyimpan --> GagalSimpan : repository gagal
+GagalSimpan --> Menyimpan : coba lagi dengan responseId sama
+Menyimpan --> Menjawab : tersimpan; masih ada butir
+Menyimpan --> Selesai : tersimpan; blok selesai
+Menjawab --> Ditunda : keluar dari sesi
+Ditunda --> Menjawab : lanjut dari checkpoint terakhir
+Selesai --> Ditinjau : tampilkan hasil dan pembahasan
+Ditinjau --> [*]
+note right of Menyimpan
+ Sinyal tersimpan hanya setelah commit.
+ Penghentian paksa diuji pada setiap batas tulis.
+end note
+
+@enduml

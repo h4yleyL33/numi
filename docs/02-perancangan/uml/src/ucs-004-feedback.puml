@@ -1,0 +1,28 @@
+@startuml ucs-004-feedback
+!include _gaya.iuml
+title UC-004 Menerima Feedback
+
+|Siswa|
+start
+note right
+  **Prasyarat:** siswa menekan Cek Jawaban
+  di lesson atau mastery test
+end note
+:Menekan Cek Jawaban;
+|Sistem|
+:Memeriksa jawaban;
+if (Jawaban benar?) then (ya)
+  :Menampilkan banner hijau dan +10 XP;
+else (tidak)
+  :Menampilkan banner berisi jawaban benar
+  dan penjelasan;
+  :Numi berekspresi semangat;
+endif
+|Siswa|
+:Membaca feedback lalu lanjut ke soal berikutnya;
+note right
+  **Pascakondisi:** siswa tahu
+  letak kesalahannya
+end note
+stop
+@enduml

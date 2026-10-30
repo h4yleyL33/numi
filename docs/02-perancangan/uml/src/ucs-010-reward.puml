@@ -1,0 +1,30 @@
+@startuml ucs-010-reward
+!include _gaya.iuml
+title UC-010 Memperoleh XP, Streak, dan Lencana
+
+|Siswa|
+start
+note right
+  **Prasyarat:** bagian dari UC-003 atau UC-005
+end note
+:Menyelesaikan lesson atau mastery test;
+|Sistem|
+:Menambah XP;
+:Mencatat hari aktif untuk streak;
+:Memeriksa delapan syarat lencana;
+if (Ada lencana baru?) then (ya)
+  :Memberikan lencana baru;
+else (tidak)
+endif
+if (XP mencapai level berikutnya?) then (ya)
+  :Menaikkan level;
+else (tidak)
+endif
+:Memilih pesan maskot yang sesuai;
+:Menyimpan XP, streak, dan lencana;
+note right
+  **Pascakondisi:** XP, streak, dan
+  lencana baru tersimpan
+end note
+stop
+@enduml

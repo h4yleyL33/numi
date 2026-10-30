@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "presentation": {
+    "id": "1Yaa0mBw-K7EqquZRBN3dTJ-qVaP32Wj03QZuHxYFyc0",
+    "title": "Numi — Presentasi Progres Proyek — 28 Oktober 2026",
+    "revisionId": "MzjY_wKijDDbng",
+    "slideCount": 12
+  },
+  "snapshotSha256": "543adac36cb52a71434d621d2bab54d5296fe702c203211b045aa56498e5fc98",
+  "summary": {
+    "totalIssues": 0,
+    "reportedIssues": 0,
+    "truncated": false,
+    "bySeverity": {},
+    "byCode": {}
+  },
+  "issues": []
+}

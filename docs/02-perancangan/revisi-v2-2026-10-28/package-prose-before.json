@@ -1,0 +1,165 @@
+{
+  "title": "Package Diagram Aplikasi Numi",
+  "date": "28 Oktober 2026",
+  "filename": "247001_240003_240007_240009_240045_Package Diagram.pdf",
+  "team": [
+    [
+      "Alfrandiano Imanuel Rionaldo Holle",
+      "140810247001"
+    ],
+    [
+      "Yarfi Setya Nugraha",
+      "140810240003"
+    ],
+    [
+      "Khalit Putra Afana",
+      "140810240007"
+    ],
+    [
+      "Muhammad Andri Firmansyah",
+      "140810240009"
+    ],
+    [
+      "Nabil Rizky Aulia Utomo",
+      "140810240045"
+    ]
+  ],
+  "purpose": "Numi adalah aplikasi penguatan numerasi untuk siswa SD usia 6-12 tahun. Alur utama meliputi profil, diagnostic, peta keterampilan, lesson, mastery, progres, dan pendamping maskot. Materi MVP mencakup sebagian CP Matematika Fase A-C melalui dua belas topik.",
+  "scope": "PKG-002 memodelkan pengelompokan kode Flutter yang tersedia pada app/lib. bootstrap adalah pengelompokan logis main.dart dan app.dart, bukan nama folder. Paket fitur dikelompokkan menurut tanggung jawab. Diagram ini tidak menggambarkan server yang telah di-deploy.",
+  "legend": "Kotak bertab menyatakan package. Kotak di dalam package menyatakan subpackage. Panah garis putus-putus A ke B menyatakan A bergantung pada B; kepala panah menunjuk pemasok. Label nama subfolder adalah isi package, bukan kelas. Panah utama dipilih untuk keterbacaan; matriks dependensi memuat seluruh relasi lintas package hasil pembacaan import lokal. Tidak ada klaim bahwa setiap relasi adalah UML package import.",
+  "packages": [
+    [
+      "bootstrap",
+      "main.dart; app.dart",
+      "Memuat SharedPreferences dan data awal; memasang LocalNumiRepository ke ProviderScope; menjalankan MaterialApp dan layar awal."
+    ],
+    [
+      "features",
+      "onboarding, diagnostic, home, skill_map, lesson, quiz, feedback, mastery, progress, mascot",
+      "Mengelola tampilan dan interaksi. PemutarSoal menampilkan soal, merekam jawaban sementara, dan memanggil callback. Fitur membaca controller serta model/konten."
+    ],
+    [
+      "state",
+      "numi_controller.dart",
+      "Menyediakan provider Riverpod dan NumiController; mengoordinasikan profil, hasil sesi, progres, reward, dan penyimpanan melalui NumiRepository."
+    ],
+    [
+      "domain",
+      "diagnostic_engine; skill_map_service; learning_path_service; progress_service; companion_service",
+      "Menjalankan aturan pemetaan, rekomendasi, progres, dan pesan. Logika ini memakai model dan konten yang saat ini berada di data, serta konfigurasi/utilitas core."
+    ],
+    [
+      "data.models",
+      "siswa; topik; soal; lesson; catatan_belajar; data_belajar; badge; companion_message",
+      "Mewakili struktur data dan serialisasi yang dipakai bersama. DataBelajar menjadi agregat penyimpanan lokal."
+    ],
+    [
+      "data.content",
+      "daftar_topik; daftar_lesson; daftar_lencana; kalimat_maskot; generator_soal",
+      "Menyediakan konten awal dan generator soal. Butir, prasyarat, dan metadata bukti perlu diselaraskan lagi dengan rancangan kurikulum v2."
+    ],
+    [
+      "data.repositories",
+      "numi_repository; local_numi_repository",
+      "NumiRepository menetapkan muat(), simpan(DataBelajar), hapus(). Implementasi lokal menyimpan JSON melalui shared_preferences. Adapter Firestore belum tersedia."
+    ],
+    [
+      "core",
+      "config; theme; utils; widgets",
+      "Menyediakan kebijakan AppConfig, tema, utilitas tanggal, dan widget bersama. Core belum sepenuhnya independen: widget chip_status mengimpor model topik."
+    ]
+  ],
+  "scenarios": [
+    [
+      "Profil dan pembukaan aplikasi",
+      "bootstrap memuat data -> ProviderScope -> features/onboarding -> state.daftar() -> NumiRepository -> LocalNumiRepository -> SharedPreferences."
+    ],
+    [
+      "Diagnostic dan peta",
+      "features/diagnostic membuat SesiDiagnostic -> domain memakai GeneratorSoal dan model -> jawaban blok dinilai -> state.simpanDiagnostic() -> SkillMapService -> repository -> features/skill_map."
+    ],
+    [
+      "Lesson dan mastery",
+      "features/lesson atau mastery -> quiz/PemutarSoal -> model Jawaban -> callback selesai -> NumiController -> ProgressService/SkillMapService/CompanionService -> simpan agregat -> hasil sesi/progres."
+    ]
+  ],
+  "gaps": [
+    [
+      "Diagnostic",
+      "Kode dapat menganggap topik di bawah titik uji telah dikuasai dan membentuk kelompok global.",
+      "Gunakan bukti per skill; materi belum diuji tetap belum diuji; pisahkan bukti dari akses."
+    ],
+    [
+      "Checkpoint",
+      "Jawaban dalam PemutarSoal masih berada pada state widget; controller menyimpan pada peristiwa aktivitas/hasil sesi.",
+      "Persistenkan setiap respons dan posisi sesi; uji tutup paksa serta pemulihan sesi."
+    ],
+    [
+      "Mastery",
+      "Konfigurasi masih menulis ambang 95; MasteryScreen menggunakan feedback bawaan per soal.",
+      "Notasi 5/5 = 100 dan feedback setelah blok; simpan respons pertama, versi kebijakan, serta pemeriksaan retensi."
+    ],
+    [
+      "Penyimpanan cloud",
+      "Dependensi aktif hanya Flutter, Riverpod, shared_preferences. Tidak ditemukan adapter Firestore; aturan firebase/firestore.rules masih rancangan.",
+      "Integrasikan Firebase secara bertahap, tetapkan kepemilikan data dan uji aturan akses; jangan menampilkan cloud sebagai layanan aktif."
+    ],
+    [
+      "Validasi materi",
+      "Dua belas topik dan generator tersedia dalam kode; validitas pedagogis belum dibuktikan.",
+      "Validasi guru, perbaikan transisi kelas 3, rubrik/miskonsepsi, lalu pilot anak dengan pendamping."
+    ]
+  ],
+  "traceability": [
+    [
+      "FR-001 / UC-001",
+      "features/diagnostic, domain/diagnostic_engine.dart",
+      "Bukti per skill dan checkpoint diagnostic."
+    ],
+    [
+      "FR-002,003 / UC-002,009",
+      "features/skill_map, domain/skill_map_service.dart, learning_path_service.dart",
+      "Akses materi dan rekomendasi berdasarkan prasyarat."
+    ],
+    [
+      "FR-004a,004b,005 / UC-003,004",
+      "features/lesson, quiz, feedback; data/content",
+      "Lesson dan umpan balik konseptual."
+    ],
+    [
+      "FR-007 / UC-005",
+      "features/mastery; state; core/config",
+      "Tes mandiri, respons pertama, dan kebijakan kelulusan."
+    ],
+    [
+      "FR-006,008,009 / UC-006,007,010",
+      "domain/progress_service, companion_service; features/progress, mascot",
+      "Progres, XP, lencana, dan pesan pendamping."
+    ],
+    [
+      "DATA-001 / UC-008; NFR-003",
+      "bootstrap, state, data/models, data/repositories",
+      "Profil, pemuatan data, dan persistensi; checkpoint v2 masih pekerjaan lanjutan."
+    ]
+  ],
+  "references": [
+    [
+      "Proposal PPL revisi v2",
+      "https://docs.google.com/document/d/1gYgMYdlTagCbejr2_isrqjIyPHRJDp9brfq4G1fPVCU/edit"
+    ],
+    [
+      "Dokumentasi teknis revisi v2",
+      "https://docs.google.com/document/d/1UzoljGfYWE1TbWRikJ7JCbGoUR9Kj-E2YZyS20PCd3Q/edit"
+    ],
+    [
+      "Rencana kurikulum dan spesifikasi asesmen",
+      "https://docs.google.com/document/d/1h-Edcm0FCujOX1yMsT5pR9TwwBP4oKhZrb004fxJJjY/edit"
+    ],
+    [
+      "OMG UML 2.5.1 (acuan notasi)",
+      "https://www.omg.org/spec/UML/2.5.1/About-UML"
+    ]
+  ],
+  "submission": "Instruksi tugas: package diagram aplikasi sesuai proposal dan penjelasannya; berkas PDF menggunakan enam digit terakhir NPM setiap anggota. Pengumpulan dilakukan oleh project manager melalui Google Classroom pada H-1 praktikum berikutnya pukul 23.59. Tanggal kalender belum ditetapkan pada lampiran yang diberikan. Berkas ini disiapkan untuk ditinjau tim dan belum diunggah ke Classroom.",
+  "test_status": "Verifikasi 28 Oktober 2026: flutter test --no-pub --reporter expanded menghasilkan 48 pengujian otomatis lulus setelah cache dependensi dipulihkan dengan flutter pub get. Pengujian ini mencakup baseline kode saat ini (domain, state, generator, dan satu alur widget); belum membuktikan kepatuhan seluruh aturan v2, pemulihan sesi per respons, integrasi Firebase, uji perangkat menyeluruh, ataupun efektivitas belajar. Log: flutter-test.log. Tidak ada perubahan kode aplikasi pada tugas dokumentasi ini."
+}

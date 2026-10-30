@@ -1,0 +1,62 @@
+@startuml pkg-002-paket-v2
+title PKG-002 Package diagram Numi - kode lokal 28 Oktober 2026
+skinparam packageStyle rectangle
+skinparam shadowing false
+package "bootstrap (kelompok logis)" as boot
+package "features" as ui {
+  package onboarding
+  package diagnostic
+  package home
+  package skill_map
+  package lesson
+  package quiz
+  package feedback
+  package mastery
+  package progress
+  package mascot
+}
+package "state" as state
+package "domain" as domain
+package "core" as core {
+  package config
+  package theme
+  package utils
+  package widgets
+}
+package "data" as data {
+  package "models" as models
+  package "content" as content
+  package "repositories" as repos
+}
+boot ..> ui
+boot ..> state
+boot ..> repos
+boot ..> core
+ui ..> state
+ui ..> domain
+ui ..> models
+ui ..> content
+ui ..> core
+state ..> domain
+state ..> repos
+state ..> models
+state ..> content
+state ..> core
+domain ..> models
+domain ..> content
+domain ..> core
+repos ..> models
+content ..> models
+content ..> core
+core ..> models
+note bottom of repos
+NumiRepository: muat(), simpan(DataBelajar), hapus()
+LocalNumiRepository aktif (shared_preferences).
+Adapter Firestore masih rencana.
+end note
+note bottom of core
+core.widgets mengimpor model topik.
+Pemindaian tidak menemukan siklus antarkelompok.
+Ketergantungan core ke model perlu ditinjau saat refaktor.
+end note
+@enduml

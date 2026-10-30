@@ -1,5 +1,13 @@
 # UML Numi
 
+## Status revisi 29 Oktober 2026
+
+Diagram pada `src/` mempertahankan struktur implementasi dan rancangan lama. Sebagian masih memuat perilaku kode seperti kelompok global, ambang 95, dan feedback mastery per butir; perilaku tersebut belum sesuai target kurikulum. Gunakan `target-v3-2026-10-29/` sebagai spesifikasi rancangan terbaru. Nama kelas target sengaja dibedakan dari kelas Dart yang tersedia. Kode aplikasi belum diperbarui dalam audit ini.
+
+Rancangan target menambahkan usia 6–12 tahun, memisahkan bukti kemampuan dari akses materi, menyimpan respons dan checkpoint, menunda pembahasan tes sampai blok selesai, serta menetapkan siswa dan wali sebagai aktor aplikasi. Guru tetap validator di luar aplikasi selama belum ada portal guru. Klaim penguasaan seluruh Matematika SD tidak didukung cakupan MVP dua belas topik.
+
+Catatan perubahan lama di bawah adalah riwayat keputusan. Pernyataan bahwa diagnostic harus diulang dari awal dan penyimpanan checkpoint tidak bermanfaat telah digantikan oleh rancangan target v3.
+
 Sumber setiap diagram ada di `src/*.puml`. Hasil render ada di `png/` (untuk ditempel ke
 doktek) dan `svg/` (bisa diperbesar tanpa pecah). Nama kelas, method, dan konstanta di
 diagram sama persis dengan kode di `app/lib`, jadi kalau kode berubah, diagram yang terkait
@@ -34,6 +42,11 @@ Use case diagram dan alur pengguna versi rapi ada juga di Figma, halaman `user f
 | DPL-001 | Deployment | APK, penyimpanan lokal, Firebase | semua | NFR-003, NFR-004 |
 | PKG-001 | Package | Struktur folder `app/lib` | semua | - |
 | ERD-001 | ERD | Skema data | semua | DATA-001 s.d. DATA-005 |
+
+Skenario per use case (`ucs-001` s.d. `ucs-010`) menggambarkan spesifikasi UC-001 sampai
+UC-010 sebagai diagram: jalur aktor dan sistem, prasyarat di awal, alur alternatif bertanda
+catatan, dan pascakondisi di akhir. Di doktek dipakai sebagai Gambar 2.9 sampai 2.18. Semua
+gambar doktek juga dikumpulkan di Figma, halaman `doktek gambar`.
 
 ## Render ulang
 

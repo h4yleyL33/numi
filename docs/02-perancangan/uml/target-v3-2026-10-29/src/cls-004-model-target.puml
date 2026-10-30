@@ -1,0 +1,107 @@
+@startuml cls-004-model-target
+!include _target-style.iuml
+title CLS-004 Model target untuk usia cakupan dan bukti
+
+hide empty methods
+class ProfilSiswa {
+ id: String
+ namaPanggilan: String
+ usia: int // 6-12 tahun
+ preferensiBantuan: Set
+}
+class VersiKurikulum {
+ id
+ nomorCP
+ tanggalBerlaku
+}
+class Subketerampilan {
+ id
+ elemen
+ faseCP
+ tujuan
+ prasyarat
+}
+class KetersediaanMateri {
+ status
+ alasan
+ versiKonten
+}
+class PrasyaratSkill {
+ skillId
+ prasyaratId
+ kriteriaBukti
+}
+class TemplateSoal {
+ id
+ versi
+ skillId
+ representasi
+ satuan
+ miskonsepsi
+}
+class ValidasiMateri {
+ validator
+ waktu
+ status
+ catatan
+}
+class SesiAsesmen {
+ id
+ jenis
+ policyVersion
+ itemIds
+ nextIndex
+ selesai
+}
+class ResponsPertama {
+ responseId
+ itemId
+ jawaban
+ waktu
+ bantuan
+ benar
+}
+class Checkpoint {
+ sessionId
+ nextIndex
+ committedAt
+ schemaVersion
+}
+class BuktiSkill {
+ skillId
+ statusBukti
+ jumlahButir
+ waktu
+ sumber
+ retestAt
+}
+class AksesMateri {
+ skillId
+ statusAkses
+ alasan
+}
+class KebijakanAsesmen {
+ versi
+ ukuranBlok
+ gerbangPilot
+ jedaUlang
+}
+ProfilSiswa "1" -- "0..*" SesiAsesmen
+ProfilSiswa "1" -- "0..*" BuktiSkill
+ProfilSiswa "1" -- "0..*" AksesMateri
+VersiKurikulum "1" -- "1..*" Subketerampilan
+Subketerampilan "1" -- "1" KetersediaanMateri
+Subketerampilan "1" -- "0..*" TemplateSoal
+Subketerampilan "1" -- "0..*" PrasyaratSkill
+TemplateSoal "1" -- "0..*" ValidasiMateri
+SesiAsesmen "1" *-- "0..*" ResponsPertama
+SesiAsesmen "1" *-- "1" Checkpoint
+SesiAsesmen "*" --> "1" KebijakanAsesmen
+BuktiSkill "*" --> "1" Subketerampilan
+AksesMateri "*" --> "1" Subketerampilan
+note bottom of ProfilSiswa
+ Nama kelas pada diagram ini adalah rancangan target.
+ Belum identik dengan kelas Dart yang diimplementasikan.
+end note
+
+@enduml

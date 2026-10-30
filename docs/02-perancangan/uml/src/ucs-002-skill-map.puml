@@ -1,0 +1,32 @@
+@startuml ucs-002-skill-map
+!include _gaya.iuml
+title UC-002 Melihat Skill Map
+
+|Siswa|
+start
+note right
+  **Prasyarat:** diagnostic selesai
+end note
+:Membuka peta pulau;
+|Sistem|
+:Membaca status 12 topik;
+:Menampilkan pulau terkunci, belum dikuasai,
+perlu latihan, atau dikuasai;
+:Menandai pulau yang disarankan (include UC-009);
+|Siswa|
+:Mengetuk sebuah pulau;
+|Sistem|
+if (Pulau terkunci?) then (ya)
+  :Menampilkan daftar pulau prasyarat
+  yang belum dikuasai;
+  note right: **Alur alternatif**
+else (tidak)
+  :Menampilkan sheet topik dengan lesson
+  dan mastery test;
+endif
+note right
+  **Pascakondisi:** siswa tahu topik
+  yang perlu dipelajari
+end note
+stop
+@enduml

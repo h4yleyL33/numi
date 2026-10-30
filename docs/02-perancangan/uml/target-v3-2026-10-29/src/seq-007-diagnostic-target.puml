@@ -1,0 +1,38 @@
+@startuml seq-007-diagnostic-target
+!include _target-style.iuml
+title SEQ-007 Diagnostic berbasis bukti per skill
+
+autonumber
+actor Siswa
+participant "Layar pemetaan" as UI
+participant "Rencana asesmen" as Plan
+participant "Layanan bukti skill" as Bukti
+database "Repository lokal" as Repo
+Siswa -> UI : pilih materi aktif
+UI -> Plan : susun jangkar(skill, versiCP, usia)
+note right of Plan
+ Usia membantu titik awal dan bahasa.
+ Blok awal maksimum 12 butir pada cakupan MVP.
+ Tidak mengukur seluruh CP dari satu blok singkat.
+end note
+loop setiap butir dalam blok
+ UI -> Siswa : pertanyaan tanpa kunci jawaban
+ Siswa -> UI : respons pertama
+ UI -> Repo : simpan respons dan checkpoint
+ alt penyimpanan berhasil
+  Repo --> UI : konfirmasi tersimpan
+ else penyimpanan gagal
+  Repo --> UI : gagal simpan
+  UI -> Siswa : coba lagi; belum menjanjikan resume
+ end
+end
+UI -> Bukti : rangkum bukti skill yang benar-benar diuji
+Bukti --> UI : indikasi awal, jumlah butir, waktu
+UI -> Repo : simpan ringkasan
+UI -> Siswa : peta dan saran pemeriksaan lanjutan
+note over Bukti
+ Skill belum diuji tetap Belum diuji.
+ Akses materi tidak menetapkan tingkat kemampuan.
+end note
+
+@enduml

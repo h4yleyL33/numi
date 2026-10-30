@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-28",
+  "reportDocumentId": "1O_u8ewo2j8QKe-Ztc6iiShJWYDWHBqhvEWU3HYHpRIo",
+  "reportRevision": "2.3",
+  "reportPdfPages": 11,
+  "orientation": "A4 portrait",
+  "font": "Times New Roman",
+  "nativeTables": 3,
+  "inlineImages": 1,
+  "dependencies": 21,
+  "figureDependencies": 9,
+  "cycleFound": false,
+  "applicationCodeChanged": false,
+  "visualQa": "passed",
+  "pdfFolder": "1pbd_59ou47G9eaLtS7T8AgJXcZNOF940",
+  "alignedArtifacts": [
+    "package report",
+    "doktek",
+    "proposal",
+    "curriculum",
+    "charter",
+    "Gantt",
+    "UCDC",
+    "Figma design",
+    "Figma Slides",
+    "Google Slides"
+  ]
+}

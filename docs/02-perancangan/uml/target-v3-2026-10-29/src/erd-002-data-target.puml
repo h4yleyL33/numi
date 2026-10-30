@@ -1,0 +1,74 @@
+@startuml erd-002-data-target
+!include _target-style.iuml
+title ERD-002 Rancangan data target bukan migrasi aktif
+
+hide circle
+hide methods
+entity ProfilSiswa {
+* siswaId : string
+ --
+ usia : int 6-12
+ preferensiBantuan : json
+}
+entity Skill {
+* skillId : string
+ --
+ versiCP : string
+ elemen : string
+ fase : string
+ prasyaratSkill : json
+ ketersediaan : enum
+}
+entity BuktiSkill {
+* siswaId : FK
+ * skillId : FK
+ --
+ statusBukti : enum
+ jumlahButir : int
+ dicatatPada : datetime
+ policyVersion : string
+}
+entity AksesMateri {
+* siswaId : FK
+ * skillId : FK
+ --
+ statusAkses : enum
+ alasan : string
+}
+entity Sesi {
+* sessionId : string
+ --
+ siswaId : FK
+ itemIdsDanVersi : json
+ policyVersion : string
+}
+entity Respons {
+* responseId : string
+ --
+ sessionId : FK
+ itemId : string
+ ordinal : int
+ responsPertama : json
+ bantuan : json
+ waktu : datetime
+}
+entity Checkpoint {
+* sessionId : FK
+ --
+ nextIndex : int
+ committedAt : datetime
+ schemaVersion : int
+}
+ProfilSiswa ||--o{ Sesi
+ProfilSiswa ||--o{ BuktiSkill
+ProfilSiswa ||--o{ AksesMateri
+Skill ||--o{ BuktiSkill
+Skill ||--o{ AksesMateri
+Sesi ||--o{ Respons
+Sesi ||--|| Checkpoint
+note bottom of Respons
+ Unik(sessionId, itemId, ordinal) untuk respons pertama.
+ Respons dan checkpoint ditulis atomik dan idempoten.
+end note
+
+@enduml

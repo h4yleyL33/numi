@@ -1,0 +1,32 @@
+@startuml ucs-007-pesan-maskot
+!include _gaya.iuml
+title UC-007 Menerima Pesan Maskot
+
+|Penjadwal Notifikasi|
+start
+note right
+  **Prasyarat:** diagnostic selesai
+end note
+:Aplikasi dibuka atau jadwal pengingat tiba;
+|Sistem|
+:Memeriksa aktivitas terakhir dan streak;
+:Memilih jenis pesan: sambutan, streak terancam,
+atau lama tidak aktif;
+if (Pesan jenis ini sudah muncul hari ini?) then (ya)
+  :Tidak menampilkan pesan;
+  note right: **Alur alternatif**
+  stop
+else (belum)
+  :Numi muncul dengan balon kata
+  dan ekspresi yang sesuai;
+endif
+|Siswa|
+:Membaca pesan;
+|Sistem|
+:Menyimpan pesan dan menandainya dibaca;
+note right
+  **Pascakondisi:** pesan tersimpan
+  dan ditandai dibaca
+end note
+stop
+@enduml

@@ -1,0 +1,346 @@
+{
+  "date": "2026-10-28",
+  "dart_files": 51,
+  "test_files": 5,
+  "declared_tests": 25,
+  "packages": {
+    "bootstrap": 2,
+    "domain": 5,
+    "state": 1,
+    "core": 11,
+    "data.content": 5,
+    "data.models": 8,
+    "data.repositories": 2,
+    "features": 17
+  },
+  "edges": [
+    {
+      "from": "bootstrap",
+      "to": "core",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/app.dart",
+          "import": "core/theme/app_theme.dart"
+        }
+      ]
+    },
+    {
+      "from": "bootstrap",
+      "to": "data.repositories",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/main.dart",
+          "import": "data/repositories/local_numi_repository.dart"
+        }
+      ]
+    },
+    {
+      "from": "bootstrap",
+      "to": "features",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/app.dart",
+          "import": "features/onboarding/splash_screen.dart"
+        }
+      ]
+    },
+    {
+      "from": "bootstrap",
+      "to": "state",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/main.dart",
+          "import": "state/numi_controller.dart"
+        }
+      ]
+    },
+    {
+      "from": "core",
+      "to": "data.models",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/core/widgets/chip_status.dart",
+          "import": "../../data/models/catatan_belajar.dart"
+        }
+      ]
+    },
+    {
+      "from": "data.content",
+      "to": "core",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/data/content/generator_soal.dart",
+          "import": "../../core/utils/tanggal.dart"
+        }
+      ]
+    },
+    {
+      "from": "data.content",
+      "to": "data.models",
+      "count": 6,
+      "examples": [
+        {
+          "source": "app/lib/data/content/daftar_lencana.dart",
+          "import": "../models/badge.dart"
+        },
+        {
+          "source": "app/lib/data/content/daftar_lesson.dart",
+          "import": "../models/lesson.dart"
+        },
+        {
+          "source": "app/lib/data/content/daftar_topik.dart",
+          "import": "../models/siswa.dart"
+        }
+      ]
+    },
+    {
+      "from": "data.repositories",
+      "to": "data.models",
+      "count": 2,
+      "examples": [
+        {
+          "source": "app/lib/data/repositories/local_numi_repository.dart",
+          "import": "../models/data_belajar.dart"
+        },
+        {
+          "source": "app/lib/data/repositories/numi_repository.dart",
+          "import": "../models/data_belajar.dart"
+        }
+      ]
+    },
+    {
+      "from": "domain",
+      "to": "core",
+      "count": 4,
+      "examples": [
+        {
+          "source": "app/lib/domain/companion_service.dart",
+          "import": "../core/utils/tanggal.dart"
+        },
+        {
+          "source": "app/lib/domain/diagnostic_engine.dart",
+          "import": "../core/config/app_config.dart"
+        },
+        {
+          "source": "app/lib/domain/progress_service.dart",
+          "import": "../core/config/app_config.dart"
+        }
+      ]
+    },
+    {
+      "from": "domain",
+      "to": "data.content",
+      "count": 4,
+      "examples": [
+        {
+          "source": "app/lib/domain/companion_service.dart",
+          "import": "../data/content/kalimat_maskot.dart"
+        },
+        {
+          "source": "app/lib/domain/diagnostic_engine.dart",
+          "import": "../data/content/generator_soal.dart"
+        },
+        {
+          "source": "app/lib/domain/learning_path_service.dart",
+          "import": "../data/content/daftar_lesson.dart"
+        }
+      ]
+    },
+    {
+      "from": "domain",
+      "to": "data.models",
+      "count": 15,
+      "examples": [
+        {
+          "source": "app/lib/domain/companion_service.dart",
+          "import": "../data/models/companion_message.dart"
+        },
+        {
+          "source": "app/lib/domain/companion_service.dart",
+          "import": "../data/models/data_belajar.dart"
+        },
+        {
+          "source": "app/lib/domain/diagnostic_engine.dart",
+          "import": "../data/models/catatan_belajar.dart"
+        }
+      ]
+    },
+    {
+      "from": "features",
+      "to": "core",
+      "count": 53,
+      "examples": [
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_intro_screen.dart",
+          "import": "../../core/widgets/latar_malam.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_intro_screen.dart",
+          "import": "../../core/widgets/tombol_numi.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_intro_screen.dart",
+          "import": "../../core/widgets/transisi.dart"
+        }
+      ]
+    },
+    {
+      "from": "features",
+      "to": "data.content",
+      "count": 11,
+      "examples": [
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+          "import": "../../data/content/daftar_topik.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_screen.dart",
+          "import": "../../data/content/daftar_topik.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_screen.dart",
+          "import": "../../data/content/kalimat_maskot.dart"
+        }
+      ]
+    },
+    {
+      "from": "features",
+      "to": "data.models",
+      "count": 32,
+      "examples": [
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_intro_screen.dart",
+          "import": "../../data/models/companion_message.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+          "import": "../../data/models/catatan_belajar.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+          "import": "../../data/models/companion_message.dart"
+        }
+      ]
+    },
+    {
+      "from": "features",
+      "to": "domain",
+      "count": 3,
+      "examples": [
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+          "import": "../../domain/diagnostic_engine.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+          "import": "../../domain/skill_map_service.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_screen.dart",
+          "import": "../../domain/diagnostic_engine.dart"
+        }
+      ]
+    },
+    {
+      "from": "features",
+      "to": "state",
+      "count": 11,
+      "examples": [
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_intro_screen.dart",
+          "import": "../../state/numi_controller.dart"
+        },
+        {
+          "source": "app/lib/features/diagnostic/diagnostic_screen.dart",
+          "import": "../../state/numi_controller.dart"
+        },
+        {
+          "source": "app/lib/features/home/home_shell.dart",
+          "import": "../../state/numi_controller.dart"
+        }
+      ]
+    },
+    {
+      "from": "state",
+      "to": "core",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../core/config/app_config.dart"
+        }
+      ]
+    },
+    {
+      "from": "state",
+      "to": "data.content",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../data/content/daftar_topik.dart"
+        }
+      ]
+    },
+    {
+      "from": "state",
+      "to": "data.models",
+      "count": 6,
+      "examples": [
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../data/models/badge.dart"
+        },
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../data/models/catatan_belajar.dart"
+        },
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../data/models/companion_message.dart"
+        }
+      ]
+    },
+    {
+      "from": "state",
+      "to": "data.repositories",
+      "count": 1,
+      "examples": [
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../data/repositories/numi_repository.dart"
+        }
+      ]
+    },
+    {
+      "from": "state",
+      "to": "domain",
+      "count": 5,
+      "examples": [
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../domain/companion_service.dart"
+        },
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../domain/diagnostic_engine.dart"
+        },
+        {
+          "source": "app/lib/state/numi_controller.dart",
+          "import": "../domain/learning_path_service.dart"
+        }
+      ]
+    }
+  ],
+  "external_imports": {
+    "flutter": 28,
+    "flutter_riverpod": 12,
+    "shared_preferences": 2
+  }
+}

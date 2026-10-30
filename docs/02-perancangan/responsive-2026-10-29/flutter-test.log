@@ -1,0 +1,61 @@
+00:00 +0: loading E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart
+00:00 +0: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: usia menentukan topik pertama yang diuji
+00:00 +1: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: setiap topik diuji dengan dua soal
+00:00 +2: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: semua benar: tes naik sampai batas topik diagnostic
+00:00 +3: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: salah di topik awal: tes turun sampai menemukan topik yang dikuasai
+00:00 +4: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: salah terus sampai topik pertama: masuk kelas kecil
+00:00 +5: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: satu dari dua benar dicatat sebagai perlu latihan
+00:00 +6: E:/belajar/rpl/numi/app/test/domain/diagnostic_engine_test.dart: skill map membuka topik yang prasyaratnya sudah dikuasai
+00:00 +7: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T01 Mengenal bilangan sampai 20 200 soal tingkat 1 selalu bisa dijawab
+00:00 +8: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T01 Mengenal bilangan sampai 20 200 soal tingkat 2 selalu bisa dijawab
+00:00 +9: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T02 Bilangan sampai 100 dan nilai tempat 200 soal tingkat 1 selalu bisa dijawab
+00:00 +10: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T02 Bilangan sampai 100 dan nilai tempat 200 soal tingkat 2 selalu bisa dijawab
+00:00 +11: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T03 Penjumlahan sampai 20 200 soal tingkat 1 selalu bisa dijawab
+00:00 +12: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T03 Penjumlahan sampai 20 200 soal tingkat 2 selalu bisa dijawab
+00:00 +13: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T04 Pengurangan sampai 20 200 soal tingkat 1 selalu bisa dijawab
+00:00 +14: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: level naik setiap 100 XP
+00:00 +15: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: level naik setiap 100 XP
+00:00 +16: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T05 Pecahan setengah dan seperempat 200 soal tingkat 1 selalu bisa dijawab
+00:00 +17: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: streak dihitung dari hari berturut-turut sampai hari ini
+00:00 +18: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: streak dihitung dari hari berturut-turut sampai hari ini
+00:00 +19: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T06 Penjumlahan dan pengurangan sampai 1.000 200 soal tingkat 1 selalu bisa dijawab
+00:00 +20: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T06 Penjumlahan dan pengurangan sampai 1.000 200 soal tingkat 1 selalu bisa dijawab
+00:00 +21: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: streak putus kalau satu hari terlewat
+00:00 +22: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T06 Penjumlahan dan pengurangan sampai 1.000 200 soal tingkat 2 selalu bisa dijawab
+00:00 +23: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: catat aktivitas menambah hari baru atau menambah hitungan hari yang sama
+00:00 +24: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T07 Perkalian sampai 100 200 soal tingkat 1 selalu bisa dijawab
+00:00 +25: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: lencana pemula, teliti, dan cepat terbuka setelah lesson sempurna yang cepat
+00:00 +26: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T07 Perkalian sampai 100 200 soal tingkat 2 selalu bisa dijawab
+00:00 +27: E:/belajar/rpl/numi/app/test/domain/progress_service_test.dart: lencana yang sudah dimiliki tidak diberikan lagi
+00:00 +28: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T08 Pembagian sampai 100 200 soal tingkat 1 selalu bisa dijawab
+00:00 +29: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T08 Pembagian sampai 100 200 soal tingkat 2 selalu bisa dijawab
+00:00 +30: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T09 Pecahan senilai dan membandingkan pecahan 200 soal tingkat 1 selalu bisa dijawab
+00:00 +31: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T09 Pecahan senilai dan membandingkan pecahan 200 soal tingkat 2 selalu bisa dijawab
+00:00 +32: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T10 Operasi hitung sampai 100.000 dan soal cerita 200 soal tingkat 1 selalu bisa dijawab
+00:00 +33: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T10 Operasi hitung sampai 100.000 dan soal cerita 200 soal tingkat 2 selalu bisa dijawab
+00:00 +34: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T11 Penjumlahan dan pengurangan pecahan 200 soal tingkat 1 selalu bisa dijawab
+00:00 +35: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T11 Penjumlahan dan pengurangan pecahan 200 soal tingkat 2 selalu bisa dijawab
+00:00 +36: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T12 KPK dan FPB 200 soal tingkat 1 selalu bisa dijawab
+00:00 +37: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T12 KPK dan FPB 200 soal tingkat 2 selalu bisa dijawab
+00:00 +38: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T04 tidak pernah menghasilkan pengurangan dengan hasil negatif
+00:00 +39: E:/belajar/rpl/numi/app/test/domain/generator_soal_test.dart: T05 hanya memakai pecahan setengah dan seperempat sesuai Fase A
+00:00 +40: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: pendaftaran dan diagnostic tersimpan, dan topik berprasyarat T01 terbuka
+00:00 +41: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: lesson lulus memberi XP, menandai selesai, dan membuka lencana
+00:00 +42: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: lesson dengan benar kurang dari minimum tidak dianggap selesai
+00:00 +43: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: mastery test lulus menguasai topik dan membuka topik berikutnya
+00:00 +44: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: mastery test di bawah ambang tetap perlu latihan
+00:00 +45: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: maskot menyapa sekali sehari dan mengingatkan saat streak terancam
+00:00 +46: E:/belajar/rpl/numi/app/test/state/numi_controller_test.dart: data disimpan setiap aktivitas selesai
+00:00 +47: E:/belajar/rpl/numi/app/test/widget/alur_awal_test.dart: siswa baru melewati cerita lalu mengisi profil sampai diagnostic
+00:01 +48: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: profil dan navigasi dapat dipakai pada Size(320.0, 568.0)
+00:01 +49: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal, feedback, dan navigasi utama tidak terpotong pada Size(320.0, 568.0)
+00:02 +50: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: profil dan navigasi dapat dipakai pada Size(390.0, 844.0)
+00:02 +51: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal, feedback, dan navigasi utama tidak terpotong pada Size(390.0, 844.0)
+00:02 +52: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: profil dan navigasi dapat dipakai pada Size(844.0, 390.0)
+00:02 +53: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal, feedback, dan navigasi utama tidak terpotong pada Size(844.0, 390.0)
+00:02 +54: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: profil dan navigasi dapat dipakai pada Size(1024.0, 768.0)
+00:03 +55: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal, feedback, dan navigasi utama tidak terpotong pada Size(1024.0, 768.0)
+00:03 +56: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: profil dan navigasi dapat dipakai pada Size(1440.0, 900.0)
+00:03 +57: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal, feedback, dan navigasi utama tidak terpotong pada Size(1440.0, 900.0)
+00:03 +58: E:/belajar/rpl/numi/app/test/widget/responsive_test.dart: soal landscape tetap terbaca dengan pembesaran teks
+00:03 +59: All tests passed!

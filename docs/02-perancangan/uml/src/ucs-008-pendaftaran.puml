@@ -1,0 +1,33 @@
+@startuml ucs-008-pendaftaran
+!include _gaya.iuml
+title UC-008 Mendaftar dan Mengisi Profil
+
+|Siswa / Orang Tua|
+start
+note right
+  **Prasyarat:** aplikasi baru dipasang
+  atau data sudah dihapus
+end note
+:Membuka aplikasi;
+|Sistem|
+:Menampilkan splash dan tiga layar cerita;
+|Siswa / Orang Tua|
+:Mengisi nama dan memilih umur 6 sampai 12;
+|Sistem|
+if (Nama terisi dan umur dipilih?) then (ya)
+  :Mengaktifkan tombol Mulai Petualangan;
+else (tidak)
+  :Tombol Mulai Petualangan tetap nonaktif;
+  stop
+endif
+|Siswa / Orang Tua|
+:Menekan Mulai Petualangan;
+|Sistem|
+:Menyimpan profil siswa;
+:Mengarahkan ke diagnostic (UC-001);
+note right
+  **Pascakondisi:** profil tersimpan,
+  siswa diarahkan ke diagnostic
+end note
+stop
+@enduml

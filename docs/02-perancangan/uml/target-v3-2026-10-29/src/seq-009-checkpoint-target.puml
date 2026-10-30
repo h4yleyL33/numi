@@ -1,0 +1,32 @@
+@startuml seq-009-checkpoint-target
+!include _target-style.iuml
+title SEQ-009 Simpan respons dan lanjutkan sesi
+
+autonumber
+actor Siswa
+participant "Layar sesi" as UI
+participant "Controller target" as Ctrl
+database "Repository lokal" as Repo
+Siswa -> UI : kirim jawaban
+UI -> Ctrl : catat(responseId, responsPertama)
+Ctrl -> Repo : transaksi respons + nextIndex + versi sesi
+alt gagal
+ Repo --> Ctrl : error
+ Ctrl --> UI : belum tersimpan
+ UI -> Siswa : coba lagi dengan responseId sama
+else berhasil
+ Repo --> Ctrl : committed
+ Ctrl --> UI : tersimpan
+ UI -> Siswa : lanjut butir berikutnya
+end
+... aplikasi ditutup dan dibuka kembali ...
+UI -> Repo : muat checkpoint
+Repo --> UI : itemIds, urutan, nextIndex, bantuan, versi
+UI -> Siswa : tawarkan melanjutkan sesi
+note over Ctrl,Repo
+ Pengiriman ulang harus idempoten.
+ Resume tidak membangkitkan ulang butir tes.
+ Ini target; repository saat ini belum menyimpan per respons.
+end note
+
+@enduml
