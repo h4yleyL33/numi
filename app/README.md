@@ -14,10 +14,10 @@ memiliki dua butir awal berversi per kelas, masih draft dan belum enam paket kon
 Diagnostic hanya menghasilkan indikasi jangkar; BuktiSkill terpisah dari AksesMateri dan XP.
 Riwayat lama tetap ada dan dapat memerlukan pemetaan ulang. Adapter Google/Firebase serta
 alur beberapa profil lokal per UID tersedia; konfigurasi proyek tim, login nyata, cloud, dan
-checkpoint lesson/diagnostic masih menunggu integrasi/verifikasi. Mastery sudah memakai
-snapshot soal, checkpoint per respons, resume, dan finalisasi reward sekali per sesi dalam
-database lokal. Cakupan dan batasnya ada di
-[`CHECKPOINT-MASTERY.md`](../docs/03-implementasi/CHECKPOINT-MASTERY.md).
+verifikasi Android masih terbuka. Diagnostic, lesson dan mastery sudah memakai snapshot soal,
+checkpoint per respons, resume, dan finalisasi aktivitas/reward sekali per sesi dalam database
+lokal. Lesson juga memulihkan pembahasan sebelum Lanjut. Cakupan dan batasnya ada di
+[`CHECKPOINT-ALUR.md`](../docs/03-implementasi/CHECKPOINT-ALUR.md).
 
 Tanpa proyek Firebase, jalankan demo pengembangan dengan `flutter run -d chrome
 --dart-define=NUMI_LOCAL_DEMO=true` (satu baris). Flag demo hanya berlaku pada build non-release.

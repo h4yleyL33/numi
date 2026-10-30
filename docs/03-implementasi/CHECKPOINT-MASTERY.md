@@ -2,6 +2,8 @@
 
 Tanggal: 30 Oktober 2026. Irisan implementasi sebelum pengujian akhir Bab IV.
 
+Pembaruan berikutnya pada tanggal yang sama sudah menghubungkan checkpoint diagnostic dan lesson. [CHECKPOINT-ALUR.md](CHECKPOINT-ALUR.md) menggantikan keterangan dua alur yang belum terhubung di bagian batas historis dokumen ini; cloud dan verifikasi Android tetap terbuka.
+
 ## Perilaku yang tersedia
 
 Mastery dimulai dengan menyimpan snapshot lima soal sebelum soal pertama ditampilkan. Snapshot mencakup ID, versi, jenis soal, teks, gambar numerik, pasangan, urutan pilihan, kunci, dan pembahasan. Resume memakai snapshot tersimpan; generator tidak menentukan ulang butir sesi tersebut.

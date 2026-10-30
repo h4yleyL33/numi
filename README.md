@@ -129,8 +129,8 @@ Demo memakai `LocalNumiRepository` dan hanya tersedia pada build non-release. Al
 memakai adapter Google/Firebase dan `LocalProfilRepository` per UID; data belajar tetap di
 perangkat. Sebelum konfigurasi Firebase, aplikasi menampilkan layanan akun belum tersedia.
 Ikuti [panduan Firebase](firebase/README.md) setelah proyek tim dibuat. Firestore, migrasi data
-tanpa UID ke akun, serta checkpoint lesson/diagnostic belum diintegrasikan. Checkpoint mastery
-lokal sudah tersedia; lihat [catatan implementasi](docs/03-implementasi/CHECKPOINT-MASTERY.md).
+tanpa UID ke akun belum diintegrasikan. Checkpoint diagnostic, lesson dan mastery lokal sudah
+tersedia; lihat [catatan implementasi](docs/03-implementasi/CHECKPOINT-ALUR.md).
 `firebase/firestore.rules` masih rancangan
 jalur lama dan belum menjadi aturan final beberapa profil.
 

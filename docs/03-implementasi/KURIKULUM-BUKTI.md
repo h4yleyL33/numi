@@ -38,7 +38,7 @@ JSON data belajar menjadi versi 3. `skillMap`, hasil diagnostic/mastery, lesson,
 - Ringkasan saat ini masih satu sampel terakhir per topik. Pemecahan seluruh topik menjadi banyak subketerampilan dan riwayat bukti/retensi lengkap belum selesai.
 - Paket pengantar belum divalidasi guru, belum menjadi konten terbit, dan tidak boleh dipakai untuk menyimpulkan efektivitas pembelajaran atau dukungan seluruh Matematika SD.
 - Katalog lengkap aktif/belum tersedia dan graf prasyarat per subketerampilan tetap I06/I07. Model akses sudah menyediakan status belum tersedia.
-- Pembaruan I08: mastery sudah memakai sesi persisten, snapshot soal, checkpoint respons, serta finalisasi/reward idempoten. Diagnostic/lesson dan sinkronisasi belum. Rinciannya ada di [CHECKPOINT-MASTERY.md](CHECKPOINT-MASTERY.md).
+- Pembaruan I08: diagnostic, lesson dan mastery sudah memakai sesi persisten, snapshot soal, checkpoint respons, serta finalisasi/reward idempoten. Sinkronisasi belum. Rinciannya ada di [CHECKPOINT-ALUR.md](CHECKPOINT-ALUR.md).
 - Pembahasan akhir blok dan pemeriksaan ulang 3–7 hari belum selesai. Riwayat hasil lama tetap tersedia tetapi tidak dipromosikan menjadi bukti baru.
 - Firebase tim dan Android SDK belum tersedia; tidak ada login nyata, deployment cloud, atau pilot anak baru yang dijalankan dalam irisan ini.
 

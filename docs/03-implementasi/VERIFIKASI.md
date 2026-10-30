@@ -2,6 +2,20 @@
 
 Tanggal: 30 Oktober 2026. Pengujian teknis selama implementasi, belum laporan pengujian akhir Bab IV.
 
+## Pembaruan checkpoint diagnostic dan lesson
+
+Lanjutan I08 menghubungkan diagnostic adaptif dan lesson ke transaksi lokal. Blok berikutnya disimpan bersama respons terakhir; lesson mempertahankan pembahasan/Lanjut, sedangkan hasil dan reward difinalisasi dari checkpoint lengkap. API penyelesaian tanpa checkpoint dihapus. JSON versi 5 tetap membaca sesi mastery versi 4. Rincian ada di [CHECKPOINT-ALUR.md](CHECKPOINT-ALUR.md).
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| `flutter test --no-pub --reporter expanded` | **138 tes lulus**. Tambahan mencakup rute naik/turun keenam kelas, respons di batas blok, feedback/Lanjut, gagal/retry/restart, konfirmasi terputus setelah commit, finalisasi ganda, migrasi v4, file per profil dan tiga widget alur. |
+| `flutter analyze --no-pub` | **No issues found** setelah perapian kurung blok. |
+| `flutter build web --no-pub` | **Berhasil dari `lib/main.dart`**; Wasm dry run berhasil. Peringatan font CupertinoIcons yang sudah ada tetap muncul. |
+| Probe file proses Windows | **Diagnostic, lesson, dan mastery lulus** setelah writer dihentikan tanpa close; isi snapshot pulih identik. Bukan uji Android atau mati listrik di tengah commit. |
+| Browser nyata 127.0.0.1:8767 | Fixture sintetis memulihkan pembahasan lesson kedua setelah reload, hasil 4/5 dengan 60 XP, diagnostic parsial ke hasil 0/2, lalu total tujuh respons/XP tetap setelah reload. Membuka hasil lesson lagi tidak membuat percobaan baru. Log warning/error kosong. |
+
+Build akhir sudah dikembalikan ke `lib/main.dart`, bukan fixture. Pengujian APK/perangkat Android, Firebase nyata, cloud/emulator, konflik dua perangkat, konten tervalidasi dan pilot tetap belum selesai. Bagian di bawah menyimpan riwayat tahap sebelumnya.
+
 ## Pembaruan checkpoint mastery lokal
 
 I08 menambahkan database transaksi file/IndexedDB, pembukaan database per UID setelah pemeriksaan akun, snapshot lima soal, command ID tetap, respons pertama/cursor, gagal/retry, resume, dan finalisasi hasil/reward idempoten. Jalur finalisasi mastery lama tanpa checkpoint dihapus; tesnya dipindahkan ke skenario sesi persisten. Rincian dan batas ada di [CHECKPOINT-MASTERY.md](CHECKPOINT-MASTERY.md).

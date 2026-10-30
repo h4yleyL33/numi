@@ -71,12 +71,15 @@ I06/I07 masih parsial. Rincian cakupan 12 butir awal, migrasi, dan batas bukti a
 ## I08 — Checkpoint per respons
 
 - [x] Irisan mastery lokal: database transaksi, snapshot butir/versi/urutan, command ID tetap, respons pertama+cursor, gagal/retry, resume dan finalisasi reward sekali per sesi.
-- [ ] Hubungkan checkpoint lesson dan diagnostic adaptif, lengkapkan status sinkronisasi/cloud dan verifikasi proses Android dihentikan.
+- [x] Checkpoint lesson dan diagnostic adaptif: blok berikutnya atomik, pemulihan pembahasan/Lanjut, retry hasil akhir, finalisasi aktivitas/reward sekali per sesi.
+- [ ] Lengkapkan status sinkronisasi/cloud dan verifikasi proses Android dihentikan.
 - Penerimaan: command ID tetap dan deduplikasi; jawaban berbeda tidak menimpa pertama; finalisasi ulang tidak menggandakan XP; status lokal/pending/synced/konflik dibedakan.
 - Verifikasi: repository failure/retry/restart, proses Android dihentikan, konflik dua perangkat, emulator cloud.
 - Dependensi: I05–I07. Berkas: session/response models, adapter durabel lokal, cloud repository, quiz/controller/bootstrap.
 
 I08 masih parsial. [Catatan checkpoint mastery](../docs/03-implementasi/CHECKPOINT-MASTERY.md) membedakan bukti file Windows/browser, batas adapter, dan kriteria cloud/Android yang belum terpenuhi.
+
+[Lanjutan diagnostic dan lesson](../docs/03-implementasi/CHECKPOINT-ALUR.md) mencatat pemulihan rute, pembahasan, kompatibilitas versi 4–5, serta batas durasi/jeda dan verifikasi perangkat.
 
 ## I09 — Jalur belajar dan lesson
 

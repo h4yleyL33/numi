@@ -47,3 +47,5 @@ Lanjutkan tanpa menunggu layanan cloud: buat paket pengantar enam kelas dengan t
 ## Irisan lanjutan I08 lokal
 
 Mulai checkpoint melalui satu alur lengkap mastery: database transaksi lokal, snapshot lima soal, respons pertama/cursor, retry yang menahan soal, resume, dan finalisasi idempoten. Pertahankan isolasi UID/profil serta cache lama. Uji domain/controller/widget, file setelah proses penulis dihentikan pada host, dan IndexedDB/browser. Catat batasnya; bukti host tidak menggantikan uji Android, dan checkpoint dua alur lain serta cloud tetap terbuka.
+
+Lanjutan berikutnya menghubungkan diagnostic adaptif dan lesson ke database yang sama. Diagnostic menyimpan blok berikutnya bersama respons terakhir; lesson menyimpan status pembahasan/Lanjut. Kedua hasil difinalisasi idempoten dan kegagalannya dapat dicoba kembali. Lingkup, bukti, dan kriteria cloud/Android yang belum terpenuhi ada di `docs/03-implementasi/CHECKPOINT-ALUR.md`.
