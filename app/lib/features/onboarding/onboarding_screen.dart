@@ -15,7 +15,8 @@ import '../../core/widgets/transisi.dart';
 /// Cerita pembuka lalu pengisian profil (UC-008). Isi cerita mengikuti
 /// design/cerita/README.md.
 class OnboardingScreen extends ConsumerStatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({super.key, this.tampilkanCerita = false});
+  final bool tampilkanCerita;
 
   @override
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -58,7 +59,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void initState() {
     super.initState();
     final siswa = ref.read(numiControllerProvider).siswa;
-    if (siswa != null) _posisi = _cerita.length;
+    if (siswa != null && !widget.tampilkanCerita) _posisi = _cerita.length;
     _halaman = PageController(initialPage: _posisi);
     _nama = TextEditingController(text: siswa?.nama ?? '');
     _kelas = siswa?.perluKonfirmasiKelas == false ? siswa?.kelas : null;

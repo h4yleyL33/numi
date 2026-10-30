@@ -5,11 +5,16 @@ import 'core/widgets/latar_numi.dart';
 import 'features/onboarding/splash_screen.dart';
 
 class NumiApp extends StatelessWidget {
-  const NumiApp({super.key});
+  const NumiApp({super.key, this.home, this.bilahWali, this.navigatorKey});
+
+  final Widget? home;
+  final Widget? bilahWali;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Numi',
       debugShowCheckedModeBanner: false,
       theme: NumiTema.terang,
@@ -17,11 +22,16 @@ class NumiApp extends StatelessWidget {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1200),
-            child: child!,
+            child: Column(
+              children: [
+                ?bilahWali,
+                Expanded(child: child!),
+              ],
+            ),
           ),
         ),
       ),
-      home: const SplashScreen(),
+      home: home ?? const SplashScreen(),
     );
   }
 }

@@ -32,19 +32,28 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   Future<void> _cekPesan() async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
-    final pesan = await ref
-        .read(numiControllerProvider.notifier)
-        .periksaPesanMaskot();
+    if (!mounted) return;
+    CompanionMessage? pesan;
+    try {
+      pesan = await ref.read(numiControllerProvider.notifier).periksaPesanMaskot();
+    } catch (_) {
+      // Sesi yang ditutup atau simpan gagal tidak boleh membuka pesan lama.
+      return;
+    }
     if (!mounted || pesan == null) return;
     setState(() => _pesan = pesan);
     _tutup = Timer(const Duration(seconds: 7), _sembunyikan);
   }
 
-  void _sembunyikan() {
+  Future<void> _sembunyikan() async {
     final pesan = _pesan;
     if (!mounted || pesan == null) return;
     setState(() => _pesan = null);
-    ref.read(numiControllerProvider.notifier).tandaiPesanDibaca(pesan.id);
+    try {
+      await ref.read(numiControllerProvider.notifier).tandaiPesanDibaca(pesan.id);
+    } catch (_) {
+      // Pesan sudah ditutup; status baca dapat diperiksa pada pembukaan berikutnya.
+    }
   }
 
   @override
