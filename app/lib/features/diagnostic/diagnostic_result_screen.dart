@@ -50,10 +50,10 @@ class DiagnosticResultScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          const Text('Kelompok belajarmu', style: TextStyle(fontWeight: FontWeight.w700)),
+                          Text('Titik awal: Kelas ${hasil.kelas}', style: const TextStyle(fontWeight: FontWeight.w700)),
                           Text(hasil.kelompok.label,
                               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900)),
-                          Text(hasil.kelompok.gaya),
+                          Text(hasil.kelompok.fase),
                         ],
                       ),
                     ),

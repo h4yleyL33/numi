@@ -54,13 +54,13 @@ void main() {
       }
       await tester.ensureVisible(find.byType(TextField));
       await tester.enterText(find.byType(TextField), 'Sari');
-      await tester.ensureVisible(find.text('8'));
-      await tester.tap(find.text('8'));
+      await tester.ensureVisible(find.text('Kelas 2'));
+      await tester.tap(find.text('Kelas 2'));
       await tester.pump();
       await tester.tap(find.text('Mulai Petualangan'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 700));
-      expect(repo.tersimpan!.siswa!.usia, 8);
+      expect(repo.tersimpan!.siswa!.kelas, 2);
       expect(find.text('Membaca Peta'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

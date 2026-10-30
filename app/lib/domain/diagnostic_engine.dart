@@ -1,5 +1,6 @@
 import '../core/config/app_config.dart';
 import '../data/content/generator_soal.dart';
+import '../data/content/paket_kelas.dart';
 import '../data/models/catatan_belajar.dart';
 import '../data/models/siswa.dart';
 import '../data/models/soal.dart';
@@ -10,7 +11,7 @@ class HasilAkhirDiagnostic {
   const HasilAkhirDiagnostic({
     required this.hasilPerTopik,
     required this.statusAwal,
-    required this.kelompok,
+    required this.kelas,
   });
 
   /// Hanya topik yang benar-benar diuji.
@@ -18,44 +19,41 @@ class HasilAkhirDiagnostic {
 
   /// Status awal semua topik sebelum dibuka oleh SkillMapService.
   final Map<String, StatusTopik> statusAwal;
-  final KelompokBelajar kelompok;
+  final int kelas;
+  KelompokKelas get kelompok => KelompokKelas.dariKelas(kelas);
 }
 
 /// Diagnostic test adaptif (FR-001, UC-001).
 ///
-/// Tes dimulai dari topik yang sesuai usia. Kalau siswa menjawab benar semua soal
+/// Tes dimulai dari topik awal kelas. Kalau siswa menjawab benar semua soal
 /// di satu topik, tes naik ke topik berikutnya. Kalau salah di topik pertama, tes
 /// turun ke topik sebelumnya. Dengan begitu anak tidak perlu mengerjakan soal di
 /// semua topik, cukup di sekitar batas kemampuannya.
 class SesiDiagnostic {
   SesiDiagnostic({
     required List<Topik> topik,
-    required int usia,
+    required this.kelas,
     GeneratorSoal? generator,
-  })  : _topik = [...topik]..sort((a, b) => a.urutan.compareTo(b.urutan)),
-        _generator = generator ?? GeneratorSoal() {
-    _indeksAwal = indeksAwalUntukUsia(usia).clamp(0, _topik.length - 1);
+  }) : _topik = [...topik]..sort((a, b) => a.urutan.compareTo(b.urutan)),
+       _generator = generator ?? GeneratorSoal() {
+    final idAwal = PaketKelas.untuk(kelas).topikAwal;
+    _indeksAwal = _topik.indexWhere((t) => t.id == idAwal);
+    if (_indeksAwal < 0) {
+      throw ArgumentError('Topik awal $idAwal tidak tersedia.');
+    }
     _indeks = _indeksAwal;
     _soalSekarang = _buatSoal();
   }
 
   final List<Topik> _topik;
   final GeneratorSoal _generator;
+  final int kelas;
   late final int _indeksAwal;
   late int _indeks;
   bool _turun = false;
   bool _selesai = false;
   late List<Soal> _soalSekarang;
   final Map<String, DiagnosticResult> _hasil = {};
-
-  /// Usia hanya menentukan titik awal, bukan kelompok belajar.
-  static int indeksAwalUntukUsia(int usia) {
-    if (usia <= 7) return 0;
-    if (usia == 8) return 2;
-    if (usia == 9) return 5;
-    if (usia == 10) return 6;
-    return 7;
-  }
 
   bool get selesai => _selesai;
   Topik get topikSekarang => _topik[_indeks];
@@ -64,10 +62,10 @@ class SesiDiagnostic {
   Map<String, DiagnosticResult> get hasilSementara => Map.unmodifiable(_hasil);
 
   List<Soal> _buatSoal() => _generator.buat(
-        _topik[_indeks].id,
-        AppConfig.soalDiagnosticPerTopik,
-        tingkat: 1,
-      );
+    _topik[_indeks].id,
+    AppConfig.soalDiagnosticPerTopik,
+    tingkat: 1,
+  );
 
   /// Dipanggil setelah semua soal topik sekarang dijawab.
   void catat(int jumlahBenar) {
@@ -75,7 +73,9 @@ class SesiDiagnostic {
     final total = _soalSekarang.length;
     final status = jumlahBenar == total
         ? StatusTopik.mastered
-        : (jumlahBenar > 0 ? StatusTopik.perluLatihan : StatusTopik.belumDikuasai);
+        : (jumlahBenar > 0
+              ? StatusTopik.perluLatihan
+              : StatusTopik.belumDikuasai);
     _hasil[topikSekarang.id] = DiagnosticResult(
       topikId: topikSekarang.id,
       benar: jumlahBenar,
@@ -120,20 +120,17 @@ class SesiDiagnostic {
       if (hasil != null) {
         status[topik.id] = hasil.statusPenguasaan;
       } else if (i < terendah) {
-        // Topik di bawah titik uji dianggap sudah dikuasai.
+        // shortcut: inferensi topik lama, ganti dengan bukti belum diuji pada I07.
         status[topik.id] = StatusTopik.mastered;
       } else {
         status[topik.id] = StatusTopik.terkunci;
       }
     }
 
-    final pertamaBelum = _topik.where((t) => status[t.id] != StatusTopik.mastered);
-    final kelompok = pertamaBelum.isEmpty ? KelompokBelajar.besar : pertamaBelum.first.kelompok;
-
     return HasilAkhirDiagnostic(
       hasilPerTopik: _hasil.values.toList(),
       statusAwal: status,
-      kelompok: kelompok,
+      kelas: kelas,
     );
   }
 }

@@ -23,7 +23,7 @@ class DiagnosticScreen extends ConsumerStatefulWidget {
 class _DiagnosticScreenState extends ConsumerState<DiagnosticScreen> {
   late final SesiDiagnostic _sesi = SesiDiagnostic(
     topik: daftarTopik,
-    usia: ref.read(numiControllerProvider).siswa!.usia,
+    kelas: ref.read(numiControllerProvider).siswa!.kelas!,
   );
   final _semuaJawaban = <Jawaban>[];
   bool _menyimpan = false;

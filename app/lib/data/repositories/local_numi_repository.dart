@@ -7,8 +7,8 @@ import 'numi_repository.dart';
 
 /// Menyimpan seluruh data belajar sebagai satu JSON di perangkat.
 ///
-/// Disimpan setiap kali satu aktivitas selesai, sehingga progres tidak hilang
-/// walau aplikasi tertutup tiba-tiba (NFR-003).
+/// Disimpan pada akhir aktivitas. Checkpoint per respons dan jaminan pemulihan
+/// setelah proses berhenti memerlukan adapter durabel tersendiri (NFR-003).
 class LocalNumiRepository implements NumiRepository {
   LocalNumiRepository(this._prefs);
 
@@ -28,8 +28,16 @@ class LocalNumiRepository implements NumiRepository {
   }
 
   @override
-  Future<void> simpan(DataBelajar data) => _prefs.setString(_kunci, jsonEncode(data.toJson()));
+  Future<void> simpan(DataBelajar data) async {
+    if (!await _prefs.setString(_kunci, jsonEncode(data.toJson()))) {
+      throw StateError('Data belajar gagal disimpan di perangkat.');
+    }
+  }
 
   @override
-  Future<void> hapus() => _prefs.remove(_kunci);
+  Future<void> hapus() async {
+    if (!await _prefs.remove(_kunci)) {
+      throw StateError('Data belajar gagal dihapus dari perangkat.');
+    }
+  }
 }

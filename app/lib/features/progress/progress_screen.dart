@@ -52,7 +52,7 @@ class ProgressScreen extends ConsumerWidget {
                     children: [
                       Text(data.siswa?.nama ?? '',
                           style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
-                      Text(data.siswa?.kelompokBelajar?.label ?? '',
+                      Text(data.siswa?.kelompokKelas?.label ?? 'Konfirmasi kelas bersama wali',
                           style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 10),
                       Row(

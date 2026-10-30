@@ -26,7 +26,7 @@ class PemutarSoal extends StatefulWidget {
   final KonteksJawaban konteks;
   final ValueChanged<List<Jawaban>> onSelesai;
 
-  /// Diagnostic tidak menampilkan benar atau salah supaya hasilnya jujur.
+  /// Hanya berlaku pada lesson. Tes selalu menunda pembahasan sampai blok selesai.
   final bool umpanBalik;
   final String? judul;
   final int nomorAwal;
@@ -42,12 +42,16 @@ class _PemutarSoalState extends State<PemutarSoal> {
   int _indeks = 0;
   String? _pilihan;
   bool _sudahCek = false;
+  bool _tuntas = false;
+
+  bool get _umpanBalik =>
+      widget.konteks == KonteksJawaban.lesson && widget.umpanBalik;
 
   Soal get _soal => widget.soal[_indeks];
 
   void _cek() {
     final pilihan = _pilihan;
-    if (pilihan == null) return;
+    if (pilihan == null || _sudahCek || _tuntas) return;
     final jawaban = Jawaban(
       soalId: _soal.id,
       topikId: _soal.topikId,
@@ -58,7 +62,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
     );
     _jawaban.add(jawaban);
     widget.onJawab?.call(jawaban);
-    if (widget.umpanBalik) {
+    if (_umpanBalik) {
       setState(() => _sudahCek = true);
     } else {
       _lanjut();
@@ -66,7 +70,9 @@ class _PemutarSoalState extends State<PemutarSoal> {
   }
 
   void _lanjut() {
+    if (_tuntas) return;
     if (_indeks == widget.soal.length - 1) {
+      _tuntas = true;
       widget.onSelesai(List.unmodifiable(_jawaban));
       return;
     }
@@ -135,7 +141,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
               child: TampilanSoal(
                 soal: _soal,
                 terkunci: _sudahCek,
-                tampilkanKunci: widget.umpanBalik,
+                tampilkanKunci: _umpanBalik && _sudahCek,
                 onPilih: (p) => setState(() => _pilihan = p),
               ),
             ),
@@ -158,13 +164,15 @@ class _PemutarSoalState extends State<PemutarSoal> {
                     ),
                   ),
                 )
+              : _pilihan == null
+              ? const SizedBox.shrink()
               : Padding(
                   key: const ValueKey('cek'),
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                   child: SafeArea(
                     top: false,
                     child: TombolNumi(
-                      label: 'Cek Jawaban',
+                      label: _umpanBalik ? 'Cek Jawaban' : 'Kirim',
                       lebar: double.infinity,
                       warna: NumiWarna.malam,
                       warnaTeks: Colors.white,

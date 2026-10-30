@@ -28,7 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     if (!mounted) return;
     final data = ref.read(numiControllerProvider);
     final Widget tujuan;
-    if (!data.sudahDaftar) {
+    if (!data.sudahDaftar || data.siswa!.perluKonfirmasiKelas) {
       tujuan = const OnboardingScreen();
     } else if (!data.diagnosticSelesai) {
       tujuan = const DiagnosticIntroScreen();

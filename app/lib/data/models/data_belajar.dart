@@ -66,7 +66,7 @@ class DataBelajar {
   }
 
   Map<String, dynamic> toJson() => {
-        'versi': 1,
+        'versi': 2,
         'siswa': siswa?.toJson(),
         'skillMap': skillMap.values.map((e) => e.toJson()).toList(),
         'hasilDiagnostic': hasilDiagnostic.map((e) => e.toJson()).toList(),

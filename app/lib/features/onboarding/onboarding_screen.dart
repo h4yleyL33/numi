@@ -8,6 +8,7 @@ import '../../data/models/companion_message.dart';
 import '../../state/numi_controller.dart';
 import '../diagnostic/diagnostic_intro_screen.dart';
 import '../mascot/numi_mascot.dart';
+import '../home/home_shell.dart';
 import '../../core/widgets/pulau_hias.dart';
 import '../../core/widgets/transisi.dart';
 
@@ -46,10 +47,22 @@ const _cerita = [
 ];
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  final _halaman = PageController();
-  final _nama = TextEditingController();
+  late final PageController _halaman;
+  late final TextEditingController _nama;
   int _posisi = 0;
-  int? _usia;
+  int? _kelas;
+  bool _menyimpan = false;
+  String? _galat;
+
+  @override
+  void initState() {
+    super.initState();
+    final siswa = ref.read(numiControllerProvider).siswa;
+    if (siswa != null) _posisi = _cerita.length;
+    _halaman = PageController(initialPage: _posisi);
+    _nama = TextEditingController(text: siswa?.nama ?? '');
+    _kelas = siswa?.perluKonfirmasiKelas == false ? siswa?.kelas : null;
+  }
 
   @override
   void dispose() {
@@ -66,12 +79,30 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _mulai() async {
-    await ref
-        .read(numiControllerProvider.notifier)
-        .daftar(nama: _nama.text, usia: _usia!);
-    if (!mounted) return;
-    Navigator.of(context)
-        .pushReplacement(transisiPudar(const DiagnosticIntroScreen()));
+    if (_menyimpan || _kelas == null) return;
+    setState(() {
+      _menyimpan = true;
+      _galat = null;
+    });
+    try {
+      final controller = ref.read(numiControllerProvider.notifier);
+      if (ref.read(numiControllerProvider).sudahDaftar) {
+        await controller.ubahProfil(nama: _nama.text, kelas: _kelas!);
+      } else {
+        await controller.daftar(nama: _nama.text, kelas: _kelas!);
+      }
+      if (!mounted) return;
+      final tujuan = ref.read(numiControllerProvider).diagnosticSelesai
+          ? const HomeShell()
+          : const DiagnosticIntroScreen();
+      Navigator.of(context).pushReplacement(transisiPudar(tujuan));
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _menyimpan = false;
+        _galat = 'Profil belum tersimpan. Coba lagi.';
+      });
+    }
   }
 
   @override
@@ -112,13 +143,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       _HalamanCerita(adegan: adegan),
                     _FormProfil(
                       nama: _nama,
-                      usia: _usia,
-                      onUsia: (u) => setState(() => _usia = u),
+                      kelas: _kelas,
+                      onKelas: (k) => setState(() => _kelas = k),
                       onUbah: () => setState(() {}),
                     ),
                   ],
                 ),
               ),
+              if (_galat != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    _galat!,
+                    semanticsLabel: _galat,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
                 child: _posisi < _cerita.length
@@ -130,9 +170,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         onTap: _berikut,
                       )
                     : TombolNumi(
-                        label: 'Mulai Petualangan',
+                        label: _menyimpan
+                            ? 'Menyimpan...'
+                            : 'Mulai Petualangan',
                         lebar: double.infinity,
-                        onTap: _nama.text.trim().isEmpty || _usia == null
+                        onTap:
+                            _menyimpan ||
+                                _nama.text.trim().isEmpty ||
+                                _kelas == null
                             ? null
                             : _mulai,
                       ),
@@ -213,14 +258,14 @@ class _HalamanCerita extends StatelessWidget {
 class _FormProfil extends StatelessWidget {
   const _FormProfil({
     required this.nama,
-    required this.usia,
-    required this.onUsia,
+    required this.kelas,
+    required this.onKelas,
     required this.onUbah,
   });
 
   final TextEditingController nama;
-  final int? usia;
-  final ValueChanged<int> onUsia;
+  final int? kelas;
+  final ValueChanged<int> onKelas;
   final VoidCallback onUbah;
 
   @override
@@ -272,7 +317,7 @@ class _FormProfil extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const Text(
-            'Berapa umurmu?',
+            'Sekarang kelas berapa?',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w800,
@@ -284,30 +329,31 @@ class _FormProfil extends StatelessWidget {
             spacing: 10,
             runSpacing: 10,
             children: [
-              for (var u = 6; u <= 12; u++)
-                GestureDetector(
-                  onTap: () => onUsia(u),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 64,
+              for (var k = 1; k <= 6; k++)
+                Semantics(
+                  selected: kelas == k,
+                  child: SizedBox(
+                    width: 100,
                     height: 64,
-                    decoration: BoxDecoration(
-                      color: usia == u
-                          ? NumiWarna.cahaya
-                          : Colors.white.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: usia == u ? Colors.white : Colors.white24,
-                        width: 2,
+                    child: OutlinedButton(
+                      onPressed: () => onKelas(k),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: kelas == k
+                            ? NumiWarna.cahaya
+                            : Colors.white.withValues(alpha: 0.12),
+                        foregroundColor: kelas == k
+                            ? NumiWarna.tinta
+                            : Colors.white,
+                        padding: EdgeInsets.zero,
+                        side: BorderSide(
+                          color: kelas == k ? Colors.white : Colors.white24,
+                        ),
                       ),
-                    ),
-                    child: Center(
                       child: Text(
-                        '$u',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: usia == u ? NumiWarna.tinta : Colors.white,
+                        'Kelas $k',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
