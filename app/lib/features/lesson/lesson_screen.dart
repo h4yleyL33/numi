@@ -31,23 +31,27 @@ class LessonScreen extends ConsumerStatefulWidget {
 
 class _LessonScreenState extends ConsumerState<LessonScreen> {
   final _generator = GeneratorSoal();
-  late _Tahap _tahap = widget.lesson.tipe == TipeLesson.kenalan ? _Tahap.kenalan : _Tahap.soal;
+  late _Tahap _tahap = widget.lesson.tipe == TipeLesson.kenalan
+      ? _Tahap.kenalan
+      : _Tahap.soal;
   late List<Soal> _soal = _buatSoal();
   final _stopwatch = Stopwatch();
   RingkasanSesi? _ringkasan;
   int _percobaan = 0;
 
   List<Soal> _buatSoal() => _generator.buat(
-        widget.lesson.topikId,
-        AppConfig.soalPerLesson,
-        tingkat: widget.lesson.tipe == TipeLesson.kenalan ? 1 : 2,
-      );
+    widget.lesson.topikId,
+    AppConfig.soalPerLesson,
+    tingkat: widget.lesson.tipe == TipeLesson.kenalan ? 1 : 2,
+  );
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(numiControllerProvider.notifier).mulaiLesson(widget.lesson.topikId);
+      ref
+          .read(numiControllerProvider.notifier)
+          .mulaiLesson(widget.lesson.topikId);
     });
     if (_tahap == _Tahap.soal) _stopwatch.start();
   }
@@ -82,38 +86,44 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     return Scaffold(
       body: switch (_tahap) {
         _Tahap.kenalan => _Kenalan(
-            lesson: widget.lesson,
-            namaPulau: topik.namaPulau,
-            onMulai: () => setState(() {
-              _tahap = _Tahap.soal;
-              _stopwatch.start();
-            }),
-          ),
+          lesson: widget.lesson,
+          namaPulau: topik.namaPulau,
+          onMulai: () => setState(() {
+            _tahap = _Tahap.soal;
+            _stopwatch.start();
+          }),
+        ),
         _Tahap.soal => SafeArea(
-            child: PemutarSoal(
-              key: ValueKey('lesson-$_percobaan'),
-              soal: _soal,
-              konteks: KonteksJawaban.lesson,
-              judul: '${topik.namaPulau} · ${widget.lesson.judul}',
-              onSelesai: _selesai,
-            ),
+          child: PemutarSoal(
+            key: ValueKey('lesson-$_percobaan'),
+            soal: _soal,
+            konteks: KonteksJawaban.lesson,
+            judul: '${topik.namaPulau} · ${widget.lesson.judul}',
+            onSelesai: _selesai,
           ),
+        ),
         _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
         _Tahap.hasil => HasilSesiView(
-            ringkasan: _ringkasan!,
-            judul: _ringkasan!.lulus ? 'Lesson selesai!' : 'Sedikit lagi!',
-            tombolUtama: _ringkasan!.lulus ? 'Kembali ke Peta' : 'Coba lagi',
-            onUtama: _ringkasan!.lulus ? () => Navigator.of(context).pop() : _ulangi,
-            tombolKedua: _ringkasan!.lulus ? null : 'Kembali ke Peta',
-            onKedua: () => Navigator.of(context).pop(),
-          ),
+          ringkasan: _ringkasan!,
+          judul: _ringkasan!.lulus ? 'Lesson selesai!' : 'Sedikit lagi!',
+          tombolUtama: _ringkasan!.lulus ? 'Kembali ke Peta' : 'Coba lagi',
+          onUtama: _ringkasan!.lulus
+              ? () => Navigator.of(context).pop()
+              : _ulangi,
+          tombolKedua: _ringkasan!.lulus ? null : 'Kembali ke Peta',
+          onKedua: () => Navigator.of(context).pop(),
+        ),
       },
     );
   }
 }
 
 class _Kenalan extends StatefulWidget {
-  const _Kenalan({required this.lesson, required this.namaPulau, required this.onMulai});
+  const _Kenalan({
+    required this.lesson,
+    required this.namaPulau,
+    required this.onMulai,
+  });
 
   final Lesson lesson;
   final String namaPulau;
@@ -143,38 +153,61 @@ class _KenalanState extends State<_Kenalan> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 Expanded(
-                  child: Text(widget.namaPulau,
-                      style: const TextStyle(fontWeight: FontWeight.w800, color: NumiWarna.tintaPudar)),
+                  child: Text(
+                    widget.namaPulau,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: NumiWarna.tintaPudar,
+                    ),
+                  ),
                 ),
               ],
             ),
-            Text(widget.lesson.judul, style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 16),
-            if (widget.lesson.contoh != null)
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: NumiWarna.cahaya, width: 3),
-                ),
-                child: TeksMatematika(widget.lesson.contoh!, ukuran: 38),
-              ),
-            const SizedBox(height: 16),
             Expanded(
               child: ListView(
                 children: [
+                  Text(
+                    widget.lesson.judul,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  if (widget.lesson.contoh != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: NumiWarna.cahaya, width: 3),
+                      ),
+                      child: TeksMatematika(widget.lesson.contoh!, ukuran: 38),
+                    ),
+                  const SizedBox(height: 16),
+
                   for (var i = 0; i < _terbuka && i < poin.length; i++)
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18)),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.check_circle_rounded, color: NumiWarna.benar),
+                          const Icon(
+                            Icons.check_circle_rounded,
+                            color: NumiWarna.benar,
+                          ),
                           const SizedBox(width: 10),
-                          Expanded(child: Text(poin[i], style: const TextStyle(fontSize: 16, height: 1.4))),
+                          Expanded(
+                            child: Text(
+                              poin[i],
+                              style: const TextStyle(fontSize: 16, height: 1.4),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -182,7 +215,9 @@ class _KenalanState extends State<_Kenalan> {
                     key: ValueKey(_terbuka),
                     teks: poin[_terbuka],
                     ukuranMaskot: 84,
-                    ekspresi: habis ? EkspresiMaskot.semangat : EkspresiMaskot.senang,
+                    ekspresi: habis
+                        ? EkspresiMaskot.semangat
+                        : EkspresiMaskot.senang,
                   ),
                 ],
               ),

@@ -14,7 +14,8 @@ class DiagnosticIntroScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nama = ref.watch(numiControllerProvider).siswa?.namaPanggilan ?? 'Teman';
+    final nama =
+        ref.watch(numiControllerProvider).siswa?.namaPanggilan ?? 'Teman';
     return Scaffold(
       body: LatarMalam(
         child: SafeArea(
@@ -22,26 +23,40 @@ class DiagnosticIntroScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
-                const Spacer(),
-                const Text('🗺️', style: TextStyle(fontSize: 72)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const Text('🗺️', style: TextStyle(fontSize: 72)),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Membaca Peta',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        MascotBubble(
+                          gelap: true,
+                          ekspresi: EkspresiMaskot.berpikir,
+                          ukuranMaskot: 96,
+                          teks:
+                              'Sebelum berlayar, aku perlu tahu pulau mana yang sudah bisa kamu terangi, $nama. '
+                              'Jawab sebisamu ya. Ini bukan ujian, tidak ada nilai merah!',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Membaca Peta',
-                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 28),
-                MascotBubble(
-                  gelap: true,
-                  ekspresi: EkspresiMaskot.berpikir,
-                  ukuranMaskot: 96,
-                  teks: 'Sebelum berlayar, aku perlu tahu pulau mana yang sudah bisa kamu terangi, $nama. '
-                      'Jawab sebisamu ya. Ini bukan ujian, tidak ada nilai merah!',
-                ),
-                const Spacer(),
                 TombolNumi(
                   label: 'Ayo mulai',
                   lebar: double.infinity,
-                  onTap: () => Navigator.of(context).push(transisiNaik(const DiagnosticScreen())),
+                  onTap: () =>
+                      Navigator.of(context)
+                          .push(transisiNaik(const DiagnosticScreen())),
                 ),
               ],
             ),

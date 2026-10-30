@@ -47,52 +47,80 @@ class _TampilanSoalState extends State<TampilanSoal> {
   Widget build(BuildContext context) {
     final soal = widget.soal;
     final tema = Theme.of(context).textTheme;
-    return Column(
+    final pertanyaan = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (soal.jenis != JenisSoal.soalCerita) ...[
-          Text(soal.pertanyaan, style: tema.headlineSmall, textAlign: TextAlign.center),
+          Text(
+            soal.pertanyaan,
+            style: tema.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 18),
         ],
         switch (soal.jenis) {
           JenisSoal.hitungBenda => _HitungBenda(soal: soal),
-          JenisSoal.pecahanGambar => Center(child: _GambarPecahan(pecahan: soal.gambarPecahan!)),
+          JenisSoal.pecahanGambar => Center(
+            child: _GambarPecahan(pecahan: soal.gambarPecahan!),
+          ),
           JenisSoal.soalCerita => _KartuCerita(soal: soal),
           JenisSoal.seretKeKotak => const SizedBox.shrink(),
           JenisSoal.pasangkan => const SizedBox.shrink(),
           JenisSoal.bandingkan => const SizedBox.shrink(),
-          JenisSoal.pilihanGanda => soal.kalimat == null
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: TeksMatematika(soal.kalimat!, ukuran: 42),
-                ),
-        },
-        const SizedBox(height: 20),
-        switch (soal.jenis) {
-          JenisSoal.seretKeKotak => _SeretKeKotak(
-              soal: soal,
-              isi: _pilihan,
-              terkunci: widget.terkunci,
-              onIsi: _pilih,
-            ),
-          JenisSoal.pasangkan => _Pasangkan(soal: soal, terkunci: widget.terkunci, onLengkap: _pilih),
-          JenisSoal.bandingkan => _Bandingkan(
-              soal: soal,
-              pilihan: _pilihan,
-              terkunci: widget.terkunci,
-              tampilkanKunci: widget.tampilkanKunci,
-              onPilih: _pilih,
-            ),
-          _ => _GridPilihan(
-              pilihan: soal.pilihan,
-              terpilih: _pilihan,
-              kunci: widget.tampilkanKunci ? soal.jawabanBenar : null,
-              terkunci: widget.terkunci,
-              onPilih: _pilih,
-            ),
+          JenisSoal.pilihanGanda =>
+            soal.kalimat == null
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TeksMatematika(soal.kalimat!, ukuran: 42),
+                  ),
         },
       ],
+    );
+    final pilihan = switch (soal.jenis) {
+      JenisSoal.seretKeKotak => _SeretKeKotak(
+        soal: soal,
+        isi: _pilihan,
+        terkunci: widget.terkunci,
+        onIsi: _pilih,
+      ),
+      JenisSoal.pasangkan => _Pasangkan(
+        soal: soal,
+        terkunci: widget.terkunci,
+        onLengkap: _pilih,
+      ),
+      JenisSoal.bandingkan => _Bandingkan(
+        soal: soal,
+        pilihan: _pilihan,
+        terkunci: widget.terkunci,
+        tampilkanKunci: widget.tampilkanKunci,
+        onPilih: _pilih,
+      ),
+      _ => _GridPilihan(
+        pilihan: soal.pilihan,
+        terpilih: _pilihan,
+        kunci: widget.tampilkanKunci ? soal.jawabanBenar : null,
+        terkunci: widget.terkunci,
+        onPilih: _pilih,
+      ),
+    };
+    return LayoutBuilder(
+      builder: (context, batas) {
+        if (batas.maxWidth >= 700) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: pertanyaan),
+              const SizedBox(width: 32),
+              Expanded(child: pilihan),
+            ],
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [pertanyaan, const SizedBox(height: 20), pilihan],
+        );
+      },
     );
   }
 }
@@ -133,7 +161,11 @@ class _GridPilihan extends StatelessWidget {
             terpilih: terpilih == p,
             status: kunci == null || !terkunci
                 ? StatusKartu.biasa
-                : (p == kunci ? StatusKartu.benar : (terpilih == p ? StatusKartu.salah : StatusKartu.biasa)),
+                : (p == kunci
+                      ? StatusKartu.benar
+                      : (terpilih == p
+                            ? StatusKartu.salah
+                            : StatusKartu.biasa)),
             onTap: terkunci ? null : () => onPilih(p),
           ),
       ],
@@ -167,11 +199,16 @@ class KartuPilihan extends StatefulWidget {
   State<KartuPilihan> createState() => _KartuPilihanState();
 }
 
-class _KartuPilihanState extends State<KartuPilihan> with TickerProviderStateMixin {
-  late final AnimationController _muncul =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
-  late final AnimationController _getar =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+class _KartuPilihanState extends State<KartuPilihan>
+    with TickerProviderStateMixin {
+  late final AnimationController _muncul = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
+  late final AnimationController _getar = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
 
   Timer? _tunda;
 
@@ -186,7 +223,9 @@ class _KartuPilihanState extends State<KartuPilihan> with TickerProviderStateMix
   @override
   void didUpdateWidget(covariant KartuPilihan lama) {
     super.didUpdateWidget(lama);
-    if (widget.status == StatusKartu.salah && lama.status != StatusKartu.salah) _getar.forward(from: 0);
+    if (widget.status == StatusKartu.salah && lama.status != StatusKartu.salah) {
+      _getar.forward(from: 0);
+    }
   }
 
   @override
@@ -202,11 +241,14 @@ class _KartuPilihanState extends State<KartuPilihan> with TickerProviderStateMix
     final (latar, garis) = switch (widget.status) {
       StatusKartu.benar => (NumiWarna.benarMuda, NumiWarna.benar),
       StatusKartu.salah => (NumiWarna.salahMuda, NumiWarna.salah),
-      StatusKartu.biasa => widget.terpilih
-          ? (const Color(0xFFFFF0CF), NumiWarna.cahaya)
-          : (Colors.white, const Color(0xFFE6E0D2)),
+      StatusKartu.biasa =>
+        widget.terpilih
+            ? (const Color(0xFFFFF0CF), NumiWarna.cahaya)
+            : (Colors.white, const Color(0xFFE6E0D2)),
     };
-    final angkat = widget.terpilih && widget.status == StatusKartu.biasa ? -4.0 : 0.0;
+    final angkat = widget.terpilih && widget.status == StatusKartu.biasa
+        ? -4.0
+        : 0.0;
 
     return AnimatedBuilder(
       animation: Listenable.merge([_muncul, _getar]),
@@ -232,16 +274,27 @@ class _KartuPilihanState extends State<KartuPilihan> with TickerProviderStateMix
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: garis, width: 3),
               boxShadow: [
-                BoxShadow(color: garis.withValues(alpha: 0.9), offset: Offset(0, widget.terpilih ? 2 : 5)),
+                BoxShadow(
+                  color: garis.withValues(alpha: 0.9),
+                  offset: Offset(0, widget.terpilih ? 2 : 5),
+                ),
               ],
             ),
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  FittedBox(child: TeksPecahanAtauAngka(widget.label, ukuran: 30)),
+                  FittedBox(
+                    child: TeksPecahanAtauAngka(widget.label, ukuran: 30),
+                  ),
                   if (widget.keterangan != null)
-                    Text(widget.keterangan!, style: const TextStyle(fontSize: 12, color: NumiWarna.tintaPudar)),
+                    Text(
+                      widget.keterangan!,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: NumiWarna.tintaPudar,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -274,25 +327,47 @@ class _HitungBenda extends StatelessWidget {
           if (kelompok2)
             Row(
               children: [
-                Expanded(child: _KumpulanBenda(benda: soal.benda!, jumlah: soal.jumlahBenda)),
+                Expanded(
+                  child: _KumpulanBenda(
+                    benda: soal.benda!,
+                    jumlah: soal.jumlahBenda,
+                  ),
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text('+', style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900, color: NumiWarna.cahaya)),
+                  child: Text(
+                    '+',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w900,
+                      color: NumiWarna.cahaya,
+                    ),
+                  ),
                 ),
                 Expanded(
-                  child: _KumpulanBenda(benda: soal.benda!, jumlah: soal.jumlahBenda2, jedaAwal: soal.jumlahBenda),
+                  child: _KumpulanBenda(
+                    benda: soal.benda!,
+                    jumlah: soal.jumlahBenda2,
+                    jedaAwal: soal.jumlahBenda,
+                  ),
                 ),
               ],
             )
           else
-            _KumpulanBenda(benda: soal.benda!, jumlah: soal.jumlahBenda, dicoret: soal.jumlahDicoret),
+            _KumpulanBenda(
+              benda: soal.benda!,
+              jumlah: soal.jumlahBenda,
+              dicoret: soal.jumlahDicoret,
+            ),
           if (soal.kalimat != null) ...[
             const SizedBox(height: 12),
             TeksMatematika(soal.kalimat!, ukuran: 30),
           ],
           const SizedBox(height: 6),
-          const Text('Ketuk benda untuk menandai yang sudah dihitung',
-              style: TextStyle(fontSize: 12, color: NumiWarna.tintaPudar)),
+          const Text(
+            'Ketuk benda untuk menandai yang sudah dihitung',
+            style: TextStyle(fontSize: 12, color: NumiWarna.tintaPudar),
+          ),
         ],
       ),
     );
@@ -300,7 +375,12 @@ class _HitungBenda extends StatelessWidget {
 }
 
 class _KumpulanBenda extends StatefulWidget {
-  const _KumpulanBenda({required this.benda, required this.jumlah, this.dicoret = 0, this.jedaAwal = 0});
+  const _KumpulanBenda({
+    required this.benda,
+    required this.jumlah,
+    this.dicoret = 0,
+    this.jedaAwal = 0,
+  });
 
   final String benda;
   final int jumlah;
@@ -327,27 +407,46 @@ class _KumpulanBendaState extends State<_KumpulanBenda> {
             tween: Tween(begin: 0, end: 1),
             duration: Duration(milliseconds: 350 + (i + widget.jedaAwal) * 45),
             curve: Curves.easeOutBack,
-            builder: (context, v, child) => Transform.scale(scale: v, child: child),
+            builder: (context, v, child) =>
+                Transform.scale(scale: v, child: child),
             child: GestureDetector(
-              onTap: () => setState(() => _dihitung.contains(i) ? _dihitung.remove(i) : _dihitung.add(i)),
+              onTap: () => setState(
+                () => _dihitung.contains(i)
+                    ? _dihitung.remove(i)
+                    : _dihitung.add(i),
+              ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
                     opacity: i >= widget.jumlah - widget.dicoret ? 0.35 : 1,
-                    child: Text(widget.benda, style: TextStyle(fontSize: ukuran)),
+                    child: Text(
+                      widget.benda,
+                      style: TextStyle(fontSize: ukuran),
+                    ),
                   ),
                   if (i >= widget.jumlah - widget.dicoret)
-                    Icon(Icons.close_rounded, color: NumiWarna.salah, size: ukuran * 1.1),
+                    Icon(
+                      Icons.close_rounded,
+                      color: NumiWarna.salah,
+                      size: ukuran * 1.1,
+                    ),
                   if (_dihitung.contains(i))
                     Positioned(
                       right: 0,
                       bottom: 0,
                       child: Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(color: NumiWarna.benar, shape: BoxShape.circle),
-                        child: const Icon(Icons.check, size: 12, color: Colors.white),
+                        decoration: const BoxDecoration(
+                          color: NumiWarna.benar,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          size: 12,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                 ],
@@ -396,10 +495,20 @@ class _PelukisPecahan extends CustomPainter {
     final kotak = Rect.fromCircle(center: pusat, radius: r);
     final sudut = 2 * pi / pecahan.penyebut;
 
-    canvas.drawCircle(pusat.translate(0, 6), r, Paint()..color = const Color(0xFFE7C9A0));
+    canvas.drawCircle(
+      pusat.translate(0, 6),
+      r,
+      Paint()..color = const Color(0xFFE7C9A0),
+    );
     canvas.drawCircle(pusat, r, Paint()..color = const Color(0xFFFFF3DE));
     for (var i = 0; i < pecahan.pembilang; i++) {
-      canvas.drawArc(kotak, -pi / 2 + i * sudut, sudut * t, true, Paint()..color = const Color(0xFFFF8FA3));
+      canvas.drawArc(
+        kotak,
+        -pi / 2 + i * sudut,
+        sudut * t,
+        true,
+        Paint()..color = const Color(0xFFFF8FA3),
+      );
     }
     final garis = Paint()
       ..color = const Color(0xFF8A5A3C)
@@ -413,7 +522,8 @@ class _PelukisPecahan extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _PelukisPecahan lama) => lama.t != t || lama.pecahan != pecahan;
+  bool shouldRepaint(covariant _PelukisPecahan lama) =>
+      lama.t != t || lama.pecahan != pecahan;
 }
 
 // soal cerita
@@ -439,14 +549,16 @@ class _KartuCerita extends StatelessWidget {
               tween: Tween(begin: 0.4, end: 1),
               duration: const Duration(milliseconds: 600),
               curve: Curves.elasticOut,
-              builder: (context, v, child) => Transform.scale(scale: v, child: child),
+              builder: (context, v, child) =>
+                  Transform.scale(scale: v, child: child),
               child: Text(soal.benda!, style: const TextStyle(fontSize: 56)),
             ),
           const SizedBox(height: 8),
           Text(
             soal.pertanyaan,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(height: 1.45, fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(height: 1.45, fontWeight: FontWeight.w700),
           ),
         ],
       ),
@@ -457,7 +569,12 @@ class _KartuCerita extends StatelessWidget {
 // seret ke kotak
 
 class _SeretKeKotak extends StatelessWidget {
-  const _SeretKeKotak({required this.soal, required this.isi, required this.terkunci, required this.onIsi});
+  const _SeretKeKotak({
+    required this.soal,
+    required this.isi,
+    required this.terkunci,
+    required this.onIsi,
+  });
 
   final Soal soal;
   final String? isi;
@@ -483,7 +600,11 @@ class _SeretKeKotak extends StatelessWidget {
               onAcceptWithDetails: (d) => onIsi(d.data),
               builder: (context, calon, _) => GestureDetector(
                 onTap: terkunci ? null : () => onIsi(null),
-                child: KotakKosong(ukuran: 38, isi: isi, sorot: calon.isNotEmpty),
+                child: KotakKosong(
+                  ukuran: 38,
+                  isi: isi,
+                  sorot: calon.isNotEmpty,
+                ),
               ),
             ),
           ),
@@ -491,7 +612,10 @@ class _SeretKeKotak extends StatelessWidget {
         const SizedBox(height: 22),
         Text(
           terkunci ? '' : 'Seret atau ketuk kartu angka',
-          style: const TextStyle(color: NumiWarna.tintaPudar, fontWeight: FontWeight.w600),
+          style: const TextStyle(
+            color: NumiWarna.tintaPudar,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 10),
         Wrap(
@@ -500,7 +624,13 @@ class _SeretKeKotak extends StatelessWidget {
           runSpacing: 12,
           children: [
             for (final (i, p) in soal.pilihan.indexed)
-              _KartuSeret(nilai: p, urutan: i, dipakai: isi == p, terkunci: terkunci, onTap: () => onIsi(p)),
+              _KartuSeret(
+                nilai: p,
+                urutan: i,
+                dipakai: isi == p,
+                terkunci: terkunci,
+                onTap: () => onIsi(p),
+              ),
           ],
         ),
       ],
@@ -524,26 +654,26 @@ class _KartuSeret extends StatelessWidget {
   final VoidCallback onTap;
 
   Widget _kartu({bool melayang = false}) => Material(
-        color: Colors.transparent,
-        child: Container(
-          constraints: const BoxConstraints(minWidth: 72),
-          height: 76,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: NumiWarna.cahaya, width: 3),
-            boxShadow: [
-              BoxShadow(
-                color: melayang ? Colors.black26 : NumiWarna.cahaya,
-                blurRadius: melayang ? 18 : 0,
-                offset: Offset(0, melayang ? 10 : 5),
-              ),
-            ],
+    color: Colors.transparent,
+    child: Container(
+      constraints: const BoxConstraints(minWidth: 72),
+      height: 76,
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: NumiWarna.cahaya, width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: melayang ? Colors.black26 : NumiWarna.cahaya,
+            blurRadius: melayang ? 18 : 0,
+            offset: Offset(0, melayang ? 10 : 5),
           ),
-          child: Center(child: TeksPecahanAtauAngka(nilai, ukuran: 28)),
-        ),
-      );
+        ],
+      ),
+      child: Center(child: TeksPecahanAtauAngka(nilai, ukuran: 28)),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -557,7 +687,8 @@ class _KartuSeret extends StatelessWidget {
       tween: Tween(begin: 0, end: 1),
       duration: Duration(milliseconds: 400 + urutan * 80),
       curve: Curves.easeOutBack,
-      builder: (context, v, child) => Transform.translate(offset: Offset(0, (1 - v) * 40), child: child),
+      builder: (context, v, child) =>
+          Transform.translate(offset: Offset(0, (1 - v) * 40), child: child),
       child: Draggable<String>(
         data: nilai,
         feedback: Transform.rotate(angle: -0.06, child: _kartu(melayang: true)),
@@ -571,7 +702,11 @@ class _KartuSeret extends StatelessWidget {
 // pasangkan
 
 class _Pasangkan extends StatefulWidget {
-  const _Pasangkan({required this.soal, required this.terkunci, required this.onLengkap});
+  const _Pasangkan({
+    required this.soal,
+    required this.terkunci,
+    required this.onLengkap,
+  });
 
   final Soal soal;
   final bool terkunci;
@@ -582,7 +717,12 @@ class _Pasangkan extends StatefulWidget {
 }
 
 class _PasangkanState extends State<_Pasangkan> {
-  static const _warna = [NumiWarna.ungu, NumiWarna.langit, Color(0xFFFF8A3D), NumiWarna.benar];
+  static const _warna = [
+    NumiWarna.ungu,
+    NumiWarna.langit,
+    Color(0xFFFF8A3D),
+    NumiWarna.benar,
+  ];
 
   /// indeks kiri -> nilai kanan
   final _pasangan = <int, String>{};
@@ -606,7 +746,9 @@ class _PasangkanState extends State<_Pasangkan> {
     });
     final kiri = widget.soal.pasangan;
     if (_pasangan.length == kiri.length) {
-      widget.onLengkap([for (var i = 0; i < kiri.length; i++) _pasangan[i]].join('|'));
+      widget.onLengkap(
+        [for (var i = 0; i < kiri.length; i++) _pasangan[i]].join('|'),
+      );
     }
   }
 
@@ -623,8 +765,13 @@ class _PasangkanState extends State<_Pasangkan> {
     return Column(
       children: [
         Text(
-          _kiriAktif == null ? 'Ketuk kartu kiri, lalu pasangannya di kanan' : 'Sekarang ketuk pasangannya',
-          style: const TextStyle(color: NumiWarna.tintaPudar, fontWeight: FontWeight.w600),
+          _kiriAktif == null
+              ? 'Ketuk kartu kiri, lalu pasangannya di kanan'
+              : 'Sekarang ketuk pasangannya',
+          style: const TextStyle(
+            color: NumiWarna.tintaPudar,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -636,7 +783,9 @@ class _PasangkanState extends State<_Pasangkan> {
                   for (var i = 0; i < kiri.length; i++)
                     _KartuPasang(
                       teks: kiri[i].kiri,
-                      warna: _pasangan.containsKey(i) ? _warna[i % _warna.length] : null,
+                      warna: _pasangan.containsKey(i)
+                          ? _warna[i % _warna.length]
+                          : null,
                       aktif: _kiriAktif == i,
                       onTap: () => _ketukKiri(i),
                     ),
@@ -648,7 +797,12 @@ class _PasangkanState extends State<_Pasangkan> {
               child: Column(
                 children: [
                   for (final nilai in widget.soal.pilihan)
-                    _KartuPasang(teks: nilai, warna: _warnaKanan(nilai), aktif: false, onTap: () => _ketukKanan(nilai)),
+                    _KartuPasang(
+                      teks: nilai,
+                      warna: _warnaKanan(nilai),
+                      aktif: false,
+                      onTap: () => _ketukKanan(nilai),
+                    ),
                 ],
               ),
             ),
@@ -660,7 +814,12 @@ class _PasangkanState extends State<_Pasangkan> {
 }
 
 class _KartuPasang extends StatelessWidget {
-  const _KartuPasang({required this.teks, required this.warna, required this.aktif, required this.onTap});
+  const _KartuPasang({
+    required this.teks,
+    required this.warna,
+    required this.aktif,
+    required this.onTap,
+  });
 
   final String teks;
   final Color? warna;
@@ -687,7 +846,13 @@ class _KartuPasang extends StatelessWidget {
           child: FittedBox(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(teks, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
+              child: Text(
+                teks,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
             ),
           ),
         ),
@@ -713,7 +878,11 @@ class _Bandingkan extends StatelessWidget {
   final bool tampilkanKunci;
   final ValueChanged<String> onPilih;
 
-  static const _arti = {'<': 'lebih kecil', '=': 'sama dengan', '>': 'lebih besar'};
+  static const _arti = {
+    '<': 'lebih kecil',
+    '=': 'sama dengan',
+    '>': 'lebih besar',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -748,8 +917,10 @@ class _Bandingkan extends StatelessWidget {
                     status: !terkunci || !tampilkanKunci
                         ? StatusKartu.biasa
                         : (tanda == soal.jawabanBenar
-                            ? StatusKartu.benar
-                            : (pilihan == tanda ? StatusKartu.salah : StatusKartu.biasa)),
+                              ? StatusKartu.benar
+                              : (pilihan == tanda
+                                    ? StatusKartu.salah
+                                    : StatusKartu.biasa)),
                     onTap: terkunci ? null : () => onPilih(tanda),
                   ),
                 ),

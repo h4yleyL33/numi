@@ -24,18 +24,27 @@ class BannerUmpanBalik extends StatelessWidget {
   final VoidCallback onLanjut;
   final bool tampilkanXp;
 
-  static const _pujian = ['Hebat!', 'Tepat sekali!', 'Keren!', 'Pintar!', 'Mantap!'];
+  static const _pujian = [
+    'Hebat!',
+    'Tepat sekali!',
+    'Keren!',
+    'Pintar!',
+    'Mantap!',
+  ];
 
   @override
   Widget build(BuildContext context) {
     final warna = benar ? NumiWarna.benar : NumiWarna.salah;
-    final judul = benar ? _pujian[soal.id.hashCode.abs() % _pujian.length] : 'Belum tepat, tidak apa-apa';
+    final judul = benar
+        ? _pujian[soal.id.hashCode.abs() % _pujian.length]
+        : 'Belum tepat, tidak apa-apa';
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1, end: 0),
       duration: const Duration(milliseconds: 380),
       curve: Curves.easeOutCubic,
-      builder: (context, v, child) => Transform.translate(offset: Offset(0, v * 260), child: child),
+      builder: (context, v, child) =>
+          Transform.translate(offset: Offset(0, v * 260), child: child),
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
         decoration: BoxDecoration(
@@ -52,28 +61,49 @@ class BannerUmpanBalik extends StatelessWidget {
                 children: [
                   NumiMascot(
                     ukuran: 64,
-                    ekspresi: benar ? EkspresiMaskot.bangga : EkspresiMaskot.semangat,
+                    ekspresi: benar
+                        ? EkspresiMaskot.bangga
+                        : EkspresiMaskot.semangat,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       judul,
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Color.lerp(warna, Colors.black, 0.25)),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: Color.lerp(warna, Colors.black, 0.25),
+                      ),
                     ),
                   ),
                   if (benar && tampilkanXp)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(color: NumiWarna.cahaya, borderRadius: BorderRadius.circular(20)),
-                      child: const Text('+${AppConfig.xpPerBenar} XP', style: TextStyle(fontWeight: FontWeight.w900)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: NumiWarna.cahaya,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        '+${AppConfig.xpPerBenar} XP',
+                        style: TextStyle(fontWeight: FontWeight.w900),
+                      ),
                     ),
                 ],
               ),
               if (!benar) ...[
                 const SizedBox(height: 4),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Jawaban yang benar: ', style: TextStyle(fontWeight: FontWeight.w700)),
+                    const Text(
+                      'Jawaban yang benar: ',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
                     if (soal.jenis == JenisSoal.pasangkan)
                       const SizedBox.shrink()
                     else
@@ -81,10 +111,18 @@ class BannerUmpanBalik extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(soal.penjelasan, style: const TextStyle(fontSize: 16, height: 1.4)),
+                Text(
+                  soal.penjelasan,
+                  style: const TextStyle(fontSize: 16, height: 1.4),
+                ),
               ],
               const SizedBox(height: 16),
-              TombolNumi(label: 'Lanjut', warna: warna, warnaTeks: Colors.white, onTap: onLanjut),
+              TombolNumi(
+                label: 'Lanjut',
+                warna: warna,
+                warnaTeks: Colors.white,
+                onTap: onLanjut,
+              ),
             ],
           ),
         ),

@@ -59,13 +59,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void _berikut() {
-    _halaman.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeOutCubic);
+    _halaman.nextPage(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   Future<void> _mulai() async {
-    await ref.read(numiControllerProvider.notifier).daftar(nama: _nama.text, usia: _usia!);
+    await ref
+        .read(numiControllerProvider.notifier)
+        .daftar(nama: _nama.text, usia: _usia!);
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(transisiPudar(const DiagnosticIntroScreen()));
+    Navigator.of(context)
+        .pushReplacement(transisiPudar(const DiagnosticIntroScreen()));
   }
 
   @override
@@ -88,7 +94,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         width: i == _posisi ? 28 : 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: i == _posisi ? NumiWarna.cahaya : Colors.white24,
+                          color: i == _posisi
+                              ? NumiWarna.cahaya
+                              : Colors.white24,
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -100,7 +108,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   controller: _halaman,
                   onPageChanged: (i) => setState(() => _posisi = i),
                   children: [
-                    for (final adegan in _cerita) _HalamanCerita(adegan: adegan),
+                    for (final adegan in _cerita)
+                      _HalamanCerita(adegan: adegan),
                     _FormProfil(
                       nama: _nama,
                       usia: _usia,
@@ -114,14 +123,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
                 child: _posisi < _cerita.length
                     ? TombolNumi(
-                        label: _posisi == _cerita.length - 1 ? 'Aku mau membantu!' : 'Lanjut',
+                        label: _posisi == _cerita.length - 1
+                            ? 'Aku mau membantu!'
+                            : 'Lanjut',
                         lebar: double.infinity,
                         onTap: _berikut,
                       )
                     : TombolNumi(
                         label: 'Mulai Petualangan',
                         lebar: double.infinity,
-                        onTap: _nama.text.trim().isEmpty || _usia == null ? null : _mulai,
+                        onTap: _nama.text.trim().isEmpty || _usia == null
+                            ? null
+                            : _mulai,
                       ),
               ),
             ],
@@ -139,36 +152,71 @@ class _HalamanCerita extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 220,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(left: 0, bottom: 20, child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 90)),
-                Positioned(right: 0, bottom: 40, child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 70)),
-                Positioned(top: 0, child: NumiMascot(ukuran: 150, ekspresi: adegan.ekspresi)),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, batas) {
+        final mendatar = batas.maxWidth >= 700;
+        final gambar = SizedBox(
+          width: mendatar ? 240 : batas.maxWidth - 48,
+          height: mendatar ? 160 : 220,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                left: 0,
+                bottom: 20,
+                child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 90),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 40,
+                child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 70),
+              ),
+              Positioned(
+                top: 0,
+                child: NumiMascot(
+                  ukuran: mendatar ? 120 : 150,
+                  ekspresi: adegan.ekspresi,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 28),
-          Text(
-            adegan.teks,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 21, height: 1.45, fontWeight: FontWeight.w700),
+        );
+        final teks = Text(
+          adegan.teks,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 21,
+            height: 1.45,
+            fontWeight: FontWeight.w700,
           ),
-        ],
-      ),
+        );
+        return Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: mendatar
+                ? Row(
+                    children: [
+                      gambar,
+                      const SizedBox(width: 32),
+                      Expanded(child: teks),
+                    ],
+                  )
+                : Column(children: [gambar, const SizedBox(height: 28), teks]),
+          ),
+        );
+      },
     );
   }
 }
 
 class _FormProfil extends StatelessWidget {
-  const _FormProfil({required this.nama, required this.usia, required this.onUsia, required this.onUbah});
+  const _FormProfil({
+    required this.nama,
+    required this.usia,
+    required this.onUsia,
+    required this.onUbah,
+  });
 
   final TextEditingController nama;
   final int? usia;
@@ -182,11 +230,17 @@ class _FormProfil extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Center(child: NumiMascot(ukuran: 120, ekspresi: EkspresiMaskot.senang)),
+          const Center(
+            child: NumiMascot(ukuran: 120, ekspresi: EkspresiMaskot.senang),
+          ),
           const Text(
             'Halo, Teman!',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           const SizedBox(height: 4),
           const Text(
@@ -195,7 +249,14 @@ class _FormProfil extends StatelessWidget {
             style: TextStyle(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 24),
-          const Text('Siapa namamu?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
+          const Text(
+            'Siapa namamu?',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 17,
+            ),
+          ),
           const SizedBox(height: 8),
           TextField(
             controller: nama,
@@ -210,7 +271,14 @@ class _FormProfil extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Text('Berapa umurmu?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
+          const Text(
+            'Berapa umurmu?',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 17,
+            ),
+          ),
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
@@ -224,9 +292,14 @@ class _FormProfil extends StatelessWidget {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: usia == u ? NumiWarna.cahaya : Colors.white.withValues(alpha: 0.12),
+                      color: usia == u
+                          ? NumiWarna.cahaya
+                          : Colors.white.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
-                      border: Border.all(color: usia == u ? Colors.white : Colors.white24, width: 2),
+                      border: Border.all(
+                        color: usia == u ? Colors.white : Colors.white24,
+                        width: 2,
+                      ),
                     ),
                     child: Center(
                       child: Text(
@@ -249,7 +322,10 @@ class _FormProfil extends StatelessWidget {
               Icon(Icons.shield_rounded, size: 16, color: Colors.white54),
               SizedBox(width: 6),
               Flexible(
-                child: Text('Data tersimpan aman di perangkat ini', style: TextStyle(color: Colors.white54)),
+                child: Text(
+                  'Data tersimpan aman di perangkat ini',
+                  style: TextStyle(color: Colors.white54),
+                ),
               ),
             ],
           ),

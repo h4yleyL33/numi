@@ -43,37 +43,48 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       body: LatarMalam(
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const NumiMascot(ukuran: 170, ekspresi: EkspresiMaskot.senang),
-              const SizedBox(height: 12),
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: 1),
-                duration: const Duration(milliseconds: 900),
-                curve: Curves.easeOutBack,
-                builder: (context, v, child) => Opacity(
-                  opacity: v.clamp(0, 1),
-                  child: Transform.translate(offset: Offset(0, (1 - v) * 30), child: child),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Numi',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 2,
-                          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const NumiMascot(ukuran: 170, ekspresi: EkspresiMaskot.senang),
+                const SizedBox(height: 12),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: 1),
+                  duration: const Duration(milliseconds: 900),
+                  curve: Curves.easeOutBack,
+                  builder: (context, v, child) => Opacity(
+                    opacity: v.clamp(0, 1),
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - v) * 30),
+                      child: child,
                     ),
-                    const Text(
-                      'Petualangan di Samudra Angka',
-                      style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Numi',
+                        style: Theme.of(context).textTheme.displayMedium
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 2,
+                            ),
+                      ),
+                      const Text(
+                        'Petualangan di Samudra Angka',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

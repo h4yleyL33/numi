@@ -81,7 +81,8 @@ class _PemutarSoalState extends State<PemutarSoal> {
   Widget build(BuildContext context) {
     final total = widget.perkiraanTotal ?? widget.soal.length;
     final nomor = widget.nomorAwal + _indeks + 1;
-    final benarTerakhir = _sudahCek && _jawaban.isNotEmpty && _jawaban.last.benar;
+    final benarTerakhir =
+        _sudahCek && _jawaban.isNotEmpty && _jawaban.last.benar;
 
     return Column(
       children: [
@@ -94,20 +95,38 @@ class _PemutarSoalState extends State<PemutarSoal> {
                 icon: const Icon(Icons.close_rounded, size: 30),
                 onPressed: () => Navigator.of(context).maybePop(),
               ),
-              Expanded(child: BilahProgres(nilai: (nomor - 1 + (_sudahCek ? 1 : 0)) / total)),
+              Expanded(
+                child: BilahProgres(
+                  nilai: (nomor - 1 + (_sudahCek ? 1 : 0)) / total,
+                ),
+              ),
               const SizedBox(width: 12),
-              Text('$nomor/$total', style: const TextStyle(fontWeight: FontWeight.w800, color: NumiWarna.tintaPudar)),
+              Text(
+                '$nomor/$total',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: NumiWarna.tintaPudar,
+                ),
+              ),
             ],
           ),
         ),
         if (widget.judul != null)
-          Text(widget.judul!, style: const TextStyle(fontWeight: FontWeight.w800, color: NumiWarna.tintaPudar)),
+          Text(
+            widget.judul!,
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              color: NumiWarna.tintaPudar,
+            ),
+          ),
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
             transitionBuilder: (child, anim) => SlideTransition(
               position: Tween(begin: const Offset(1, 0), end: Offset.zero)
-                  .animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
+                  .animate(
+                    CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
+                  ),
               child: FadeTransition(opacity: anim, child: child),
             ),
             child: SingleChildScrollView(
@@ -125,12 +144,19 @@ class _PemutarSoalState extends State<PemutarSoal> {
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           child: _sudahCek
-              ? BannerUmpanBalik(
-                  key: ValueKey('umpan-$_indeks'),
-                  benar: benarTerakhir,
-                  soal: _soal,
-                  onLanjut: _lanjut,
-                  tampilkanXp: widget.konteks != KonteksJawaban.diagnostic,
+              ? ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.sizeOf(context).height * 0.52,
+                  ),
+                  child: SingleChildScrollView(
+                    child: BannerUmpanBalik(
+                      key: ValueKey('umpan-$_indeks'),
+                      benar: benarTerakhir,
+                      soal: _soal,
+                      onLanjut: _lanjut,
+                      tampilkanXp: widget.konteks != KonteksJawaban.diagnostic,
+                    ),
+                  ),
                 )
               : Padding(
                   key: const ValueKey('cek'),

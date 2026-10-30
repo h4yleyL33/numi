@@ -32,7 +32,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   Future<void> _cekPesan() async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
-    final pesan = await ref.read(numiControllerProvider.notifier).periksaPesanMaskot();
+    final pesan = await ref
+        .read(numiControllerProvider.notifier)
+        .periksaPesanMaskot();
     if (!mounted || pesan == null) return;
     setState(() => _pesan = pesan);
     _tutup = Timer(const Duration(seconds: 7), _sembunyikan);
@@ -53,36 +55,85 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          IndexedStack(index: _tab, children: const [SkillMapScreen(), ProgressScreen()]),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeOutBack,
-            left: 12,
-            right: 12,
-            bottom: _pesan == null ? -220 : 12,
-            child: GestureDetector(
-              onTap: _sembunyikan,
-              child: _pesan == null
-                  ? const SizedBox(height: 160)
-                  : MascotBubble(teks: _pesan!.isi, ekspresi: _pesan!.ekspresi, ukuranMaskot: 88),
-            ),
+    return LayoutBuilder(
+      builder: (context, batas) {
+        final mendatar = batas.maxWidth >= 700;
+        return Scaffold(
+          body: Row(
+            children: [
+              if (mendatar)
+                SafeArea(
+                  child: NavigationRail(
+                    backgroundColor: Colors.white,
+                    indicatorColor: NumiWarna.cahayaMuda,
+                    labelType: NavigationRailLabelType.all,
+                    selectedIndex: _tab,
+                    onDestinationSelected: (i) => setState(() => _tab = i),
+                    destinations: const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.map_outlined),
+                        selectedIcon: Icon(Icons.map_rounded),
+                        label: Text('Peta'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.emoji_events_outlined),
+                        selectedIcon: Icon(Icons.emoji_events_rounded),
+                        label: Text('Progres'),
+                      ),
+                    ],
+                  ),
+                ),
+              Expanded(
+                child: Stack(
+                  children: [
+                    IndexedStack(
+                      index: _tab,
+                      children: const [SkillMapScreen(), ProgressScreen()],
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOutBack,
+                      left: 12,
+                      right: 12,
+                      bottom: _pesan == null ? -220 : 12,
+                      child: GestureDetector(
+                        onTap: _sembunyikan,
+                        child: _pesan == null
+                            ? const SizedBox(height: 160)
+                            : MascotBubble(
+                                teks: _pesan!.isi,
+                                ekspresi: _pesan!.ekspresi,
+                                ukuranMaskot: 88,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.white,
-        indicatorColor: NumiWarna.cahayaMuda,
-        selectedIndex: _tab,
-        onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.map_outlined), selectedIcon: Icon(Icons.map_rounded), label: 'Peta'),
-          NavigationDestination(
-              icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Progres'),
-        ],
-      ),
+          bottomNavigationBar: mendatar
+              ? null
+              : NavigationBar(
+                  backgroundColor: Colors.white,
+                  indicatorColor: NumiWarna.cahayaMuda,
+                  selectedIndex: _tab,
+                  onDestinationSelected: (i) => setState(() => _tab = i),
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.map_outlined),
+                      selectedIcon: Icon(Icons.map_rounded),
+                      label: 'Peta',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.emoji_events_outlined),
+                      selectedIcon: Icon(Icons.emoji_events_rounded),
+                      label: 'Progres',
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }

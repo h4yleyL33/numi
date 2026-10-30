@@ -4,7 +4,6 @@ app/.flutter-plugins
 app/.flutter-plugins-dependencies
 app/build/
 app/.packages
-app/pubspec.lock
 app/android/.gradle/
 app/android/local.properties
 app/android/app/debug/
@@ -23,6 +22,10 @@ app/android/app/google-services.json
 *.keystore
 key.properties
 .env
+.env.*
+!.env.example
+*.pem
+*.p12
 
 # sistem
 .DS_Store
@@ -32,3 +35,9 @@ desktop.ini
 
 # node
 node_modules/
+
+# Cache lokal dan metadata tautan sementara hasil ekspor
+/.cache/
+/blobs/
+docs/03-presentasi/figma-rpl-2026-10-30/screenshots.json
+docs/02-perancangan/responsive-2026-10-29/raw-output.json
