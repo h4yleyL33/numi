@@ -2,6 +2,7 @@ import 'catatan_belajar.dart';
 import 'companion_message.dart';
 import 'siswa.dart';
 import 'bukti_skill.dart';
+import 'sesi_mastery.dart';
 
 /// Seluruh data milik satu siswa. Disimpan utuh oleh repository, dan menjadi
 /// state utama yang dipegang NumiController.
@@ -11,6 +12,7 @@ class DataBelajar {
     this.skillMap = const {},
     this.buktiSkill = const {},
     this.aksesMateri = const {},
+    this.sesiMastery = const {},
     this.hasilDiagnostic = const [],
     this.progresLesson = const {},
     this.riwayatJawaban = const [],
@@ -25,6 +27,7 @@ class DataBelajar {
   final Map<String, SkillMap> skillMap;
   final Map<String, BuktiSkill> buktiSkill;
   final Map<String, AksesMateri> aksesMateri;
+  final Map<String, SesiMastery> sesiMastery;
   final List<DiagnosticResult> hasilDiagnostic;
   final Map<String, LessonProgress> progresLesson;
   final List<Jawaban> riwayatJawaban;
@@ -68,6 +71,7 @@ class DataBelajar {
     Map<String, SkillMap>? skillMap,
     Map<String, BuktiSkill>? buktiSkill,
     Map<String, AksesMateri>? aksesMateri,
+    Map<String, SesiMastery>? sesiMastery,
     List<DiagnosticResult>? hasilDiagnostic,
     Map<String, LessonProgress>? progresLesson,
     List<Jawaban>? riwayatJawaban,
@@ -82,6 +86,7 @@ class DataBelajar {
       skillMap: skillMap ?? this.skillMap,
       buktiSkill: buktiSkill ?? this.buktiSkill,
       aksesMateri: aksesMateri ?? this.aksesMateri,
+      sesiMastery: sesiMastery ?? this.sesiMastery,
       hasilDiagnostic: hasilDiagnostic ?? this.hasilDiagnostic,
       progresLesson: progresLesson ?? this.progresLesson,
       riwayatJawaban: riwayatJawaban ?? this.riwayatJawaban,
@@ -94,7 +99,8 @@ class DataBelajar {
   }
 
   Map<String, dynamic> toJson() => {
-    'versi': 3,
+    'versi': 4,
+    'sesiMastery': sesiMastery.values.map((s) => s.toJson()).toList(),
     'buktiSkill': buktiSkill.values.map((e) => e.toJson()).toList(),
     'aksesMateri': aksesMateri.values.map((e) => e.toJson()).toList(),
     'siswa': siswa?.toJson(),
@@ -118,6 +124,10 @@ class DataBelajar {
     final skill = daftar('skillMap', SkillMap.fromJson);
     final bukti = daftar('buktiSkill', BuktiSkill.fromJson);
     final akses = daftar('aksesMateri', AksesMateri.fromJson);
+    final sesi = daftar('sesiMastery', SesiMastery.fromJson);
+    if (sesi.map((s) => s.topikId).toSet().length != sesi.length) {
+      throw const FormatException('Checkpoint topik duplikat.');
+    }
     final lesson = daftar('progresLesson', LessonProgress.fromJson);
     return DataBelajar(
       siswa: json['siswa'] == null
@@ -126,6 +136,7 @@ class DataBelajar {
       skillMap: {for (final s in skill) s.topikId: s},
       buktiSkill: {for (final b in bukti) b.topikId: b},
       aksesMateri: {for (final a in akses) a.topikId: a},
+      sesiMastery: {for (final s in sesi) s.topikId: s},
       hasilDiagnostic: daftar('hasilDiagnostic', DiagnosticResult.fromJson),
       progresLesson: {for (final l in lesson) l.lessonId: l},
       riwayatJawaban: daftar('riwayatJawaban', Jawaban.fromJson),

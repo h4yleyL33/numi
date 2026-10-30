@@ -26,6 +26,16 @@ class LearningPathService {
   /// sebelum pindah. Setelah itu topik terbuka dengan urutan paling awal.
   Rekomendasi? rekomendasi(DataBelajar data) {
     final urut = [...topik]..sort((a, b) => a.urutan.compareTo(b.urutan));
+    final tertunda = data.sesiMastery.values
+        .where((s) => !s.selesai)
+        .firstOrNull;
+    if (tertunda != null) {
+      return Rekomendasi(
+        topik: urut.firstWhere((t) => t.id == tertunda.topikId),
+        alasan:
+            'Lanjutkan test tersimpan: ${tertunda.jawaban.length}/5 jawaban.',
+      );
+    }
     Topik? pilihan;
     for (final t in urut) {
       if (data.statusTopik(t.id) == StatusTopik.perluLatihan) {

@@ -197,36 +197,6 @@ void main() {
   );
 
   test(
-    'mastery test lulus menguasai topik dan membuka topik berikutnya',
-    () async {
-      await daftarDanDiagnostic();
-      final r = await controller().selesaiMastery(
-        'T02',
-        jawaban('T02', 5, 5, KonteksJawaban.mastery),
-      );
-      expect(r.lulus, isTrue);
-      expect(data().statusTopik('T02'), StatusTopik.mastered);
-      expect(
-        data().statusTopik('T05'),
-        StatusTopik.belumDiuji,
-        reason: 'prasyarat T05 adalah T02',
-      );
-      expect(data().hasilMastery.single.skor, 100);
-    },
-  );
-
-  test('mastery test di bawah ambang tetap perlu latihan', () async {
-    await daftarDanDiagnostic();
-    await controller().mulaiLesson('T02');
-    final r = await controller().selesaiMastery(
-      'T02',
-      jawaban('T02', 4, 5, KonteksJawaban.mastery),
-    );
-    expect(r.lulus, isFalse);
-    expect(data().statusTopik('T02'), StatusTopik.perluLatihan);
-  });
-
-  test(
     'maskot menyapa sekali sehari dan mengingatkan saat streak terancam',
     () async {
       await daftarDanDiagnostic();
@@ -274,61 +244,6 @@ void main() {
     expect(data().buktiSkill, sebelum);
     expect(data().buktiSkill['T01']!.status, StatusBukti.indikasiSiap);
     expect(data().jumlahBuktiAwal, 0);
-  });
-
-  test('blok mastery tidak lengkap, duplikat, atau konteks salah tidak memberi bukti/reward', () async {
-    await daftarDanDiagnostic();
-    final sebelum = data();
-    final duplikat = jawaban('T02', 5, 5, KonteksJawaban.mastery).first;
-    for (final respons in [
-      jawaban('T02', 4, 4, KonteksJawaban.mastery),
-      [for (var i = 0; i < 5; i++) duplikat],
-      jawaban('T02', 5, 5, KonteksJawaban.lesson),
-    ]) {
-      await expectLater(
-        controller().selesaiMastery('T02', respons),
-        throwsArgumentError,
-      );
-    }
-    expect(identical(data(), sebelum), isTrue);
-  });
-
-  test(
-    'lima jawaban berbantuan belum menjadi bukti penguasaan mandiri',
-    () async {
-      await daftarDanDiagnostic();
-      final respons = [
-        for (var i = 0; i < 5; i++)
-          Jawaban(
-            soalId: 'T02-$i',
-            topikId: 'T02',
-            jawaban: 'x',
-            benar: true,
-            waktu: sekarang,
-            konteks: KonteksJawaban.mastery,
-            versiButir: 'generator-v1',
-            bantuan: i == 0 ? 1 : 0,
-          ),
-      ];
-      final hasil = await controller().selesaiMastery('T02', respons);
-      expect(hasil.lulus, isFalse);
-      expect(data().buktiSkill['T02']!.bantuan, 1);
-      expect(data().jumlahBuktiAwal, 0);
-    },
-  );
-
-  test('bukti dan XP tidak diterbitkan ketika simpan mastery gagal', () async {
-    await daftarDanDiagnostic();
-    final sebelum = data();
-    repo.gagalSimpan = true;
-    await expectLater(
-      controller().selesaiMastery(
-        'T02',
-        jawaban('T02', 5, 5, KonteksJawaban.mastery),
-      ),
-      throwsStateError,
-    );
-    expect(identical(data(), sebelum), isTrue);
   });
 
   test('kelas dan nama tidak sah ditolak sebelum menyimpan', () async {

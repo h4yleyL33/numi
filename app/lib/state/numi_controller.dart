@@ -9,6 +9,8 @@ import '../data/models/companion_message.dart';
 import '../data/models/data_belajar.dart';
 import '../data/models/lesson.dart';
 import '../data/models/siswa.dart';
+import '../data/models/sesi_mastery.dart';
+import '../data/models/soal.dart';
 import '../data/repositories/numi_repository.dart';
 import '../domain/companion_service.dart';
 import '../domain/diagnostic_engine.dart';
@@ -64,6 +66,48 @@ class RingkasanSesi {
 
   int get skor => total == 0 ? 0 : (benar * 100 / total).round();
   bool get levelNaik => levelSesudah > levelSebelum;
+
+  Map<String, dynamic> toJson() => {
+    'benar': benar,
+    'total': total,
+    'lulus': lulus,
+    'xpDidapat': xpDidapat,
+    'levelSebelum': levelSebelum,
+    'levelSesudah': levelSesudah,
+    'lencanaBaru': lencanaBaru
+        .map(
+          (l) => {
+            'id': l.id,
+            'nama': l.nama,
+            'ikon': l.ikon,
+            'syarat': l.syarat,
+          },
+        )
+        .toList(),
+    'pesan': pesan.toJson(),
+  };
+
+  factory RingkasanSesi.fromJson(Map<String, dynamic> j) => RingkasanSesi(
+    benar: j['benar'] as int,
+    total: j['total'] as int,
+    lulus: j['lulus'] as bool,
+    xpDidapat: j['xpDidapat'] as int,
+    levelSebelum: j['levelSebelum'] as int,
+    levelSesudah: j['levelSesudah'] as int,
+    lencanaBaru: (j['lencanaBaru'] as List)
+        .map(
+          (l) => Lencana(
+            id: l['id'] as String,
+            nama: l['nama'] as String,
+            ikon: l['ikon'] as String,
+            syarat: l['syarat'] as String,
+          ),
+        )
+        .toList(),
+    pesan: CompanionMessage.fromJson(
+      Map<String, dynamic>.from(j['pesan'] as Map),
+    ),
+  );
 }
 
 class NumiController extends Notifier<DataBelajar> {
@@ -72,6 +116,69 @@ class NumiController extends Notifier<DataBelajar> {
   ProgressService get _progress => ref.read(progressServiceProvider);
   CompanionService get _companion => ref.read(companionServiceProvider);
   DateTime get _sekarang => ref.read(jamProvider)();
+  Future<void> _antreanSesi = Future.value();
+
+  Future<T> _antrekan<T>(Future<T> Function() aksi) {
+    final hasil = _antreanSesi.then((_) {
+      if (!ref.mounted) throw StateError('Sesi profil sudah ditutup.');
+      return aksi();
+    });
+    _antreanSesi = hasil.then<void>(
+      (_) {},
+      onError: (Object _, StackTrace _) {},
+    );
+    return hasil;
+  }
+
+  Future<SesiMastery> mulaiMastery(String topikId, List<Soal> soal) =>
+      _antrekan(() async {
+        final lama = state.sesiMastery[topikId];
+        if (lama != null && !lama.selesai) return lama;
+        if (!ref.read(learningPathProvider).siapMastery(topikId, state) ||
+            state.statusTopik(topikId) == StatusTopik.terkunci ||
+            state.statusTopik(topikId) == StatusTopik.belumTersedia) {
+          throw StateError('Selesaikan lesson sebelum mulai mastery.');
+        }
+        final id =
+            '${state.siswa!.id}/mastery/$topikId/'
+            '${_sekarang.microsecondsSinceEpoch}';
+        if (id == lama?.id) throw StateError('Identitas sesi harus baru.');
+        final sesi = SesiMastery(id: id, topikId: topikId, soal: soal);
+        await _perbarui(
+          state.copyWith(sesiMastery: {...state.sesiMastery, topikId: sesi}),
+        );
+        return sesi;
+      });
+
+  SesiMastery _sesi(String topikId, String id) {
+    final sesi = state.sesiMastery[topikId];
+    if (sesi == null || sesi.id != id) {
+      throw StateError('Sesi tidak ditemukan.');
+    }
+    return sesi;
+  }
+
+  Future<void> jawabMastery(
+    String topikId,
+    String id,
+    String commandId,
+    Jawaban jawaban,
+  ) => _antrekan(() async {
+    final sesi = _sesi(topikId, id);
+    final baru = sesi.catat(commandId, jawaban);
+    if (identical(sesi, baru)) return;
+    await _perbarui(
+      state.copyWith(sesiMastery: {...state.sesiMastery, topikId: baru}),
+    );
+  });
+
+  Future<RingkasanSesi> finalisasiMastery(String topikId, String id) =>
+      _antrekan(() async {
+        final sesi = _sesi(topikId, id);
+        if (sesi.hasil case final hasil?) return RingkasanSesi.fromJson(hasil);
+        if (!sesi.lengkap) throw StateError('Blok mastery belum lengkap.');
+        return _nilaiMastery(sesi);
+      });
 
   @override
   DataBelajar build() => ref.read(dataAwalProvider);
@@ -82,20 +189,21 @@ class NumiController extends Notifier<DataBelajar> {
   }
 
   /// UC-008: siswa atau orang tua mengisi profil.
-  Future<void> daftar({required String nama, required int kelas}) async {
-    _validasiProfil(nama, kelas);
-    if (state.sudahDaftar) {
-      throw StateError('Profil sudah ada. Gunakan ubahProfil.');
-    }
-    final waktu = _sekarang;
-    final siswa = Siswa(
-      id: 'siswa-${waktu.microsecondsSinceEpoch}',
-      nama: nama.trim(),
-      kelas: kelas,
-      dibuatPada: waktu,
-    );
-    await _perbarui(DataBelajar(siswa: siswa));
-  }
+  Future<void> daftar({required String nama, required int kelas}) =>
+      _antrekan(() async {
+        _validasiProfil(nama, kelas);
+        if (state.sudahDaftar) {
+          throw StateError('Profil sudah ada. Gunakan ubahProfil.');
+        }
+        final waktu = _sekarang;
+        final siswa = Siswa(
+          id: 'siswa-${waktu.microsecondsSinceEpoch}',
+          nama: nama.trim(),
+          kelas: kelas,
+          dibuatPada: waktu,
+        );
+        await _perbarui(DataBelajar(siswa: siswa));
+      });
 
   void _validasiProfil(String nama, int kelas) {
     if (nama.trim().isEmpty || nama.trim().length > 30) {
@@ -105,22 +213,23 @@ class NumiController extends Notifier<DataBelajar> {
   }
 
   /// Mengonfirmasi kelas data lama dan memperbarui profil tanpa reset riwayat.
-  Future<void> ubahProfil({required String nama, required int kelas}) async {
-    _validasiProfil(nama, kelas);
-    final siswa = state.siswa;
-    if (siswa == null) throw StateError('Profil belum dibuat.');
-    await _perbarui(
-      state.copyWith(
-        siswa: siswa.copyWith(nama: nama.trim(), kelas: kelas),
-      ),
-    );
-  }
+  Future<void> ubahProfil({required String nama, required int kelas}) =>
+      _antrekan(() async {
+        _validasiProfil(nama, kelas);
+        final siswa = state.siswa;
+        if (siswa == null) throw StateError('Profil belum dibuat.');
+        await _perbarui(
+          state.copyWith(
+            siswa: siswa.copyWith(nama: nama.trim(), kelas: kelas),
+          ),
+        );
+      });
 
   /// UC-001: menyimpan hasil diagnostic dan menyusun skill map awal.
   Future<void> simpanDiagnostic(
     HasilAkhirDiagnostic hasil,
     List<Jawaban> jawaban,
-  ) async {
+  ) => _antrekan(() async {
     final waktu = _sekarang;
     if (hasil.hasilPerTopik.isEmpty ||
         hasil.hasilPerTopik.map((h) => h.topikId).toSet().length !=
@@ -154,7 +263,7 @@ class NumiController extends Notifier<DataBelajar> {
       streakLog: _progress.catatAktivitas(state.streakLog, waktu),
     );
     await _perbarui(data);
-  }
+  });
 
   /// Memulai lesson tidak menghasilkan bukti kemampuan.
   Future<void> mulaiLesson(String topikId) async {
@@ -169,7 +278,7 @@ class NumiController extends Notifier<DataBelajar> {
     Lesson lesson,
     List<Jawaban> jawaban,
     Duration durasi,
-  ) async {
+  ) => _antrekan(() async {
     final waktu = _sekarang;
     final benar = jawaban.where((j) => j.benar).length;
     final lulus = benar >= AppConfig.minBenarLesson;
@@ -209,13 +318,12 @@ class NumiController extends Notifier<DataBelajar> {
       triggerLulus: JenisTrigger.lessonSelesai,
       triggerGagal: JenisTrigger.lessonGagal,
     );
-  }
+  });
 
-  /// UC-005: menilai mastery test dan memperbarui skill map.
-  Future<RingkasanSesi> selesaiMastery(
-    String topikId,
-    List<Jawaban> jawaban,
-  ) async {
+  /// Hanya finalisasi checkpoint lengkap yang boleh menerbitkan bukti/reward.
+  Future<RingkasanSesi> _nilaiMastery(SesiMastery sesi) async {
+    final topikId = sesi.topikId;
+    final jawaban = sesi.jawaban;
     final waktu = _sekarang;
     final benar = jawaban.where((j) => j.benar).length;
     final skor = jawaban.isEmpty ? 0 : (benar * 100 / jawaban.length).round();
@@ -224,6 +332,7 @@ class NumiController extends Notifier<DataBelajar> {
       jawaban,
       AppConfig.soalMastery,
       KonteksJawaban.mastery,
+      sumberSesi: sesi.id,
     );
     final lulus = baru.status == StatusBukti.buktiAwal;
     final bukti = {...state.buktiSkill, topikId: baru};
@@ -250,6 +359,7 @@ class NumiController extends Notifier<DataBelajar> {
       kejadian: const KejadianSesi(),
       triggerLulus: JenisTrigger.masteryLulus,
       triggerGagal: JenisTrigger.masteryGagal,
+      sesi: sesi,
     );
   }
 
@@ -262,6 +372,7 @@ class NumiController extends Notifier<DataBelajar> {
     required KejadianSesi kejadian,
     required JenisTrigger triggerLulus,
     required JenisTrigger triggerGagal,
+    SesiMastery? sesi,
   }) async {
     final waktu = _sekarang;
     final lencana = _progress.lencanaBaru(data, waktu, kejadian);
@@ -280,18 +391,7 @@ class NumiController extends Notifier<DataBelajar> {
         .buat(trigger, data.siswa!.namaPanggilan, waktu)
         .tandaiDibaca();
 
-    await _perbarui(
-      data.copyWith(
-        lencana: [
-          ...data.lencana,
-          for (final l in lencana)
-            SiswaLencana(badgeId: l.id, waktuDiperoleh: waktu),
-        ],
-        pesanMaskot: _tambahPesan(pesan),
-      ),
-    );
-
-    return RingkasanSesi(
+    final ringkasan = RingkasanSesi(
       benar: benar,
       total: total,
       lulus: lulus,
@@ -301,17 +401,35 @@ class NumiController extends Notifier<DataBelajar> {
       lencanaBaru: lencana,
       pesan: pesan,
     );
+    await _perbarui(
+      data.copyWith(
+        sesiMastery: sesi == null
+            ? null
+            : {
+                ...data.sesiMastery,
+                sesi.topikId: sesi.tutup(ringkasan.toJson()),
+              },
+        lencana: [
+          ...data.lencana,
+          for (final l in lencana)
+            SiswaLencana(badgeId: l.id, waktuDiperoleh: waktu),
+        ],
+        pesanMaskot: _tambahPesan(pesan),
+      ),
+    );
+
+    return ringkasan;
   }
 
   /// UC-007: dipanggil saat halaman utama dibuka.
-  Future<CompanionMessage?> periksaPesanMaskot() async {
+  Future<CompanionMessage?> periksaPesanMaskot() => _antrekan(() async {
     final pesan = _companion.periksaSaatMembuka(state, _sekarang);
     if (pesan == null) return null;
     await _perbarui(state.copyWith(pesanMaskot: _tambahPesan(pesan)));
     return pesan;
-  }
+  });
 
-  Future<void> tandaiPesanDibaca(String id) async {
+  Future<void> tandaiPesanDibaca(String id) => _antrekan(() async {
     await _perbarui(
       state.copyWith(
         pesanMaskot: [
@@ -319,22 +437,23 @@ class NumiController extends Notifier<DataBelajar> {
         ],
       ),
     );
-  }
+  });
 
-  Future<void> mulaiUlang() async {
+  Future<void> mulaiUlang() => _antrekan(() async {
     final repo = _repo;
     await repo.hapus();
     if (!ref.mounted) return;
     final data = await repo.muat();
     if (ref.mounted) state = data;
-  }
+  });
 
   BuktiSkill _buatBukti(
     String topikId,
     List<Jawaban> jawaban,
     int total,
-    KonteksJawaban konteks,
-  ) {
+    KonteksJawaban konteks, {
+    String? sumberSesi,
+  }) {
     if (!daftarTopik.any((t) => t.id == topikId) ||
         jawaban.length != total ||
         jawaban.any(
@@ -370,6 +489,7 @@ class NumiController extends Notifier<DataBelajar> {
       total: total,
       bantuan: bantuan,
       sumberSesi:
+          sumberSesi ??
           '${konteks.name}-${_sekarang.microsecondsSinceEpoch}-$topikId',
       waktu: jawaban.last.waktu,
       versiKebijakan: 'numi-pilot-v1',

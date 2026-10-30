@@ -20,6 +20,8 @@ class PemutarSoal extends StatefulWidget {
     this.nomorAwal = 0,
     this.perkiraanTotal,
     this.onJawab,
+    this.simpanJawaban,
+    this.jawabanAwal = const [],
   });
 
   final List<Soal> soal;
@@ -32,36 +34,65 @@ class PemutarSoal extends StatefulWidget {
   final int nomorAwal;
   final int? perkiraanTotal;
   final ValueChanged<Jawaban>? onJawab;
+  final Future<void> Function(Jawaban)? simpanJawaban;
+  final List<Jawaban> jawabanAwal;
 
   @override
   State<PemutarSoal> createState() => _PemutarSoalState();
 }
 
 class _PemutarSoalState extends State<PemutarSoal> {
-  final _jawaban = <Jawaban>[];
-  int _indeks = 0;
+  late final _jawaban = [...widget.jawabanAwal];
+  late int _indeks = _jawaban.length;
   String? _pilihan;
   bool _sudahCek = false;
   bool _tuntas = false;
+  bool _menyimpan = false;
+  bool _gagalSimpan = false;
+  Jawaban? _tertunda;
 
   bool get _umpanBalik =>
       widget.konteks == KonteksJawaban.lesson && widget.umpanBalik;
 
   Soal get _soal => widget.soal[_indeks];
 
-  void _cek() {
+  Future<void> _cek() async {
     final pilihan = _pilihan;
-    if (pilihan == null || _sudahCek || _tuntas) return;
-    final jawaban = Jawaban(
-      soalId: _soal.id,
-      skillId: _soal.skillId,
-      versiButir: _soal.versi,
-      topikId: _soal.topikId,
-      jawaban: pilihan,
-      benar: _soal.periksa(pilihan),
-      waktu: DateTime.now(),
-      konteks: widget.konteks,
-    );
+    if (pilihan == null || _sudahCek || _tuntas || _menyimpan) return;
+    final jawaban =
+        _tertunda ??
+        Jawaban(
+          soalId: _soal.id,
+          skillId: _soal.skillId,
+          versiButir: _soal.versi,
+          topikId: _soal.topikId,
+          jawaban: pilihan,
+          benar: _soal.periksa(pilihan),
+          waktu: DateTime.now(),
+          konteks: widget.konteks,
+        );
+    final simpan = widget.simpanJawaban;
+    if (simpan != null) {
+      setState(() {
+        _tertunda = jawaban;
+        _menyimpan = true;
+        _gagalSimpan = false;
+      });
+      try {
+        await simpan(jawaban);
+      } catch (_) {
+        if (mounted) {
+          setState(() {
+            _menyimpan = false;
+            _gagalSimpan = true;
+          });
+        }
+        return;
+      }
+      if (!mounted) return;
+      _menyimpan = false;
+      _tertunda = null;
+    }
     _jawaban.add(jawaban);
     widget.onJawab?.call(jawaban);
     if (_umpanBalik) {
@@ -142,7 +173,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
               child: TampilanSoal(
                 soal: _soal,
-                terkunci: _sudahCek,
+                terkunci: _sudahCek || _tertunda != null || _menyimpan,
                 tampilkanKunci: _umpanBalik && _sudahCek,
                 onPilih: (p) => setState(() => _pilihan = p),
               ),
@@ -151,7 +182,15 @@ class _PemutarSoalState extends State<PemutarSoal> {
         ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
-          child: _sudahCek
+          child: _menyimpan
+              ? Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Semantics(
+                    label: 'Menyimpan jawaban',
+                    child: const CircularProgressIndicator(),
+                  ),
+                )
+              : _sudahCek
               ? ConstrainedBox(
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.sizeOf(context).height * 0.52,
@@ -173,12 +212,28 @@ class _PemutarSoalState extends State<PemutarSoal> {
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                   child: SafeArea(
                     top: false,
-                    child: TombolNumi(
-                      label: _umpanBalik ? 'Cek Jawaban' : 'Kirim',
-                      lebar: double.infinity,
-                      warna: NumiWarna.malam,
-                      warnaTeks: Colors.white,
-                      onTap: _pilihan == null ? null : _cek,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_gagalSimpan)
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              'Jawaban belum berhasil disimpan. '
+                              'Coba simpan lagi. Jika tetap gagal, buka ulang profil.',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        TombolNumi(
+                          label: _gagalSimpan
+                              ? 'Coba simpan lagi'
+                              : (_umpanBalik ? 'Cek Jawaban' : 'Kirim'),
+                          lebar: double.infinity,
+                          warna: NumiWarna.malam,
+                          warnaTeks: Colors.white,
+                          onTap: _pilihan == null ? null : _cek,
+                        ),
+                      ],
                     ),
                   ),
                 ),

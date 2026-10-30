@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sembast/sembast.dart';
 
 import '../models/data_belajar.dart';
 import '../models/siswa.dart';
@@ -8,17 +9,31 @@ import 'numi_repository.dart';
 import 'profil_repository.dart';
 
 /// Cache lokal dipisahkan per UID; data legacy tanpa pemilik tidak dibaca di sini.
-/// shortcut: belum sinkronisasi/durabilitas checkpoint, lengkapi adapter pada I08.
+/// Database menjadi sumber utama; preferences hanya sumber migrasi cache ber-UID.
 class LocalProfilRepository implements ProfilRepository {
   LocalProfilRepository(
     this._prefs, {
     required this.uid,
     required this.uidAktif,
+    this.database,
+    this.databaseUntuk,
   }) {
     if (uid.isEmpty) throw ArgumentError('UID wali wajib diisi.');
   }
 
   final SharedPreferences _prefs;
+  final Database? database;
+  final Future<Database> Function()? databaseUntuk;
+  Database? _terbuka;
+
+  Future<Database?> _db() async {
+    if (database != null) return database;
+    final buka = databaseUntuk;
+    if (buka == null) return null;
+    return _terbuka ??= await buka();
+  }
+
+  final _store = StoreRef<String, String>('wali');
   final String uid;
   final String? Function() uidAktif;
   Future<void> _antrean = Future.value();
@@ -28,9 +43,8 @@ class LocalProfilRepository implements ProfilRepository {
     if (uidAktif() != uid) throw StateError('Sesi akun sudah berubah.');
   }
 
-  Map<String, DataBelajar> _baca() {
+  Map<String, DataBelajar> _urai(String? teks) {
     _periksaAkun();
-    final teks = _prefs.getString(_kunci);
     if (teks == null) return {};
     final json = jsonDecode(teks) as Map<String, dynamic>;
     if (json['uid'] != uid || json['versi'] != 1) {
@@ -50,19 +64,42 @@ class LocalProfilRepository implements ProfilRepository {
     return profil;
   }
 
+  Future<Map<String, DataBelajar>> _baca() async {
+    _periksaAkun();
+    final db = await _db();
+    final teks = db == null
+        ? _prefs.getString(_kunci)
+        : await _store.record(uid).get(db) ?? _prefs.getString(_kunci);
+    return _urai(teks);
+  }
+
+  String _enkode(Map<String, DataBelajar> profil) => jsonEncode({
+    'versi': 1,
+    'uid': uid,
+    'profil': profil.map((id, data) => MapEntry(id, data.toJson())),
+  });
+
   Future<T> _ubah<T>(T Function(Map<String, DataBelajar>) operasi) {
     final hasil = _antrean.then((_) async {
-      final profil = _baca();
+      _periksaAkun();
+      final db = await _db();
+      if (db != null) {
+        final hasil = await db.transaction((txn) async {
+          final profil = _urai(
+            await _store.record(uid).get(txn) ?? _prefs.getString(_kunci),
+          );
+          final hasil = operasi(profil);
+          _periksaAkun();
+          await _store.record(uid).put(txn, _enkode(profil));
+          return hasil;
+        });
+        _periksaAkun();
+        return hasil;
+      }
+      final profil = await _baca();
       final hasil = operasi(profil);
       _periksaAkun();
-      final tersimpan = await _prefs.setString(
-        _kunci,
-        jsonEncode({
-          'versi': 1,
-          'uid': uid,
-          'profil': profil.map((id, data) => MapEntry(id, data.toJson())),
-        }),
-      );
+      final tersimpan = await _prefs.setString(_kunci, _enkode(profil));
       if (!tersimpan) throw StateError('Profil belum tersimpan di perangkat.');
       _periksaAkun();
       return hasil;
@@ -73,7 +110,7 @@ class LocalProfilRepository implements ProfilRepository {
 
   @override
   Future<List<Siswa>> daftar() async =>
-      _baca().values.map((d) => d.siswa!).toList();
+      (await _baca()).values.map((d) => d.siswa!).toList();
 
   void _validasi(String nama, int kelas) {
     if (nama.trim().isEmpty || nama.trim().length > 30) {
@@ -123,6 +160,7 @@ class _DataProfilRepository implements NumiRepository {
   final LocalProfilRepository pemilik;
   final String id;
   final bool Function() masihAktif;
+  String? _terakhir;
 
   void _periksa() {
     if (!masihAktif()) throw StateError('Sesi profil sudah ditutup.');
@@ -132,23 +170,32 @@ class _DataProfilRepository implements NumiRepository {
   @override
   Future<DataBelajar> muat() async {
     _periksa();
-    final data = pemilik._baca()[id];
+    final data = (await pemilik._baca())[id];
     if (data == null) throw StateError('Profil tidak ditemukan.');
+    _periksa();
+    _terakhir = jsonEncode(data.toJson());
     return data;
   }
 
   @override
   Future<void> simpan(DataBelajar data) async {
     _periksa();
+    final sebelum = _terakhir;
     if (data.siswa?.id != id || data.siswa?.waliUid != pemilik.uid) {
       throw StateError('Data bukan milik profil aktif.');
     }
     await pemilik._ubah<void>((profil) {
       _periksa();
       if (!profil.containsKey(id)) throw StateError('Profil tidak ditemukan.');
+      final aktual = jsonEncode(profil[id]!.toJson());
+      if (sebelum == null ||
+          (aktual != sebelum && aktual != jsonEncode(data.toJson()))) {
+        throw StateError('Data berubah pada sesi lain. Buka ulang profil.');
+      }
       profil[id] = data;
     });
     _periksa();
+    _terakhir = jsonEncode(data.toJson());
   }
 
   @override

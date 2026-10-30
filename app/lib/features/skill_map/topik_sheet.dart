@@ -102,6 +102,15 @@ class TopikSheet extends ConsumerWidget {
                   '${bukti.versiKebijakan} · ${bukti.versiButir.join(', ')}'),
               Text('Akses: ${data.aksesMateri[topik.id]?.alasan ?? 'Akses tersimpan dari versi sebelumnya.'}'),
               const SizedBox(height: 16),
+              if (data.sesiMastery[topik.id] case final sesi?)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: TombolNumi(
+                    label: sesi.selesai ? 'Lihat hasil test tersimpan' :
+                      'Lanjutkan test (${sesi.jawaban.length}/5)',
+                    onTap: () => buka(MasteryScreen(topik: topik)),
+                  ),
+                ),
               if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia)
                 _Terkunci(kurang: kurang)
               else ...[

@@ -17,6 +17,7 @@ class HasilSesiView extends StatelessWidget {
     this.tombolKedua,
     this.onKedua,
     this.hiasan,
+    this.catatan,
   });
 
   final RingkasanSesi ringkasan;
@@ -26,6 +27,7 @@ class HasilSesiView extends StatelessWidget {
   final String? tombolKedua;
   final VoidCallback? onKedua;
   final Widget? hiasan;
+  final String? catatan;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class HasilSesiView extends StatelessWidget {
                     children: [
                       if (hiasan != null) Center(child: hiasan!),
                       Text(judul, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
+                      if (catatan != null) Text(catatan!, textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       Row(
                         children: [
