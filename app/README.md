@@ -9,8 +9,10 @@ di `lib/core/config/app_config.dart`.
 
 Baseline pengembangan terbaru, selisih kode terhadap seluruh PRD/PPL/doktek, dan backlog ada
 di [`docs/03-implementasi`](../docs/03-implementasi/README.md) dan [`tasks`](../tasks/plan.md).
-Init memakai kelas tunggal 1–6 dan konfirmasi kelas untuk data usia lama. Enam titik awal
-diagnostic belum berarti enam paket konten tervalidasi tersedia. Adapter Google/Firebase serta
+Init memakai kelas tunggal 1–6 dan konfirmasi kelas untuk data usia lama. Paket pengantar kini
+memiliki dua butir awal berversi per kelas, masih draft dan belum enam paket konten lengkap.
+Diagnostic hanya menghasilkan indikasi jangkar; BuktiSkill terpisah dari AksesMateri dan XP.
+Riwayat lama tetap ada dan dapat memerlukan pemetaan ulang. Adapter Google/Firebase serta
 alur beberapa profil lokal per UID tersedia; konfigurasi proyek tim, login nyata, cloud, dan
 checkpoint per respons masih menunggu integrasi/verifikasi.
 

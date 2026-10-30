@@ -39,3 +39,7 @@ Gunakan `flutter test`, `flutter analyze`, dan `flutter build web` dari `app/` u
 ## Irisan lanjutan I04/I05
 
 Pengguna meminta melanjutkan pengembangan dan mengonfirmasi proyek Firebase tim belum dibuat. Implementasikan kontrak/adapter Google-Firebase, bootstrap yang menahan akses sebelum login, alur akun, dan penyimpanan beberapa profil lokal per UID. Pertahankan data tanpa UID; jangan impor otomatis atau membuat akun palsu dalam aplikasi. Gunakan fake SDK hanya untuk test. Konfigurasi tim, login nyata, APK, migrasi dengan konfirmasi, dan Firestore tetap kriteria terbuka. Hasil serta instruksi aktivasi ada di `docs/03-implementasi/AKUN-PROFIL.md` dan `firebase/README.md`.
+
+## Irisan lanjutan I06/I07
+
+Lanjutkan tanpa menunggu layanan cloud: buat paket pengantar enam kelas dengan tujuan, prasyarat, versi, butir awal berbeda, dan status draft tanpa persetujuan validator palsu. Pisahkan BuktiSkill dari AksesMateri; diagnostic tidak menguasai topik tak diuji atau menyalakan mercusuar. Hasil dan rekomendasi memakai indikasi awal, sedangkan lesson/XP bukan bukti mastery. Pertahankan data lama sebagai riwayat tanpa mengangkat status gabungan lama menjadi bukti baru. Periksa domain, roundtrip/migrasi, controller, dan UI sebelum memperbarui hasil verifikasi. Katalog penuh, validasi guru, checkpoint, serta pemeriksaan ulang tetap pekerjaan terbuka.

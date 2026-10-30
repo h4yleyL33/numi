@@ -2,6 +2,8 @@
 
 Tanggal: 30 Oktober 2026. Status: init pengembangan lokal; belum memenuhi syarat pengujian akhir Bab IV pada doktek 3.3.4.
 
+Pembaruan terbaru: [paket pengantar dan bukti jangkar](KURIKULUM-BUKTI.md) menambahkan 12 butir awal berversi untuk enam kelas, memisahkan BuktiSkill dari AksesMateri, dan menghapus inferensi mastery untuk topik yang tidak diuji. Cakupan I06/I07 masih parsial; validasi guru, graf subketerampilan lengkap, dan checkpoint belum selesai.
+
 Pembaruan lanjutan: [akun wali dan beberapa profil](AKUN-PROFIL.md) sudah memiliki adapter, UI, dan isolasi penyimpanan lokal. Proyek Firebase tim belum dibuat, sehingga login nyata/cloud belum dinyatakan selesai. Bagian bertanda “init” di bawah merekam baseline sebelum irisan akun; status terkini ada pada backlog dan catatan verifikasi.
 
 ## Acuan yang berlaku
@@ -38,19 +40,19 @@ Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberap
 
 | ID | Target doktek | Lokasi kode relatif terhadap `app/lib/` | Kondisi dan pekerjaan berikutnya |
 | --- | --- | --- | --- |
-| FR-001 | Diagnostic maks. 12 soal, paket kelas dan bukti sebelumnya. | `domain/diagnostic_engine.dart`, `data/content/paket_kelas.dart`, `features/diagnostic/` | Parsial: enam titik awal dari kelas; adaptasi lama masih berbasis topik. Paket jangkar/hasil sebelumnya: I06–I08. |
-| FR-002 | Bukti kemampuan terpisah dari akses. | `domain/skill_map_service.dart`, `features/skill_map/` | Awal masih satu StatusTopik; I07. |
-| FR-003 | Rekomendasi dari bukti/prasyarat. | `domain/learning_path_service.dart` | Awal memilih status topik; I07/I09. |
+| FR-001 | Diagnostic maks. 12 soal, paket kelas dan bukti sebelumnya. | `domain/diagnostic_engine.dart`, `data/content/paket_kelas.dart`, `features/diagnostic/` | Dua butir awal berbeda per kelas; hasil hanya indikasi pada jangkar diuji. Adaptasi lanjutan masih per topik; hasil lama/graf lengkap tetap I06–I08. |
+| FR-002 | Bukti kemampuan terpisah dari akses. | `data/models/bukti_skill.dart`, `domain/skill_map_service.dart`, `features/skill_map/` | BuktiSkill dan AksesMateri terpisah. Ringkasan masih per sampel topik, belum semua subketerampilan. |
+| FR-003 | Rekomendasi dari bukti/prasyarat. | `domain/learning_path_service.dart` | Memilih latihan yang dapat diakses dari indikasi, menampilkan alasan; graf subketerampilan lengkap tetap I07/I09. |
 | FR-004a | Lesson fondasi dengan bantuan fleksibel. | `features/lesson/`, `data/content/daftar_lesson.dart` | Awal tersedia, paket/dukungan semua kelas belum lengkap; I06/I09. |
 | FR-004b | Penalaran/cerita pada semua kelompok sesuai kebutuhan. | `data/content/generator_soal.dart`, `features/quiz/tampilan_soal.dart` | Awal, diferensiasi enam kelas dan validasi masih I06/I09. |
 | FR-005 | Lesson langsung; tes menunda pembahasan. | `features/quiz/pemutar_soal.dart`, `features/feedback/` | Init mencegah banner/kunci per butir pada kedua tes. Pembahasan akhir blok masih I03/I07. |
 | FR-006 | XP/streak/level/lencana tanpa pengurangan saat salah. | `domain/progress_service.dart`, `state/numi_controller.dart` | Awal; finalisasi idempoten dan reward event belum ada; I08/I10. |
-| FR-007 | Lima soal baru, respons pertama, 5/5 bukti awal, periksa ulang. | `features/mastery/`, `core/config/app_config.dart` | Awal ambang 95 dari lima soal setara 5/5. Kebaruan/versi, pembahasan akhir dan retensi belum selesai; I06/I10. |
+| FR-007 | Lima soal baru, respons pertama, 5/5 bukti awal, periksa ulang. | `features/mastery/`, `state/numi_controller.dart` | Lima respons berbeda, berkonteks mastery, berversi, benar semua tanpa bantuan menjadi bukti awal sampel. Kebaruan lintas sesi, pembahasan akhir, retensi masih I08/I10. |
 | FR-008 | Aktivitas terpisah dari bukti. | `features/progress/` | Awal aktivitas tersedia; pemisahan laporan I11. |
 | FR-009 | Maskot singkat dan tidak menghalangi. | `domain/companion_service.dart`, `features/mascot/` | Awal, perlu uji perangkat/anak; I11. |
 | FR-010 | Satu kelas 1–6, tiga fase, paket berbeda, perubahan tanpa reset. | `data/models/siswa.dart`, `data/content/paket_kelas.dart`, `features/onboarding/`, `state/numi_controller.dart` | Init form/validasi/fase/migrasi lokal tersedia. Paket penuh dan pengaturan ubah kelas oleh wali masih I05/I06. |
 | FR-011 | Katalog fase/prasyarat/aktif/belum tersedia. | `data/content/daftar_topik.dart`, `features/skill_map/` | Awal hanya 12 topik; katalog target I06/I07. |
-| FR-012 | Bukti sumber/waktu/bantuan/versi/jumlah. | `data/models/catatan_belajar.dart` | Belum ada model BuktiSkill lengkap; I07/I08. |
+| FR-012 | Bukti sumber/waktu/bantuan/versi/jumlah. | `data/models/bukti_skill.dart`, `catatan_belajar.dart` | Metadata tersimpan pada ringkasan sampel; identitas sesi persisten dan riwayat per subskill tetap I07/I08. |
 | FR-013 | Respons+checkpoint atomik, resume butir sama, deduplikasi. | `data/repositories/`, `features/quiz/`, `state/numi_controller.dart` | Init memastikan state menunggu repository dan menahan callback selesai ganda di widget. Belum checkpoint durabel atau finalisasi idempoten; I08. |
 | FR-014 | Bantuan fleksibel, pengulangan, alternatif ketuk. | `features/quiz/tampilan_soal.dart` | Awal, audit seluruh bentuk dan pencatatan bantuan belum dilakukan; I09. |
 | FR-015 | Ringkasan wali per skill, waktu, jumlah butir. | `features/progress/` | Belum sesuai target; I11. |
@@ -74,12 +76,12 @@ Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberap
 | --- | --- | --- |
 | DATA-001 | Profil: ID tetap, UID wali, nama, kelas, preferensi, pembaruan. | Siswa mendapat kelas/fase dan waliUid; preferensi/cloud masih I05. |
 | DATA-002 | Materi/butir: skill/fase/tujuan/prasyarat/versi/kunci/rubrik/validasi. | Topik/Soal/Lesson awal; lengkapi I06. |
-| DATA-003 | Diagnostic: profil/sesi, respons/bantuan/jumlah/waktu/kebijakan. | DiagnosticResult masih per topik; I07/I08. |
+| DATA-003 | Diagnostic: profil/sesi, respons/bantuan/jumlah/waktu/kebijakan. | Respons berversi dan BuktiSkill per sampel topik tersedia; sesi/checkpoint persisten masih I08. |
 | DATA-004 | Aktivitas per profil. | LessonProgress/XP/streak/lencana tersedia satu profil; I05/I10. |
 | DATA-005 | Respons pertama dengan identitas dan versi tetap. | Jawaban tersedia tanpa seluruh metadata; I08. |
 | DATA-006 | Akun, hubungan profil dan status autentikasi. | AkunWali dan stream Firebase tersedia; token dikelola SDK. Konfigurasi/login nyata masih I04. |
 | DATA-007 | Sesi/checkpoint: urutan/versi/cursor/status/kebijakan. | Belum ada; I08. |
-| DATA-008 | BuktiSkill dan AksesMateri terpisah. | Masih StatusTopik tunggal; I07. |
+| DATA-008 | BuktiSkill dan AksesMateri terpisah. | JSON versi 3 menyimpan bukti/akses terpisah; StatusTopik kini proyeksi UI. skillMap lama dipertahankan sebagai arsip. |
 | DATA-009 | Konten, versi, validator, tanggal, keputusan/catatan. | Belum ada catatan persetujuan konten; I06. |
 
 ## Urutan kerja menurut PPL dan doktek

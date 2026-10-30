@@ -52,17 +52,21 @@ Rincian irisan lokal dan batas penerimaannya ada di `docs/03-implementasi/AKUN-P
 
 ## I06 — Paket kelas dan konten berversi
 
-- [ ] Enam paket pengantar dengan tujuan, skill, bentuk bantuan, prasyarat, versi, dan butir yang berbeda.
+- [x] Enam paket pengantar draft dengan fokus/tujuan, ID jangkar, prasyarat, versi, dan dua butir awal berbeda per kelas.
+- [ ] Lengkapi enam paket lesson/bank butir, bantuan, graf subketerampilan, persetujuan validator, dan katalog aktif/belum tersedia.
 - Penerimaan: kelas 1/2, 3/4, 5/6 memiliki perbedaan nyata; butir terbit memiliki catatan persetujuan validator; katalog menandai materi belum tersedia.
 - Verifikasi: validasi katalog/generator dan pemeriksaan guru; tidak menyimpulkan dukungan seluruh matematika SD.
 - Dependensi: I02. Berkas: content, models, katalog, alat validasi konten.
 
 ## I07 — Bukti skill terpisah dari akses
 
-- [ ] Catat belum diuji, indikasi perlu latihan, indikasi siap lanjut, dan bukti penguasaan awal beserta sumber/waktu/jumlah/bantuan/kebijakan.
+- [x] Pisahkan BuktiSkill dan AksesMateri; diagnostic tidak menguasai topik tak diuji; catat indikasi/bukti awal dengan sumber/waktu/jumlah/bantuan/versi dan tampilkan alasan akses/rekomendasi.
+- [ ] Perluas ringkasan sampel per topik ke seluruh subketerampilan dan riwayat bukti/retensi; validasi aturan pilot bersama guru.
 - Penerimaan: topik tak diuji tidak dianggap dikuasai; akses terkunci bukan bukti lemah; diagnostic dua soal bukan mastery.
 - Verifikasi: test domain, migrasi data lama, skill map dan hasil diagnostic.
 - Dependensi: I06. Berkas: evidence/access models, diagnostic/skill map/rekomendasi, layar hasil/peta.
+
+I06/I07 masih parsial. Rincian cakupan 12 butir awal, migrasi, dan batas bukti ada di `docs/03-implementasi/KURIKULUM-BUKTI.md`.
 
 ## I08 — Checkpoint per respons
 

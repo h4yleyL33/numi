@@ -2,6 +2,14 @@
 
 Tanggal: 30 Oktober 2026. Pengujian teknis selama implementasi, belum laporan pengujian akhir Bab IV.
 
+## Pembaruan paket pengantar dan bukti
+
+Irisan I06/I07 menambah enam paket draft (dua butir awal per kelas), versi respons, pemisahan BuktiSkill/AksesMateri, penghapusan inferensi mastery diagnostic, migrasi aman status lama, serta label/alasan pada hasil dan peta. Ringkasan masih per sampel topik; graf subketerampilan lengkap dan validasi guru belum selesai. Lihat [KURIKULUM-BUKTI.md](KURIKULUM-BUKTI.md).
+
+`flutter test --no-pub --reporter expanded`: **103 tes lulus**. `flutter analyze --no-pub`: **No issues found**. Build web berhasil pada pemeriksaan irisan ini dengan peringatan font CupertinoIcons yang sudah ada. Tidak ada verifikasi Firebase nyata, APK, proses mati, atau pilot anak tambahan.
+
+Tes baru memeriksa status belum diuji/siap lanjut, larangan menguasai topik tak ditanyakan, metadata 12 butir awal, pemisahan akses dan bukti, roundtrip/migrasi, penolakan cache dua soal sebagai bukti penguasaan, blok mastery tidak lengkap/duplikat/konteks salah, bantuan, XP tanpa perubahan bukti, gagal simpan, dan tampilan kartu pulau/hasil. Hasil test tidak menjadi persetujuan validator atau bukti keefektifan pembelajaran. Catatan irisan sebelumnya di bawah dipertahankan sebagai riwayat.
+
 ## Pembaruan akun dan profil
 
 Irisan lanjutan pada tanggal yang sama menambahkan adapter Google/Firebase, layar akun dan ruang wali, beberapa profil lokal per UID, guard sesi, serta bootstrap yang menahan akses jika Firebase belum dikonfigurasi. Rinciannya ada pada [AKUN-PROFIL.md](AKUN-PROFIL.md).
