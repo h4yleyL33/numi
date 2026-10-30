@@ -5,11 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numi/data/models/sesi_mastery.dart';
+import 'package:numi/data/models/checkpoint_diagnostic.dart';
+import 'package:numi/data/models/catatan_belajar.dart';
 import 'package:numi/data/repositories/local_profil_repository.dart';
 import 'package:numi/data/repositories/local_numi_repository.dart';
 
 import '../state/checkpoint_mastery_test.dart'
     show soalCheckpoint, jawabCheckpoint, profilSiap;
+import '../state/checkpoint_alur_test.dart' show responsSoal;
+import '../domain/checkpoint_diagnostic_test.dart' show jawabDiagnostic;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +37,47 @@ void main() {
   tearDown(() async {
     await db.close();
     await direktori.delete(recursive: true);
+  });
+
+  test('file profil memulihkan blok adaptif berikutnya dan pembahasan lesson, saudara tetap terpisah', () async {
+    final wali = repo();
+    final a = await wali.tambah(nama: 'Sari', kelas: 1);
+    final b = await wali.tambah(nama: 'Budi', kelas: 2);
+    final belajar = wali.untukProfil(a.id);
+    final awal = await belajar.muat();
+    var diagnostic = CheckpointDiagnostic.mulai('diag-file', 1);
+    final blok = diagnostic.blok.first;
+    for (var i = 0; i < 2; i++) {
+      diagnostic = diagnostic.catat(
+        blok.commandId(i),
+        jawabDiagnostic(blok, i),
+      );
+    }
+    var lesson = SesiSoal(
+      id: 'lesson-file',
+      topikId: 'T01',
+      soal: soalCheckpoint,
+      konteks: KonteksJawaban.lesson,
+      lessonId: 'T01-kenalan',
+      mulaiPada: DateTime(2026),
+    );
+    lesson = lesson.catat(
+      lesson.commandId(0),
+      responsSoal(lesson.soal.first, lesson.konteks),
+    );
+    await belajar.simpan(
+      awal.copyWith(
+        sesiDiagnostic: diagnostic,
+        sesiLesson: {lesson.lessonId!: lesson},
+      ),
+    );
+    await db.close();
+    db = await databaseFactoryIo.openDatabase('${direktori.path}/data.db');
+    final pulih = await repo().untukProfil(a.id).muat();
+    expect(pulih.sesiDiagnostic!.toJson(), diagnostic.toJson());
+    expect(pulih.sesiLesson[lesson.lessonId]!.toJson(), lesson.toJson());
+    expect(pulih.sesiLesson[lesson.lessonId]!.menungguLanjut, isTrue);
+    expect((await repo().untukProfil(b.id).muat()).sesiDiagnostic, isNull);
   });
 
   test(

@@ -11,12 +11,14 @@ import '../../data/models/catatan_belajar.dart';
 import '../../data/models/companion_message.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/soal.dart';
+import '../../data/models/sesi_soal.dart';
+import '../quiz/gagal_simpan_sesi.dart';
 import '../../state/numi_controller.dart';
 import '../mascot/mascot_bubble.dart';
 import '../quiz/pemutar_soal.dart';
 import 'hasil_sesi_view.dart';
 
-enum _Tahap { kenalan, soal, menyimpan, hasil }
+enum _Tahap { kenalan, soal, menyimpan, gagal, hasil }
 
 /// UC-003 dan UC-004. Lesson kenalan dimulai dari penjelasan maskot yang dibuka
 /// satu per satu, lalu lima soal dengan umpan balik langsung.
@@ -30,88 +32,139 @@ class LessonScreen extends ConsumerStatefulWidget {
 }
 
 class _LessonScreenState extends ConsumerState<LessonScreen> {
-  final _generator = GeneratorSoal();
-  late _Tahap _tahap = widget.lesson.tipe == TipeLesson.kenalan
-      ? _Tahap.kenalan
-      : _Tahap.soal;
-  late List<Soal> _soal = _buatSoal();
-  final _stopwatch = Stopwatch();
+  _Tahap _tahap = _Tahap.menyimpan;
+  SesiSoal? _sesi;
+  List<Soal>? _soalBaru;
   RingkasanSesi? _ringkasan;
-  int _percobaan = 0;
-
-  List<Soal> _buatSoal() => _generator.buat(
-    widget.lesson.topikId,
-    AppConfig.soalPerLesson,
-    tingkat: widget.lesson.tipe == TipeLesson.kenalan ? 1 : 2,
-  );
+  Future<void> Function()? _cobaLagi;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(numiControllerProvider.notifier)
-          .mulaiLesson(widget.lesson.topikId);
-    });
-    if (_tahap == _Tahap.soal) _stopwatch.start();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _siapkan());
   }
 
-  Future<void> _selesai(List<Jawaban> jawaban) async {
-    _stopwatch.stop();
+  Future<void> _jalankan(Future<void> Function() aksi) async {
+    if (!mounted) return;
     setState(() => _tahap = _Tahap.menyimpan);
+    try {
+      await aksi();
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _tahap = _Tahap.gagal;
+          _cobaLagi = () => _jalankan(aksi);
+        });
+      }
+    }
+  }
+
+  Future<void> _siapkan() => _jalankan(() async {
+    _sesi = ref.read(numiControllerProvider).sesiLesson[widget.lesson.id];
+    if (_sesi != null) {
+      await _tampilkan();
+    } else if (widget.lesson.tipe == TipeLesson.kenalan) {
+      setState(() => _tahap = _Tahap.kenalan);
+    } else {
+      await _buatSesi();
+    }
+  });
+
+  Future<void> _buatSesi() async {
+    _soalBaru ??= GeneratorSoal().buat(
+      widget.lesson.topikId,
+      AppConfig.soalPerLesson,
+      tingkat: widget.lesson.tipe == TipeLesson.kenalan ? 1 : 2,
+    );
+    final sesi = await ref
+        .read(numiControllerProvider.notifier)
+        .mulaiSesiLesson(widget.lesson, _soalBaru!);
+    if (!mounted) return;
+    _sesi = sesi;
+    await _tampilkan();
+  }
+
+  Future<void> _tampilkan() async {
+    if (_sesi!.hasil case final hasil?) {
+      setState(() {
+        _ringkasan = RingkasanSesi.fromJson(hasil);
+        _tahap = _Tahap.hasil;
+      });
+    } else if (_sesi!.lengkap && !_sesi!.menungguLanjut) {
+      await _finalisasi();
+    } else {
+      setState(() => _tahap = _Tahap.soal);
+    }
+  }
+
+  Future<void> _finalisasi() async {
     final ringkasan = await ref
         .read(numiControllerProvider.notifier)
-        .selesaiLesson(widget.lesson, jawaban, _stopwatch.elapsed);
-    if (!mounted) return;
-    setState(() {
-      _ringkasan = ringkasan;
-      _tahap = _Tahap.hasil;
-    });
+        .finalisasiLesson(widget.lesson.id, _sesi!.id);
+    if (mounted) {
+      setState(() {
+        _ringkasan = ringkasan;
+        _tahap = _Tahap.hasil;
+      });
+    }
   }
 
   void _ulangi() {
-    setState(() {
-      _percobaan++;
-      _soal = _buatSoal();
-      _tahap = _Tahap.soal;
-      _stopwatch
-        ..reset()
-        ..start();
-    });
+    _soalBaru = null;
+    _jalankan(_buatSesi);
   }
 
   @override
   Widget build(BuildContext context) {
     final topik = topikById(widget.lesson.topikId);
+    final sesi = _sesi;
     return Scaffold(
       body: switch (_tahap) {
         _Tahap.kenalan => _Kenalan(
           lesson: widget.lesson,
           namaPulau: topik.namaPulau,
-          onMulai: () => setState(() {
-            _tahap = _Tahap.soal;
-            _stopwatch.start();
-          }),
+          onMulai: () => _jalankan(_buatSesi),
         ),
         _Tahap.soal => SafeArea(
           child: PemutarSoal(
-            key: ValueKey('lesson-$_percobaan'),
-            soal: _soal,
+            key: ValueKey(sesi!.id),
+            soal: sesi.soal,
             konteks: KonteksJawaban.lesson,
+            jawabanAwal: sesi.jawaban,
+            menungguLanjut: sesi.menungguLanjut,
             judul: '${topik.namaPulau} · ${widget.lesson.judul}',
-            onSelesai: _selesai,
+            simpanJawaban: (j) => ref
+                .read(numiControllerProvider.notifier)
+                .jawabLesson(
+                  widget.lesson.id,
+                  sesi.id,
+                  sesi.commandId(sesi.soal.indexWhere((s) => s.id == j.soalId)),
+                  j,
+                ),
+            simpanLanjut: (i) => ref
+                .read(numiControllerProvider.notifier)
+                .lanjutLesson(
+                  widget.lesson.id,
+                  sesi.id,
+                  '${sesi.id}/lanjut/$i',
+                ),
+            onSelesai: (_) => _jalankan(_finalisasi),
           ),
         ),
         _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
+        _Tahap.gagal => GagalSimpanSesi(onCobaLagi: _cobaLagi!),
         _Tahap.hasil => HasilSesiView(
           ringkasan: _ringkasan!,
+          catatan: 'Hasil dan XP tersimpan di perangkat ini. Membuka hasil kembali tidak menambah XP.',
           judul: _ringkasan!.lulus ? 'Lesson selesai!' : 'Sedikit lagi!',
           tombolUtama: _ringkasan!.lulus ? 'Kembali ke Peta' : 'Coba lagi',
           onUtama: _ringkasan!.lulus
               ? () => Navigator.of(context).pop()
               : _ulangi,
-          tombolKedua: _ringkasan!.lulus ? null : 'Kembali ke Peta',
-          onKedua: () => Navigator.of(context).pop(),
+          tombolKedua: _ringkasan!.lulus ? 'Latihan lagi' : 'Kembali ke Peta',
+          onKedua: _ringkasan!.lulus
+              ? _ulangi
+              : () => Navigator.of(context).pop(),
         ),
       },
     );

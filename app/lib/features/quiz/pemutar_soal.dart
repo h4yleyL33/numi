@@ -22,6 +22,8 @@ class PemutarSoal extends StatefulWidget {
     this.onJawab,
     this.simpanJawaban,
     this.jawabanAwal = const [],
+    this.menungguLanjut = false,
+    this.simpanLanjut,
   });
 
   final List<Soal> soal;
@@ -36,6 +38,8 @@ class PemutarSoal extends StatefulWidget {
   final ValueChanged<Jawaban>? onJawab;
   final Future<void> Function(Jawaban)? simpanJawaban;
   final List<Jawaban> jawabanAwal;
+  final bool menungguLanjut;
+  final Future<void> Function(int indeks)? simpanLanjut;
 
   @override
   State<PemutarSoal> createState() => _PemutarSoalState();
@@ -43,12 +47,13 @@ class PemutarSoal extends StatefulWidget {
 
 class _PemutarSoalState extends State<PemutarSoal> {
   late final _jawaban = [...widget.jawabanAwal];
-  late int _indeks = _jawaban.length;
+  late int _indeks = _jawaban.length - (widget.menungguLanjut ? 1 : 0);
   String? _pilihan;
-  bool _sudahCek = false;
+  late bool _sudahCek = widget.menungguLanjut;
   bool _tuntas = false;
   bool _menyimpan = false;
   bool _gagalSimpan = false;
+  bool _gagalLanjut = false;
   Jawaban? _tertunda;
 
   bool get _umpanBalik =>
@@ -102,8 +107,28 @@ class _PemutarSoalState extends State<PemutarSoal> {
     }
   }
 
-  void _lanjut() {
-    if (_tuntas) return;
+  Future<void> _lanjut() async {
+    if (_tuntas || _menyimpan) return;
+    final simpan = widget.simpanLanjut;
+    if (simpan != null) {
+      setState(() {
+        _menyimpan = true;
+        _gagalLanjut = false;
+      });
+      try {
+        await simpan(_indeks);
+      } catch (_) {
+        if (mounted) {
+          setState(() {
+            _menyimpan = false;
+            _gagalLanjut = true;
+          });
+        }
+        return;
+      }
+      if (!mounted) return;
+      _menyimpan = false;
+    }
     if (_indeks == widget.soal.length - 1) {
       _tuntas = true;
       widget.onSelesai(List.unmodifiable(_jawaban));
@@ -158,6 +183,15 @@ class _PemutarSoalState extends State<PemutarSoal> {
               color: NumiWarna.tintaPudar,
             ),
           ),
+        if (_gagalLanjut)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Posisi belum berhasil disimpan. Coba lagi. '
+              'Jika tetap gagal, buka ulang profil.',
+              textAlign: TextAlign.center,
+            ),
+          ),
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
@@ -201,6 +235,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
                       benar: benarTerakhir,
                       soal: _soal,
                       onLanjut: _lanjut,
+                      labelLanjut: _gagalLanjut ? 'Coba simpan lagi' : 'Lanjut',
                       tampilkanXp: widget.konteks != KonteksJawaban.diagnostic,
                     ),
                   ),

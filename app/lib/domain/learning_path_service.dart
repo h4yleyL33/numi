@@ -26,6 +26,22 @@ class LearningPathService {
   /// sebelum pindah. Setelah itu topik terbuka dengan urutan paling awal.
   Rekomendasi? rekomendasi(DataBelajar data) {
     final urut = [...topik]..sort((a, b) => a.urutan.compareTo(b.urutan));
+    final lessonTertunda = data.sesiLesson.values
+        .where((s) => !s.selesai)
+        .firstOrNull;
+    if (lessonTertunda != null) {
+      final lesson = lessonUntuk(lessonTertunda.topikId)
+          .where((l) => l.id == lessonTertunda.lessonId)
+          .firstOrNull;
+      if (lesson != null) {
+        return Rekomendasi(
+          topik: urut.firstWhere((t) => t.id == lessonTertunda.topikId),
+          lesson: lesson,
+          alasan:
+              'Lanjutkan lesson tersimpan: ${lessonTertunda.jawaban.length}/5 jawaban.',
+        );
+      }
+    }
     final tertunda = data.sesiMastery.values
         .where((s) => !s.selesai)
         .firstOrNull;
@@ -62,6 +78,9 @@ class LearningPathService {
   }
 
   Lesson? lessonBerikutnya(String topikId, DataBelajar data) =>
+      lessonUntuk(topikId)
+          .where((l) => data.sesiLesson[l.id]?.selesai == false)
+          .firstOrNull ??
       lessonUntuk(topikId).where((l) => !data.lessonSelesai(l.id)).firstOrNull;
 
   bool siapMastery(String topikId, DataBelajar data) =>

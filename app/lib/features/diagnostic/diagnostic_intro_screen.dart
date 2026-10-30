@@ -52,7 +52,14 @@ class DiagnosticIntroScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 TombolNumi(
-                  label: 'Ayo mulai',
+                  label:
+                      ref
+                              .watch(numiControllerProvider)
+                              .sesiDiagnostic
+                              ?.ditutup ==
+                          false
+                      ? 'Lanjutkan pemetaan'
+                      : 'Ayo mulai',
                   lebar: double.infinity,
                   onTap: () =>
                       Navigator.of(context)

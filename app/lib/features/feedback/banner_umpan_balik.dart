@@ -17,12 +17,14 @@ class BannerUmpanBalik extends StatelessWidget {
     required this.soal,
     required this.onLanjut,
     this.tampilkanXp = true,
+    this.labelLanjut = 'Lanjut',
   });
 
   final bool benar;
   final Soal soal;
   final VoidCallback onLanjut;
   final bool tampilkanXp;
+  final String labelLanjut;
 
   static const _pujian = [
     'Hebat!',
@@ -118,7 +120,7 @@ class BannerUmpanBalik extends StatelessWidget {
               ],
               const SizedBox(height: 16),
               TombolNumi(
-                label: 'Lanjut',
+                label: labelLanjut,
                 warna: warna,
                 warnaTeks: Colors.white,
                 onTap: onLanjut,

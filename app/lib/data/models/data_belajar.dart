@@ -3,6 +3,7 @@ import 'companion_message.dart';
 import 'siswa.dart';
 import 'bukti_skill.dart';
 import 'sesi_mastery.dart';
+import 'checkpoint_diagnostic.dart';
 
 /// Seluruh data milik satu siswa. Disimpan utuh oleh repository, dan menjadi
 /// state utama yang dipegang NumiController.
@@ -13,6 +14,8 @@ class DataBelajar {
     this.buktiSkill = const {},
     this.aksesMateri = const {},
     this.sesiMastery = const {},
+    this.sesiLesson = const {},
+    this.sesiDiagnostic,
     this.hasilDiagnostic = const [],
     this.progresLesson = const {},
     this.riwayatJawaban = const [],
@@ -28,6 +31,8 @@ class DataBelajar {
   final Map<String, BuktiSkill> buktiSkill;
   final Map<String, AksesMateri> aksesMateri;
   final Map<String, SesiMastery> sesiMastery;
+  final Map<String, SesiSoal> sesiLesson;
+  final CheckpointDiagnostic? sesiDiagnostic;
   final List<DiagnosticResult> hasilDiagnostic;
   final Map<String, LessonProgress> progresLesson;
   final List<Jawaban> riwayatJawaban;
@@ -39,7 +44,10 @@ class DataBelajar {
 
   bool get sudahDaftar => siswa != null;
   bool get diagnosticSelesai => hasilDiagnostic.isNotEmpty;
-  bool get perluDiagnostic => !diagnosticSelesai || buktiSkill.isEmpty;
+  bool get perluDiagnostic =>
+      sesiDiagnostic?.ditutup == false ||
+      !diagnosticSelesai ||
+      buktiSkill.isEmpty;
 
   StatusTopik statusTopik(String topikId) {
     final akses = aksesMateri[topikId];
@@ -72,6 +80,8 @@ class DataBelajar {
     Map<String, BuktiSkill>? buktiSkill,
     Map<String, AksesMateri>? aksesMateri,
     Map<String, SesiMastery>? sesiMastery,
+    Map<String, SesiSoal>? sesiLesson,
+    CheckpointDiagnostic? sesiDiagnostic,
     List<DiagnosticResult>? hasilDiagnostic,
     Map<String, LessonProgress>? progresLesson,
     List<Jawaban>? riwayatJawaban,
@@ -87,6 +97,8 @@ class DataBelajar {
       buktiSkill: buktiSkill ?? this.buktiSkill,
       aksesMateri: aksesMateri ?? this.aksesMateri,
       sesiMastery: sesiMastery ?? this.sesiMastery,
+      sesiLesson: sesiLesson ?? this.sesiLesson,
+      sesiDiagnostic: sesiDiagnostic ?? this.sesiDiagnostic,
       hasilDiagnostic: hasilDiagnostic ?? this.hasilDiagnostic,
       progresLesson: progresLesson ?? this.progresLesson,
       riwayatJawaban: riwayatJawaban ?? this.riwayatJawaban,
@@ -99,7 +111,9 @@ class DataBelajar {
   }
 
   Map<String, dynamic> toJson() => {
-    'versi': 4,
+    'versi': 5,
+    'sesiLesson': sesiLesson.values.map((s) => s.toJson()).toList(),
+    'sesiDiagnostic': sesiDiagnostic?.toJson(),
     'sesiMastery': sesiMastery.values.map((s) => s.toJson()).toList(),
     'buktiSkill': buktiSkill.values.map((e) => e.toJson()).toList(),
     'aksesMateri': aksesMateri.values.map((e) => e.toJson()).toList(),
@@ -125,7 +139,11 @@ class DataBelajar {
     final bukti = daftar('buktiSkill', BuktiSkill.fromJson);
     final akses = daftar('aksesMateri', AksesMateri.fromJson);
     final sesi = daftar('sesiMastery', SesiMastery.fromJson);
-    if (sesi.map((s) => s.topikId).toSet().length != sesi.length) {
+    final sesiLesson = daftar('sesiLesson', SesiSoal.fromJson);
+    if (sesi.any((s) => s.konteks != KonteksJawaban.mastery) ||
+        sesiLesson.any((s) => s.konteks != KonteksJawaban.lesson) ||
+        sesiLesson.map((s) => s.lessonId).toSet().length != sesiLesson.length ||
+        sesi.map((s) => s.topikId).toSet().length != sesi.length) {
       throw const FormatException('Checkpoint topik duplikat.');
     }
     final lesson = daftar('progresLesson', LessonProgress.fromJson);
@@ -137,6 +155,12 @@ class DataBelajar {
       buktiSkill: {for (final b in bukti) b.topikId: b},
       aksesMateri: {for (final a in akses) a.topikId: a},
       sesiMastery: {for (final s in sesi) s.topikId: s},
+      sesiLesson: {for (final s in sesiLesson) s.lessonId!: s},
+      sesiDiagnostic: json['sesiDiagnostic'] == null
+          ? null
+          : CheckpointDiagnostic.fromJson(
+              Map<String, dynamic>.from(json['sesiDiagnostic'] as Map),
+            ),
       hasilDiagnostic: daftar('hasilDiagnostic', DiagnosticResult.fromJson),
       progresLesson: {for (final l in lesson) l.lessonId: l},
       riwayatJawaban: daftar('riwayatJawaban', Jawaban.fromJson),

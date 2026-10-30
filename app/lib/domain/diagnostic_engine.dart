@@ -5,6 +5,7 @@ import '../data/models/catatan_belajar.dart';
 import '../data/models/siswa.dart';
 import '../data/models/soal.dart';
 import '../data/models/topik.dart';
+import '../data/models/sesi_soal.dart';
 
 /// Hasil akhir diagnostic test yang siap disimpan.
 class HasilAkhirDiagnostic {
@@ -30,7 +31,21 @@ class HasilAkhirDiagnostic {
 /// turun ke topik sebelumnya. Dengan begitu anak tidak perlu mengerjakan soal di
 /// semua topik, cukup di sekitar batas kemampuannya.
 class SesiDiagnostic {
-  SesiDiagnostic({
+  factory SesiDiagnostic({
+    required List<Topik> topik,
+    required int kelas,
+    GeneratorSoal? generator,
+  }) {
+    final sesi = SesiDiagnostic._(
+      topik: topik,
+      kelas: kelas,
+      generator: generator,
+    );
+    sesi._soalSekarang = sesi._buatSoal();
+    return sesi;
+  }
+
+  SesiDiagnostic._({
     required List<Topik> topik,
     required this.kelas,
     GeneratorSoal? generator,
@@ -42,7 +57,43 @@ class SesiDiagnostic {
       throw ArgumentError('Topik awal $idAwal tidak tersedia.');
     }
     _indeks = _indeksAwal;
-    _soalSekarang = _buatSoal();
+  }
+
+  /// Replay hanya keputusan dari respons tersimpan; blok aktif tidak dibangkitkan ulang.
+  factory SesiDiagnostic.pulihkan({
+    required List<Topik> topik,
+    required int kelas,
+    required List<SesiSoal> blok,
+    bool siapkanBerikutnya = false,
+    GeneratorSoal? generator,
+  }) {
+    final sesi = SesiDiagnostic._(
+      topik: topik,
+      kelas: kelas,
+      generator: generator,
+    );
+    if (blok.isEmpty || blok.length > AppConfig.maksTopikDiagnostic) {
+      throw const FormatException('Jumlah blok diagnostic tidak sah.');
+    }
+    for (var i = 0; i < blok.length; i++) {
+      final b = blok[i];
+      if (sesi.selesai ||
+          b.konteks != KonteksJawaban.diagnostic ||
+          b.topikId != sesi.topikSekarang.id ||
+          (!b.lengkap && i != blok.length - 1)) {
+        throw const FormatException('Rute diagnostic tidak sesuai checkpoint.');
+      }
+      if (b.lengkap) sesi._catat(b.jawaban.where((j) => j.benar).length);
+    }
+    if (blok.last.lengkap && !sesi.selesai) {
+      if (!siapkanBerikutnya) {
+        throw const FormatException('Blok berikutnya belum tersimpan.');
+      }
+      sesi._soalSekarang = sesi._buatSoal();
+    } else {
+      sesi._soalSekarang = blok.last.soal;
+    }
+    return sesi;
   }
 
   final List<Topik> _topik;
@@ -71,8 +122,13 @@ class SesiDiagnostic {
 
   /// Dipanggil setelah semua soal topik sekarang dijawab.
   void catat(int jumlahBenar) {
+    _catat(jumlahBenar);
+    if (!_selesai) _soalSekarang = _buatSoal();
+  }
+
+  void _catat(int jumlahBenar) {
     if (_selesai) return;
-    final total = _soalSekarang.length;
+    final total = AppConfig.soalDiagnosticPerTopik;
     RangeError.checkValueInInterval(jumlahBenar, 0, total, 'jumlahBenar');
     final status = jumlahBenar == total
         ? StatusTopik.siapLanjut
@@ -106,8 +162,6 @@ class SesiDiagnostic {
     } else {
       _selesai = true;
     }
-
-    if (!_selesai) _soalSekarang = _buatSoal();
   }
 
   HasilAkhirDiagnostic hasilAkhir() {

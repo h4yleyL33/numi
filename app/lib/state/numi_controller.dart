@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/config/app_config.dart';
 import '../data/content/daftar_topik.dart';
+import '../data/content/daftar_lesson.dart';
+import '../data/models/checkpoint_diagnostic.dart';
 import '../data/models/badge.dart';
 import '../data/models/bukti_skill.dart';
 import '../data/models/catatan_belajar.dart';
@@ -180,6 +182,123 @@ class NumiController extends Notifier<DataBelajar> {
         return _nilaiMastery(sesi);
       });
 
+  Future<CheckpointDiagnostic> mulaiDiagnostic() => _antrekan(() async {
+    final lama = state.sesiDiagnostic;
+    if (lama != null) return lama;
+    final siswa = state.siswa;
+    if (siswa?.kelas == null) {
+      throw StateError('Konfirmasi kelas terlebih dahulu.');
+    }
+    final sesi = CheckpointDiagnostic.mulai(
+      '${siswa!.id}/diagnostic/${_sekarang.microsecondsSinceEpoch}',
+      siswa.kelas!,
+    );
+    await _perbarui(state.copyWith(sesiDiagnostic: sesi));
+    return sesi;
+  });
+
+  CheckpointDiagnostic _diagnostic(String id) {
+    final sesi = state.sesiDiagnostic;
+    if (sesi == null || sesi.id != id) {
+      throw StateError('Sesi diagnostic sudah berubah.');
+    }
+    return sesi;
+  }
+
+  Future<void> jawabDiagnostic(String id, String command, Jawaban j) =>
+      _antrekan(() async {
+        final sesi = _diagnostic(id);
+        final baru = sesi.catat(command, j);
+        if (!identical(sesi, baru)) {
+          await _perbarui(state.copyWith(sesiDiagnostic: baru));
+        }
+      });
+
+  Future<HasilAkhirDiagnostic> finalisasiDiagnostic(String id) =>
+      _antrekan(() async {
+        final sesi = _diagnostic(id);
+        final hasil = sesi.hasilAkhir();
+        if (!sesi.ditutup) await _simpanDiagnostic(hasil, sesi.jawaban, sesi);
+        return hasil;
+      });
+
+  Future<SesiSoal> mulaiSesiLesson(
+    Lesson lesson,
+    List<Soal> soal,
+  ) => _antrekan(() async {
+    final lama = state.sesiLesson[lesson.id];
+    if (lama != null && !lama.selesai) return lama;
+    final daftar = lessonUntuk(lesson.topikId);
+    final indeks = daftar.indexWhere((l) => l.id == lesson.id);
+    final status = state.statusTopik(lesson.topikId);
+    if (indeks < 0 ||
+        status == StatusTopik.terkunci ||
+        status == StatusTopik.belumTersedia ||
+        (indeks > 0 && !state.lessonSelesai(daftar[indeks - 1].id))) {
+      throw StateError('Lesson belum dapat dibuka.');
+    }
+    final waktu = _sekarang;
+    final sesi = SesiSoal(
+      id: '${state.siswa!.id}/lesson/${lesson.id}/${waktu.microsecondsSinceEpoch}',
+      topikId: lesson.topikId,
+      soal: soal,
+      konteks: KonteksJawaban.lesson,
+      lessonId: lesson.id,
+      mulaiPada: waktu,
+    );
+    if (sesi.id == lama?.id) throw StateError('Identitas sesi harus baru.');
+    await _perbarui(
+      state.copyWith(sesiLesson: {...state.sesiLesson, lesson.id: sesi}),
+    );
+    return sesi;
+  });
+
+  SesiSoal _lesson(String lessonId, String id) {
+    final sesi = state.sesiLesson[lessonId];
+    if (sesi == null || sesi.id != id) {
+      throw StateError('Sesi lesson sudah berubah.');
+    }
+    return sesi;
+  }
+
+  Future<void> jawabLesson(
+    String lessonId,
+    String id,
+    String command,
+    Jawaban j,
+  ) => _antrekan(() async {
+    final sesi = _lesson(lessonId, id);
+    final baru = sesi.catat(command, j);
+    if (!identical(sesi, baru)) {
+      await _perbarui(
+        state.copyWith(sesiLesson: {...state.sesiLesson, lessonId: baru}),
+      );
+    }
+  });
+
+  Future<void> lanjutLesson(String lessonId, String id, String command) =>
+      _antrekan(() async {
+        final sesi = _lesson(lessonId, id);
+        final baru = sesi.lanjut(command);
+        if (!identical(sesi, baru)) {
+          await _perbarui(
+            state.copyWith(sesiLesson: {...state.sesiLesson, lessonId: baru}),
+          );
+        }
+      });
+
+  Future<RingkasanSesi> finalisasiLesson(String lessonId, String id) =>
+      _antrekan(() async {
+        final sesi = _lesson(lessonId, id);
+        if (sesi.hasil case final hasil?) return RingkasanSesi.fromJson(hasil);
+        if (!sesi.lengkap || sesi.menungguLanjut) {
+          throw StateError('Lesson belum lengkap.');
+        }
+        final lesson = lessonUntuk(sesi.topikId)
+            .firstWhere((l) => l.id == lessonId);
+        return _nilaiLesson(lesson, sesi);
+      });
+
   @override
   DataBelajar build() => ref.read(dataAwalProvider);
 
@@ -226,10 +345,11 @@ class NumiController extends Notifier<DataBelajar> {
       });
 
   /// UC-001: menyimpan hasil diagnostic dan menyusun skill map awal.
-  Future<void> simpanDiagnostic(
+  Future<void> _simpanDiagnostic(
     HasilAkhirDiagnostic hasil,
     List<Jawaban> jawaban,
-  ) => _antrekan(() async {
+    CheckpointDiagnostic sesi,
+  ) async {
     final waktu = _sekarang;
     if (hasil.hasilPerTopik.isEmpty ||
         hasil.hasilPerTopik.map((h) => h.topikId).toSet().length !=
@@ -249,6 +369,7 @@ class NumiController extends Notifier<DataBelajar> {
         respons,
         AppConfig.soalDiagnosticPerTopik,
         KonteksJawaban.diagnostic,
+        sumberSesi: sesi.id,
       );
       if (b.benar != h.benar) {
         throw ArgumentError('Ringkasan diagnostic tidak sesuai respons.');
@@ -256,6 +377,7 @@ class NumiController extends Notifier<DataBelajar> {
       bukti[h.topikId] = b;
     }
     final data = state.copyWith(
+      sesiDiagnostic: sesi.tutup(),
       hasilDiagnostic: hasil.hasilPerTopik,
       buktiSkill: bukti,
       aksesMateri: _skill.susunAkses(bukti),
@@ -263,22 +385,13 @@ class NumiController extends Notifier<DataBelajar> {
       streakLog: _progress.catatAktivitas(state.streakLog, waktu),
     );
     await _perbarui(data);
-  });
-
-  /// Memulai lesson tidak menghasilkan bukti kemampuan.
-  Future<void> mulaiLesson(String topikId) async {
-    final status = state.statusTopik(topikId);
-    if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia) {
-      throw StateError('Materi belum dapat dibuka.');
-    }
   }
 
   /// UC-003 dan UC-004: menyimpan hasil lesson, XP, streak, dan lencana.
-  Future<RingkasanSesi> selesaiLesson(
-    Lesson lesson,
-    List<Jawaban> jawaban,
-    Duration durasi,
-  ) => _antrekan(() async {
+  Future<RingkasanSesi> _nilaiLesson(Lesson lesson, SesiSoal sesi) async {
+    final jawaban = sesi.jawaban;
+    final selisih = jawaban.last.waktu.difference(sesi.mulaiPada!);
+    final durasi = selisih.isNegative ? null : selisih;
     final waktu = _sekarang;
     final benar = jawaban.where((j) => j.benar).length;
     final lulus = benar >= AppConfig.minBenarLesson;
@@ -317,8 +430,9 @@ class NumiController extends Notifier<DataBelajar> {
       ),
       triggerLulus: JenisTrigger.lessonSelesai,
       triggerGagal: JenisTrigger.lessonGagal,
+      sesiLesson: sesi,
     );
-  });
+  }
 
   /// Hanya finalisasi checkpoint lengkap yang boleh menerbitkan bukti/reward.
   Future<RingkasanSesi> _nilaiMastery(SesiMastery sesi) async {
@@ -373,6 +487,7 @@ class NumiController extends Notifier<DataBelajar> {
     required JenisTrigger triggerLulus,
     required JenisTrigger triggerGagal,
     SesiMastery? sesi,
+    SesiSoal? sesiLesson,
   }) async {
     final waktu = _sekarang;
     final lencana = _progress.lencanaBaru(data, waktu, kejadian);
@@ -403,6 +518,12 @@ class NumiController extends Notifier<DataBelajar> {
     );
     await _perbarui(
       data.copyWith(
+        sesiLesson: sesiLesson == null
+            ? null
+            : {
+                ...data.sesiLesson,
+                sesiLesson.lessonId!: sesiLesson.tutup(ringkasan.toJson()),
+              },
         sesiMastery: sesi == null
             ? null
             : {

@@ -111,6 +111,10 @@ class TopikSheet extends ConsumerWidget {
                     onTap: () => buka(MasteryScreen(topik: topik)),
                   ),
                 ),
+              for (final lesson in lessons.where((l) => data.sesiLesson[l.id]?.selesai == false))
+                Padding(padding: const EdgeInsets.only(bottom: 12), child: TombolNumi(
+                  label: 'Lanjutkan ${lesson.judul}',
+                  onTap: () => buka(LessonScreen(lesson: lesson)))),
               if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia)
                 _Terkunci(kurang: kurang)
               else ...[

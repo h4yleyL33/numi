@@ -9,7 +9,7 @@ import 'package:numi/data/models/data_belajar.dart';
 import 'package:numi/data/models/siswa.dart';
 import 'package:numi/data/models/bukti_skill.dart';
 import 'package:numi/data/repositories/numi_repository.dart';
-import 'package:numi/domain/diagnostic_engine.dart';
+import 'package:numi/data/models/soal.dart';
 import 'package:numi/state/numi_controller.dart';
 
 class RepositoryMemori implements NumiRepository {
@@ -37,24 +37,6 @@ void main() {
   late RepositoryMemori repo;
   late ProviderContainer container;
   var sekarang = DateTime(2026, 9, 26, 9);
-
-  List<Jawaban> jawaban(
-    String topikId,
-    int benar,
-    int total,
-    KonteksJawaban konteks,
-  ) => [
-    for (var i = 0; i < total; i++)
-      Jawaban(
-        soalId: '$topikId-$i',
-        versiButir: 'generator-v1',
-        topikId: topikId,
-        jawaban: 'x',
-        benar: i < benar,
-        waktu: sekarang,
-        konteks: konteks,
-      ),
-  ];
 
   setUp(() {
     repo = RepositoryMemori();
@@ -100,43 +82,69 @@ void main() {
 
   Future<void> daftarDanDiagnostic() async {
     await controller().daftar(nama: 'Adi Pratama', kelas: 1);
-    await controller().simpanDiagnostic(
-      const HasilAkhirDiagnostic(
-        hasilPerTopik: [
-          DiagnosticResult(
-            topikId: 'T01',
-            benar: 2,
-            total: 2,
-            statusPenguasaan: StatusTopik.mastered,
-          ),
-          DiagnosticResult(
-            topikId: 'T02',
-            benar: 0,
-            total: 2,
-            statusPenguasaan: StatusTopik.belumDiuji,
-          ),
-        ],
-        statusAwal: {
-          'T01': StatusTopik.mastered,
-          'T02': StatusTopik.belumDiuji,
-          'T03': StatusTopik.terkunci,
-          'T04': StatusTopik.terkunci,
-          'T05': StatusTopik.terkunci,
-          'T06': StatusTopik.terkunci,
-          'T07': StatusTopik.terkunci,
-          'T08': StatusTopik.terkunci,
-          'T09': StatusTopik.terkunci,
-          'T10': StatusTopik.terkunci,
-          'T11': StatusTopik.terkunci,
-          'T12': StatusTopik.terkunci,
-        },
-        kelas: 1,
-      ),
-      [
-        ...jawaban('T01', 2, 2, KonteksJawaban.diagnostic),
-        ...jawaban('T02', 0, 2, KonteksJawaban.diagnostic),
-      ],
-    );
+    final mulai = await controller().mulaiDiagnostic();
+    while (!data().sesiDiagnostic!.lengkap) {
+      final blok = data().sesiDiagnostic!.blok.last;
+      final i = blok.jawaban.length;
+      final soal = blok.soal[i];
+      final isi = soal.topikId == 'T01'
+          ? soal.jawabanBenar
+          : soal.pilihan.firstWhere((p) => p != soal.jawabanBenar);
+      await controller().jawabDiagnostic(
+        mulai.id,
+        blok.commandId(i),
+        Jawaban(
+          soalId: soal.id,
+          topikId: soal.topikId,
+          jawaban: isi,
+          benar: soal.periksa(isi),
+          waktu: sekarang,
+          konteks: KonteksJawaban.diagnostic,
+          skillId: soal.skillId,
+          versiButir: soal.versi,
+        ),
+      );
+    }
+    await controller().finalisasiDiagnostic(mulai.id);
+  }
+
+  Future<RingkasanSesi> selesaikanLesson(int benar, Duration durasi) async {
+    final lesson = lessonUntuk('T02').first;
+    final soal = [
+      for (var i = 0; i < 5; i++)
+        Soal(
+          id: 'lesson-$i',
+          topikId: 'T02',
+          jenis: JenisSoal.pilihanGanda,
+          pertanyaan: 'Soal $i',
+          pilihan: ['x', 'y'],
+          jawabanBenar: 'x',
+          penjelasan: 'Contoh',
+        ),
+    ];
+    final sesi = await controller().mulaiSesiLesson(lesson, soal);
+    for (var i = 0; i < 5; i++) {
+      await controller().jawabLesson(
+        lesson.id,
+        sesi.id,
+        sesi.commandId(i),
+        Jawaban(
+          soalId: soal[i].id,
+          topikId: 'T02',
+          jawaban: i < benar ? 'x' : 'y',
+          benar: i < benar,
+          waktu: sekarang.add(durasi),
+          konteks: KonteksJawaban.lesson,
+          versiButir: soal[i].versi,
+        ),
+      );
+      await controller().lanjutLesson(
+        lesson.id,
+        sesi.id,
+        '${sesi.id}/lanjut/$i',
+      );
+    }
+    return controller().finalisasiLesson(lesson.id, sesi.id);
   }
 
   test(
@@ -160,14 +168,9 @@ void main() {
     () async {
       await daftarDanDiagnostic();
       final lesson = lessonUntuk('T02').first;
-      await controller().mulaiLesson('T02');
       expect(data().statusTopik('T02'), StatusTopik.perluLatihan);
 
-      final r = await controller().selesaiLesson(
-        lesson,
-        jawaban('T02', 5, 5, KonteksJawaban.lesson),
-        const Duration(seconds: 90),
-      );
+      final r = await selesaikanLesson(5, const Duration(seconds: 90));
       expect(r.lulus, isTrue);
       expect(r.xpDidapat, 70);
       expect(data().xp, 70);
@@ -185,11 +188,7 @@ void main() {
     () async {
       await daftarDanDiagnostic();
       final lesson = lessonUntuk('T02').first;
-      final r = await controller().selesaiLesson(
-        lesson,
-        jawaban('T02', 2, 5, KonteksJawaban.lesson),
-        const Duration(minutes: 3),
-      );
+      final r = await selesaikanLesson(2, const Duration(minutes: 3));
       expect(r.lulus, isFalse);
       expect(data().lessonSelesai(lesson.id), isFalse);
       expect(r.pesan.trigger, JenisTrigger.lessonGagal);
@@ -226,7 +225,7 @@ void main() {
 
   test('data disimpan setiap aktivitas selesai', () async {
     await daftarDanDiagnostic();
-    expect(repo.jumlahSimpan, 2);
+    expect(repo.tersimpan!.toJson(), data().toJson());
     await controller().mulaiUlang();
     expect(data().sudahDaftar, isFalse);
     expect(repo.tersimpan, isNull);
@@ -235,11 +234,7 @@ void main() {
   test('lesson memberi XP tanpa mengubah bukti kemampuan', () async {
     await daftarDanDiagnostic();
     final sebelum = data().buktiSkill;
-    await controller().selesaiLesson(
-      lessonUntuk('T02').first,
-      jawaban('T02', 5, 5, KonteksJawaban.lesson),
-      const Duration(minutes: 2),
-    );
+    await selesaikanLesson(5, const Duration(minutes: 2));
     expect(data().xp, 70);
     expect(data().buktiSkill, sebelum);
     expect(data().buktiSkill['T01']!.status, StatusBukti.indikasiSiap);
