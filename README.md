@@ -1,11 +1,16 @@
 # Numi
 
-Platform belajar matematika adaptif berbasis gamifikasi untuk siswa SD usia 6 sampai 12 tahun.
+Platform belajar matematika adaptif berbasis gamifikasi untuk siswa SD kelas 1 sampai 6.
 Numi mendeteksi learning gap numerasi dasar lewat diagnostic test, memetakan kemampuan siswa
 di skill map, lalu menyusun jalur belajar personal. Materi mengacu ke Capaian Pembelajaran
 Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025). Cakupan awal berisi 12 topik numerasi.
-Usia membantu menentukan titik awal, sementara rancangan pembelajaran mengikuti bukti
-kemampuan per keterampilan. Profil cukup berisi nama panggilan dan usia.
+Kelas membantu menentukan titik awal, sementara rancangan pembelajaran mengikuti bukti
+kemampuan per keterampilan. Profil berisi nama panggilan dan satu kelas 1–6. Rancangan terbaru
+memakai akun Google wali dan beberapa profil anak; integrasinya belum tersedia pada init lokal.
+
+Baseline pengembangan berdasarkan seluruh PRD serta PPL/doktek Bab I–III tersedia di
+[`docs/03-implementasi`](docs/03-implementasi/README.md). Urutan dan kriteria pekerjaan ada di
+[`tasks/plan.md`](tasks/plan.md) dan [`tasks/todo.md`](tasks/todo.md).
 
 Proyek mata kuliah Rekayasa Perangkat Lunak, Teknik Informatika Unpad, semester ganjil 2026.
 Metodologi Waterfall, 13 minggu (7 September sampai 6 Desember 2026).

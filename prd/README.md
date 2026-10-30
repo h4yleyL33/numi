@@ -1,5 +1,7 @@
 # PRD Numi
 
+> **Baseline pengembangan 30 Oktober 2026:** gunakan [baseline implementasi](../docs/03-implementasi/README.md) dan [backlog](../tasks/todo.md) bersama PPL/doktek Bab I–III terbaru. Profil sekarang memakai kelas tunggal 1–6, kelompok fase A/B/C, serta rancangan akun Google wali dan beberapa profil. Bagian di bawah merekam PRD awal; keputusan umur, dua kelompok kemampuan global, dan mastery dengan pembahasan per butir sudah digantikan. Tabel penyelarasan pada baseline mencakup seluruh berkas PRD.
+
 Product Requirements Document untuk Numi versi 1.0 (MVP semester ganjil 2026). Dokumen ini
 merangkum apa yang dibangun, untuk siapa, dan kapan dianggap berhasil. Rinciannya dipecah ke
 beberapa berkas di folder ini supaya tiap orang di tim cukup membuka bagian yang ia pegang.
