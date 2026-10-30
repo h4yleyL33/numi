@@ -7,6 +7,7 @@ import 'package:numi/data/models/catatan_belajar.dart';
 import 'package:numi/data/models/companion_message.dart';
 import 'package:numi/data/models/data_belajar.dart';
 import 'package:numi/data/models/siswa.dart';
+import 'package:numi/data/models/bukti_skill.dart';
 import 'package:numi/data/repositories/numi_repository.dart';
 import 'package:numi/domain/diagnostic_engine.dart';
 import 'package:numi/state/numi_controller.dart';
@@ -46,6 +47,7 @@ void main() {
     for (var i = 0; i < total; i++)
       Jawaban(
         soalId: '$topikId-$i',
+        versiButir: 'generator-v1',
         topikId: topikId,
         jawaban: 'x',
         benar: i < benar,
@@ -111,12 +113,12 @@ void main() {
             topikId: 'T02',
             benar: 0,
             total: 2,
-            statusPenguasaan: StatusTopik.belumDikuasai,
+            statusPenguasaan: StatusTopik.belumDiuji,
           ),
         ],
         statusAwal: {
           'T01': StatusTopik.mastered,
-          'T02': StatusTopik.belumDikuasai,
+          'T02': StatusTopik.belumDiuji,
           'T03': StatusTopik.terkunci,
           'T04': StatusTopik.terkunci,
           'T05': StatusTopik.terkunci,
@@ -130,7 +132,10 @@ void main() {
         },
         kelas: 1,
       ),
-      jawaban('T01', 2, 2, KonteksJawaban.diagnostic),
+      [
+        ...jawaban('T01', 2, 2, KonteksJawaban.diagnostic),
+        ...jawaban('T02', 0, 2, KonteksJawaban.diagnostic),
+      ],
     );
   }
 
@@ -142,7 +147,7 @@ void main() {
       expect(data().siswa!.kelompokKelas, KelompokKelas.faseA);
       expect(
         data().statusTopik('T03'),
-        StatusTopik.belumDikuasai,
+        StatusTopik.belumDiuji,
         reason: 'prasyarat T03 hanya T01',
       );
       expect(data().statusTopik('T04'), StatusTopik.terkunci);
@@ -203,7 +208,7 @@ void main() {
       expect(data().statusTopik('T02'), StatusTopik.mastered);
       expect(
         data().statusTopik('T05'),
-        StatusTopik.belumDikuasai,
+        StatusTopik.belumDiuji,
         reason: 'prasyarat T05 adalah T02',
       );
       expect(data().hasilMastery.single.skor, 100);
@@ -255,6 +260,75 @@ void main() {
     await controller().mulaiUlang();
     expect(data().sudahDaftar, isFalse);
     expect(repo.tersimpan, isNull);
+  });
+
+  test('lesson memberi XP tanpa mengubah bukti kemampuan', () async {
+    await daftarDanDiagnostic();
+    final sebelum = data().buktiSkill;
+    await controller().selesaiLesson(
+      lessonUntuk('T02').first,
+      jawaban('T02', 5, 5, KonteksJawaban.lesson),
+      const Duration(minutes: 2),
+    );
+    expect(data().xp, 70);
+    expect(data().buktiSkill, sebelum);
+    expect(data().buktiSkill['T01']!.status, StatusBukti.indikasiSiap);
+    expect(data().jumlahBuktiAwal, 0);
+  });
+
+  test('blok mastery tidak lengkap, duplikat, atau konteks salah tidak memberi bukti/reward', () async {
+    await daftarDanDiagnostic();
+    final sebelum = data();
+    final duplikat = jawaban('T02', 5, 5, KonteksJawaban.mastery).first;
+    for (final respons in [
+      jawaban('T02', 4, 4, KonteksJawaban.mastery),
+      [for (var i = 0; i < 5; i++) duplikat],
+      jawaban('T02', 5, 5, KonteksJawaban.lesson),
+    ]) {
+      await expectLater(
+        controller().selesaiMastery('T02', respons),
+        throwsArgumentError,
+      );
+    }
+    expect(identical(data(), sebelum), isTrue);
+  });
+
+  test(
+    'lima jawaban berbantuan belum menjadi bukti penguasaan mandiri',
+    () async {
+      await daftarDanDiagnostic();
+      final respons = [
+        for (var i = 0; i < 5; i++)
+          Jawaban(
+            soalId: 'T02-$i',
+            topikId: 'T02',
+            jawaban: 'x',
+            benar: true,
+            waktu: sekarang,
+            konteks: KonteksJawaban.mastery,
+            versiButir: 'generator-v1',
+            bantuan: i == 0 ? 1 : 0,
+          ),
+      ];
+      final hasil = await controller().selesaiMastery('T02', respons);
+      expect(hasil.lulus, isFalse);
+      expect(data().buktiSkill['T02']!.bantuan, 1);
+      expect(data().jumlahBuktiAwal, 0);
+    },
+  );
+
+  test('bukti dan XP tidak diterbitkan ketika simpan mastery gagal', () async {
+    await daftarDanDiagnostic();
+    final sebelum = data();
+    repo.gagalSimpan = true;
+    await expectLater(
+      controller().selesaiMastery(
+        'T02',
+        jawaban('T02', 5, 5, KonteksJawaban.mastery),
+      ),
+      throwsStateError,
+    );
+    expect(identical(data(), sebelum), isTrue);
   });
 
   test('kelas dan nama tidak sah ditolak sebelum menyimpan', () async {

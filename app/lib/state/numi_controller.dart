@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/config/app_config.dart';
 import '../data/content/daftar_topik.dart';
 import '../data/models/badge.dart';
+import '../data/models/bukti_skill.dart';
 import '../data/models/catatan_belajar.dart';
 import '../data/models/companion_message.dart';
 import '../data/models/data_belajar.dart';
@@ -121,25 +122,46 @@ class NumiController extends Notifier<DataBelajar> {
     List<Jawaban> jawaban,
   ) async {
     final waktu = _sekarang;
-    final status = _skill.bukaTopik(hasil.statusAwal);
+    if (hasil.hasilPerTopik.isEmpty ||
+        hasil.hasilPerTopik.map((h) => h.topikId).toSet().length !=
+            hasil.hasilPerTopik.length ||
+        jawaban.map((j) => j.soalId).toSet().length != jawaban.length ||
+        jawaban.length >
+            AppConfig.maksTopikDiagnostic * AppConfig.soalDiagnosticPerTopik ||
+        jawaban.length !=
+            hasil.hasilPerTopik.fold<int>(0, (n, h) => n + h.total)) {
+      throw ArgumentError('Blok diagnostic tidak lengkap.');
+    }
+    final bukti = {...state.buktiSkill};
+    for (final h in hasil.hasilPerTopik) {
+      final respons = jawaban.where((j) => j.topikId == h.topikId).toList();
+      final b = _buatBukti(
+        h.topikId,
+        respons,
+        AppConfig.soalDiagnosticPerTopik,
+        KonteksJawaban.diagnostic,
+      );
+      if (b.benar != h.benar) {
+        throw ArgumentError('Ringkasan diagnostic tidak sesuai respons.');
+      }
+      bukti[h.topikId] = b;
+    }
     final data = state.copyWith(
       hasilDiagnostic: hasil.hasilPerTopik,
-      skillMap: {
-        for (final e in status.entries)
-          e.key: SkillMap(topikId: e.key, status: e.value, diperbarui: waktu),
-      },
+      buktiSkill: bukti,
+      aksesMateri: _skill.susunAkses(bukti),
       riwayatJawaban: _tambahRiwayat(jawaban),
       streakLog: _progress.catatAktivitas(state.streakLog, waktu),
     );
     await _perbarui(data);
   }
 
-  /// UC-003: saat lesson pertama di topik dimulai, statusnya jadi perlu latihan.
+  /// Memulai lesson tidak menghasilkan bukti kemampuan.
   Future<void> mulaiLesson(String topikId) async {
-    final lama = state.statusTopik(topikId);
-    final baru = _skill.saatMulaiLesson(lama);
-    if (baru == lama) return;
-    await _perbarui(state.copyWith(skillMap: _ubahStatus(topikId, baru)));
+    final status = state.statusTopik(topikId);
+    if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia) {
+      throw StateError('Materi belum dapat dibuka.');
+    }
   }
 
   /// UC-003 dan UC-004: menyimpan hasil lesson, XP, streak, dan lencana.
@@ -197,27 +219,20 @@ class NumiController extends Notifier<DataBelajar> {
     final waktu = _sekarang;
     final benar = jawaban.where((j) => j.benar).length;
     final skor = jawaban.isEmpty ? 0 : (benar * 100 / jawaban.length).round();
-    final lulus = skor >= AppConfig.masteryThreshold;
-
-    final statusBaru = _skill.setelahMastery(
-      state.statusTopik(topikId),
-      lulus: lulus,
+    final baru = _buatBukti(
+      topikId,
+      jawaban,
+      AppConfig.soalMastery,
+      KonteksJawaban.mastery,
     );
-    final semuaStatus = {
-      for (final e in state.skillMap.entries) e.key: e.value.status,
-    };
-    semuaStatus[topikId] = statusBaru;
-    final dibuka = _skill.bukaTopik(semuaStatus);
+    final lulus = baru.status == StatusBukti.buktiAwal;
+    final bukti = {...state.buktiSkill, topikId: baru};
     final xp =
         benar * AppConfig.xpPerBenar + (lulus ? AppConfig.xpMasteryLulus : 0);
 
     final data = state.copyWith(
-      skillMap: {
-        for (final e in dibuka.entries)
-          e.key: e.value == state.skillMap[e.key]?.status
-              ? state.skillMap[e.key]!
-              : SkillMap(topikId: e.key, status: e.value, diperbarui: waktu),
-      },
+      buktiSkill: bukti,
+      aksesMateri: _skill.susunAkses(bukti),
       hasilMastery: [
         ...state.hasilMastery,
         MasteryResult(topikId: topikId, skor: skor, lulus: lulus, waktu: waktu),
@@ -314,10 +329,53 @@ class NumiController extends Notifier<DataBelajar> {
     if (ref.mounted) state = data;
   }
 
-  Map<String, SkillMap> _ubahStatus(String topikId, StatusTopik status) => {
-    ...state.skillMap,
-    topikId: SkillMap(topikId: topikId, status: status, diperbarui: _sekarang),
-  };
+  BuktiSkill _buatBukti(
+    String topikId,
+    List<Jawaban> jawaban,
+    int total,
+    KonteksJawaban konteks,
+  ) {
+    if (!daftarTopik.any((t) => t.id == topikId) ||
+        jawaban.length != total ||
+        jawaban.any(
+          (j) => j.topikId != topikId || j.konteks != konteks || j.bantuan < 0,
+        ) ||
+        jawaban.map((j) => j.soalId).toSet().length != total) {
+      throw ArgumentError('Respons pertama atau jumlah butir tidak sah.');
+    }
+    final benar = jawaban.where((j) => j.benar).length;
+    final bantuan = jawaban.fold<int>(0, (n, j) => n + j.bantuan);
+    final mandiri =
+        bantuan == 0 &&
+        jawaban.every(
+          (j) =>
+              j.versiButir.trim().isNotEmpty &&
+              j.versiButir != 'legacy-tanpa-versi',
+        );
+    final status = konteks == KonteksJawaban.mastery
+        ? (benar == total && mandiri
+              ? StatusBukti.buktiAwal
+              : StatusBukti.indikasiLatihan)
+        : (benar == total && bantuan == 0
+              ? StatusBukti.indikasiSiap
+              : StatusBukti.indikasiLatihan);
+    final skill = jawaban.map((j) => j.skillId).toSet();
+    return BuktiSkill(
+      topikId: topikId,
+      skillId: skill.length == 1
+          ? skill.single ?? '$topikId-sampel'
+          : '$topikId-sampel',
+      status: status,
+      benar: benar,
+      total: total,
+      bantuan: bantuan,
+      sumberSesi:
+          '${konteks.name}-${_sekarang.microsecondsSinceEpoch}-$topikId',
+      waktu: jawaban.last.waktu,
+      versiKebijakan: 'numi-pilot-v1',
+      versiButir: jawaban.map((j) => j.versiButir).toSet().toList(),
+    );
+  }
 
   List<Jawaban> _tambahRiwayat(List<Jawaban> baru) {
     final semua = [...state.riwayatJawaban, ...baru];

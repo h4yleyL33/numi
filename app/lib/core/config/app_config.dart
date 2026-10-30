@@ -3,7 +3,8 @@
 class AppConfig {
   AppConfig._();
 
-  /// Skor minimal lulus mastery test. Mengikuti state diagram di doktek (>= 95).
+  /// Referensi rancangan awal. Kebijakan bukti pilot sekarang 5/5 mandiri;
+  /// keputusan bukti ada pada NumiController, bukan dari ambang skor ini.
   static const int masteryThreshold = 95;
 
   static const int soalPerLesson = 5;

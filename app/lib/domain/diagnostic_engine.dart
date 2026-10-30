@@ -61,21 +61,22 @@ class SesiDiagnostic {
   int get jumlahTopikDiuji => _hasil.length;
   Map<String, DiagnosticResult> get hasilSementara => Map.unmodifiable(_hasil);
 
-  List<Soal> _buatSoal() => _generator.buat(
-    _topik[_indeks].id,
-    AppConfig.soalDiagnosticPerTopik,
-    tingkat: 1,
-  );
+  List<Soal> _buatSoal() => _indeks == _indeksAwal
+      ? PaketKelas.untuk(kelas).butirAwal
+      : _generator.buat(
+          _topik[_indeks].id,
+          AppConfig.soalDiagnosticPerTopik,
+          tingkat: 1,
+        );
 
   /// Dipanggil setelah semua soal topik sekarang dijawab.
   void catat(int jumlahBenar) {
     if (_selesai) return;
     final total = _soalSekarang.length;
+    RangeError.checkValueInInterval(jumlahBenar, 0, total, 'jumlahBenar');
     final status = jumlahBenar == total
-        ? StatusTopik.mastered
-        : (jumlahBenar > 0
-              ? StatusTopik.perluLatihan
-              : StatusTopik.belumDikuasai);
+        ? StatusTopik.siapLanjut
+        : StatusTopik.perluLatihan;
     _hasil[topikSekarang.id] = DiagnosticResult(
       topikId: topikSekarang.id,
       benar: jumlahBenar,
@@ -83,7 +84,7 @@ class SesiDiagnostic {
       statusPenguasaan: status,
     );
 
-    final lulus = status == StatusTopik.mastered;
+    final lulus = status == StatusTopik.siapLanjut;
     if (_hasil.length >= AppConfig.maksTopikDiagnostic) {
       _selesai = true;
     } else if (_turun) {
@@ -110,8 +111,7 @@ class SesiDiagnostic {
   }
 
   HasilAkhirDiagnostic hasilAkhir() {
-    final diuji = _hasil.keys.map((id) => _topik.indexWhere((t) => t.id == id));
-    final terendah = diuji.reduce((a, b) => a < b ? a : b);
+    if (!_selesai) throw StateError('Diagnostic belum selesai.');
 
     final status = <String, StatusTopik>{};
     for (var i = 0; i < _topik.length; i++) {
@@ -119,11 +119,8 @@ class SesiDiagnostic {
       final hasil = _hasil[topik.id];
       if (hasil != null) {
         status[topik.id] = hasil.statusPenguasaan;
-      } else if (i < terendah) {
-        // shortcut: inferensi topik lama, ganti dengan bukti belum diuji pada I07.
-        status[topik.id] = StatusTopik.mastered;
       } else {
-        status[topik.id] = StatusTopik.terkunci;
+        status[topik.id] = StatusTopik.belumDiuji;
       }
     }
 

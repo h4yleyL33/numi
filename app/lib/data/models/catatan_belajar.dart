@@ -8,7 +8,10 @@ enum StatusTopik {
   terkunci('Terkunci'),
   belumDikuasai('Belum dikuasai'),
   perluLatihan('Perlu latihan'),
-  mastered('Dikuasai');
+  mastered('Bukti awal'),
+  belumDiuji('Belum dicoba'),
+  siapLanjut('Siap lanjut'),
+  belumTersedia('Belum tersedia');
 
   const StatusTopik(this.label);
   final String label;
@@ -23,6 +26,9 @@ class Jawaban {
     required this.benar,
     required this.waktu,
     required this.konteks,
+    this.skillId,
+    this.versiButir = 'legacy-tanpa-versi',
+    this.bantuan = 0,
   });
 
   final String soalId;
@@ -31,9 +37,15 @@ class Jawaban {
   final bool benar;
   final DateTime waktu;
   final KonteksJawaban konteks;
+  final String? skillId;
+  final String versiButir;
+  final int bantuan;
 
   Map<String, dynamic> toJson() => {
         'soalId': soalId,
+        'skillId': skillId,
+        'versiButir': versiButir,
+        'bantuan': bantuan,
         'topikId': topikId,
         'jawaban': jawaban,
         'benar': benar,
@@ -43,6 +55,9 @@ class Jawaban {
 
   factory Jawaban.fromJson(Map<String, dynamic> json) => Jawaban(
         soalId: json['soalId'] as String,
+        skillId: json['skillId'] as String?,
+        versiButir: json['versiButir'] as String? ?? 'legacy-tanpa-versi',
+        bantuan: json['bantuan'] as int? ?? 0,
         topikId: json['topikId'] as String,
         jawaban: json['jawaban'] as String,
         benar: json['benar'] as bool,

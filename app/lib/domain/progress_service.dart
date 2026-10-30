@@ -63,7 +63,7 @@ class ProgressService {
   /// Lencana yang syaratnya baru terpenuhi setelah sesi ini.
   List<Lencana> lencanaBaru(DataBelajar data, DateTime waktu, KejadianSesi kejadian) {
     final streakSekarang = streak(data.streakLog, waktu).sekarang;
-    final jumlahMastered = data.skillMap.values.where((s) => s.status == StatusTopik.mastered).length;
+    final jumlahMastered = data.jumlahBuktiAwal;
     final lulusMastery = data.hasilMastery.any((m) => m.lulus);
 
     bool syarat(String id) => switch (id) {

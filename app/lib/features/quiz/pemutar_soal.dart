@@ -54,6 +54,8 @@ class _PemutarSoalState extends State<PemutarSoal> {
     if (pilihan == null || _sudahCek || _tuntas) return;
     final jawaban = Jawaban(
       soalId: _soal.id,
+      skillId: _soal.skillId,
+      versiButir: _soal.versi,
       topikId: _soal.topikId,
       jawaban: pilihan,
       benar: _soal.periksa(pilihan),

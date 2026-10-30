@@ -1,5 +1,6 @@
 import '../data/models/catatan_belajar.dart';
 import '../data/models/topik.dart';
+import '../data/models/bukti_skill.dart';
 
 /// Mengatur perpindahan status topik di skill map (FR-002, STATE-001).
 class SkillMapService {
@@ -7,31 +8,35 @@ class SkillMapService {
 
   final List<Topik> topik;
 
-  /// Topik terkunci dibuka menjadi belum dikuasai kalau semua prasyaratnya
-  /// sudah dikuasai.
-  Map<String, StatusTopik> bukaTopik(Map<String, StatusTopik> status) {
-    final hasil = Map<String, StatusTopik>.from(status);
-    for (final t in topik) {
-      final sekarang = hasil[t.id] ?? StatusTopik.terkunci;
-      if (sekarang != StatusTopik.terkunci) continue;
-      final siap = t.prasyarat.every((p) => hasil[p] == StatusTopik.mastered);
-      if (siap) hasil[t.id] = StatusTopik.belumDikuasai;
-    }
-    return hasil;
+  Map<String, AksesMateri> susunAkses(Map<String, BuktiSkill> bukti) => {
+    for (final t in topik) t.id: _akses(t, bukti),
+  };
+
+  AksesMateri _akses(Topik t, Map<String, BuktiSkill> bukti) {
+    final prasyaratSiap = t.prasyarat.every((id) => bukti[id]?.siap == true);
+    final prasyaratLemah = t.prasyarat.any(
+      (id) => bukti[id]?.status == StatusBukti.indikasiLatihan,
+    );
+    final dicoba = bukti.containsKey(t.id);
+    final terbuka = prasyaratSiap || (dicoba && !prasyaratLemah);
+    return AksesMateri(
+      topikId: t.id,
+      terbuka: terbuka,
+      alasan: prasyaratSiap
+          ? 'Prasyarat jangkar mendukung latihan.'
+          : (terbuka
+                ? 'Jangkar sudah dicoba; prasyarat lain masih perlu diperiksa.'
+                : 'Periksa atau latih prasyarat lebih dulu.'),
+    );
   }
 
-  /// Status saat siswa mulai mengerjakan lesson di topik itu.
-  StatusTopik saatMulaiLesson(StatusTopik status) =>
-      status == StatusTopik.belumDikuasai ? StatusTopik.perluLatihan : status;
-
-  /// Status setelah mastery test. Gagal tetap perlu latihan (UC-005 alur alternatif).
-  StatusTopik setelahMastery(StatusTopik status, {required bool lulus}) {
-    if (lulus) return StatusTopik.mastered;
-    return status == StatusTopik.mastered ? StatusTopik.mastered : StatusTopik.perluLatihan;
-  }
-
-  List<Topik> prasyaratBelumDikuasai(Topik t, Map<String, StatusTopik> status) => [
-        for (final id in t.prasyarat)
-          if (status[id] != StatusTopik.mastered) topik.firstWhere((x) => x.id == id),
-      ];
+  List<Topik> prasyaratBelumDikuasai(
+    Topik t,
+    Map<String, StatusTopik> status,
+  ) => [
+    for (final id in t.prasyarat)
+      if (status[id] != StatusTopik.mastered &&
+          status[id] != StatusTopik.siapLanjut)
+        topik.firstWhere((x) => x.id == id),
+  ];
 }

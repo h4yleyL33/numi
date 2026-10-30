@@ -88,8 +88,8 @@ class ProgressScreen extends ConsumerWidget {
             children: [
               _Statistik(
                 ikon: '🗼',
-                nilai: '${data.skillMap.values.where((s) => s.status == StatusTopik.mastered).length}',
-                label: 'Pulau terang',
+                nilai: '${data.jumlahBuktiAwal}',
+                label: 'Bukti awal',
               ),
               const SizedBox(width: 10),
               _Statistik(
@@ -154,7 +154,7 @@ class ProgressScreen extends ConsumerWidget {
                 'Setiap ${AppConfig.xpPerLevel} XP, level naik satu.\n\n'
                 'Nyala api bertambah setiap hari kamu belajar. Kalau satu hari terlewat, nyalanya mulai dari nol lagi.\n\n'
                 'Lesson dianggap selesai kalau minimal ${AppConfig.minBenarLesson} dari ${AppConfig.soalPerLesson} '
-                'soal benar. Mercusuar menyala kalau skor mastery test mencapai ${AppConfig.masteryThreshold}.',
+                'soal benar. Bukti awal mastery memakai lima jawaban benar tanpa bantuan.',
                 style: TextStyle(height: 1.5),
               ),
             ],

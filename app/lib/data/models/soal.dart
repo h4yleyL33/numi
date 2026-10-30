@@ -43,9 +43,13 @@ class Soal {
     this.gambarPecahan,
     this.pilihan = const [],
     this.pasangan = const [],
+    this.skillId,
+    this.versi = 'generator-v1',
   });
 
   final String id;
+  final String? skillId;
+  final String versi;
   final String topikId;
   final JenisSoal jenis;
   final int tingkat;

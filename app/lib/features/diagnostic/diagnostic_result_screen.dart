@@ -9,7 +9,6 @@ import '../../data/models/catatan_belajar.dart';
 import '../../data/models/companion_message.dart';
 import '../../core/widgets/chip_status.dart';
 import '../../domain/diagnostic_engine.dart';
-import '../../domain/skill_map_service.dart';
 import '../home/home_shell.dart';
 import '../mascot/mascot_bubble.dart';
 
@@ -20,8 +19,8 @@ class DiagnosticResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = SkillMapService(daftarTopik).bukaTopik(hasil.statusAwal);
-    final terang = status.values.where((s) => s == StatusTopik.mastered).length;
+    final status = hasil.statusAwal;
+    final dicoba = hasil.hasilPerTopik.length;
     final latihan = status.values.where((s) => s == StatusTopik.perluLatihan).length;
     final diuji = {for (final h in hasil.hasilPerTopik) h.topikId: h};
 
@@ -38,8 +37,8 @@ class DiagnosticResultScreen extends StatelessWidget {
                       gelap: true,
                       ekspresi: EkspresiMaskot.bangga,
                       ukuranMaskot: 96,
-                      teks: 'Peta kemampuanmu sudah jadi! $terang pulau sudah terang, '
-                          'dan $latihan pulau tinggal sedikit lagi.',
+                      teks: '$dicoba jangkar sudah dicoba. $latihan bagian bisa kita latih. '
+                          'Yang belum ditanyakan tetap Belum dicoba.',
                     ),
                     const SizedBox(height: 12),
                     Container(
@@ -58,6 +57,9 @@ class DiagnosticResultScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    const Text('Hasil ini indikasi dari sampel soal, bukan penguasaan seluruh materi.',
+                      style: TextStyle(color: Colors.white70)),
+                    const SizedBox(height: 12),
                     for (final (i, t) in daftarTopik.indexed)
                       TweenAnimationBuilder<double>(
                         tween: Tween(begin: 0, end: 1),

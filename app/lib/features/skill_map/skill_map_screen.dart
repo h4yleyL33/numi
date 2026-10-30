@@ -38,6 +38,10 @@ class SkillMapScreen extends ConsumerWidget {
         child: Column(
           children: [
             _Kepala(data: data, streak: streak.sekarang, terancam: streak.terancam, level: progres.level(data.xp)),
+            if (rekomendasi != null)
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text('${rekomendasi.topik.namaPulau}: ${rekomendasi.alasan}',
+                  maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white70))),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, batas) {
@@ -59,7 +63,7 @@ class SkillMapScreen extends ConsumerWidget {
                                 child: CustomPaint(
                                   painter: _PelukisJalur(
                                     titik: [for (var i = 0; i < topik.length; i++) posisi(i)],
-                                    terbuka: [for (final t in topik) data.statusTopik(t.id) != StatusTopik.terkunci],
+                                    terbuka: [for (final t in topik) data.statusTopik(t.id) != StatusTopik.terkunci && data.statusTopik(t.id) != StatusTopik.belumTersedia],
                                   ),
                                 ),
                               ),
@@ -103,7 +107,7 @@ class _Kepala extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final terang = data.skillMap.values.where((s) => s.status == StatusTopik.mastered).length;
+    final terang = data.jumlahBuktiAwal;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
       child: Row(
@@ -116,7 +120,7 @@ class _Kepala extends StatelessWidget {
                   'Hai, ${data.siswa?.namaPanggilan ?? 'Teman'}!',
                   style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900),
                 ),
-                Text('$terang dari ${daftarTopik.length} pulau sudah terang',
+                Text('$terang dari ${daftarTopik.length} topik punya bukti awal',
                     style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
               ],
             ),
@@ -186,7 +190,7 @@ class _PulauTopikState extends State<PulauTopik> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final status = widget.status;
-    final terkunci = status == StatusTopik.terkunci;
+    final terkunci = status == StatusTopik.terkunci || status == StatusTopik.belumTersedia;
     final terang = status == StatusTopik.mastered;
     // Kemajuan pulau: 2 lesson ditambah mastery test.
     final kemajuan = terang ? 1.0 : widget.lessonSelesai / 3;
@@ -284,8 +288,8 @@ class _PelukisPulau extends CustomPainter {
     }
 
     final (pasir, rumput, cahaya) = switch (status) {
-      StatusTopik.terkunci => (const Color(0xFF3D4170), const Color(0xFF30345E), 0.0),
-      StatusTopik.belumDikuasai => (const Color(0xFFCDB98F), const Color(0xFF5E9A6A), 0.15),
+      StatusTopik.terkunci || StatusTopik.belumTersedia => (const Color(0xFF3D4170), const Color(0xFF30345E), 0.0),
+      StatusTopik.belumDikuasai || StatusTopik.belumDiuji || StatusTopik.siapLanjut => (const Color(0xFFCDB98F), const Color(0xFF5E9A6A), 0.15),
       StatusTopik.perluLatihan => (const Color(0xFFE9D19A), const Color(0xFF63B071), 0.35),
       StatusTopik.mastered => (const Color(0xFFF7DE9C), const Color(0xFF6CC47A), 0.75),
     };

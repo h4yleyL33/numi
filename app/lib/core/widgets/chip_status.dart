@@ -14,8 +14,9 @@ class ChipStatus extends StatelessWidget {
     final (warna, ikon) = switch (status) {
       StatusTopik.mastered => (NumiWarna.cahaya, Icons.star_rounded),
       StatusTopik.perluLatihan => (NumiWarna.langit, Icons.trending_up_rounded),
-      StatusTopik.belumDikuasai => (const Color(0xFFB9B6D3), Icons.circle_outlined),
-      StatusTopik.terkunci => (const Color(0xFF6E6B8F), Icons.lock_rounded),
+      StatusTopik.belumDikuasai || StatusTopik.belumDiuji => (const Color(0xFFB9B6D3), Icons.help_outline_rounded),
+      StatusTopik.siapLanjut => (NumiWarna.cahayaMuda, Icons.arrow_forward_rounded),
+      StatusTopik.terkunci || StatusTopik.belumTersedia => (const Color(0xFF6E6B8F), Icons.lock_rounded),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

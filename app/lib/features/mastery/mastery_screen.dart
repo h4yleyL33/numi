@@ -17,7 +17,7 @@ import '../quiz/pemutar_soal.dart';
 
 enum _Tahap { pembuka, soal, menyimpan, hasil }
 
-/// UC-005. Lulus kalau skor mencapai AppConfig.masteryThreshold.
+/// UC-005. Lima respons benar tanpa bantuan menjadi bukti awal pada sampel.
 class MasteryScreen extends ConsumerStatefulWidget {
   const MasteryScreen({super.key, required this.topik});
 
@@ -70,8 +70,8 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
                     const MascotBubble(
                       gelap: true,
                       ekspresi: EkspresiMaskot.semangat,
-                      teks: 'Jawab ${AppConfig.soalMastery} soal. Kalau skormu mencapai '
-                          '${AppConfig.masteryThreshold}, mercusuarnya akan menyala!',
+                      teks: 'Jawab ${AppConfig.soalMastery} soal sendiri. '
+                          'Hasil 5 dari 5 memberi bukti awal pada sampel ini.',
                     ),
                     const Spacer(),
                     TombolNumi(

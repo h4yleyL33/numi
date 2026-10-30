@@ -7,6 +7,7 @@ import '../../core/widgets/chip_status.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../core/widgets/transisi.dart';
 import '../../data/content/daftar_lesson.dart';
+import '../../data/content/daftar_topik.dart';
 import '../../data/models/catatan_belajar.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/topik.dart';
@@ -38,7 +39,7 @@ class TopikSheet extends ConsumerWidget {
     final siapMastery = path.siapMastery(topik.id, data);
     final kurang = ref
         .watch(skillMapServiceProvider)
-        .prasyaratBelumDikuasai(topik, {for (final e in data.skillMap.entries) e.key: e.value.status});
+        .prasyaratBelumDikuasai(topik, {for (final t in daftarTopik) t.id: data.statusTopik(t.id)});
 
     void buka(Widget halaman) {
       Navigator.of(context).pop();
@@ -93,7 +94,15 @@ class TopikSheet extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (status == StatusTopik.terkunci)
+              Text('Bukti pada sampel: ${data.buktiSkill[topik.id]?.label ?? 'Belum dicoba'}',
+                style: const TextStyle(fontWeight: FontWeight.w800)),
+              if (data.buktiSkill[topik.id] case final bukti?)
+                Text('${bukti.benar}/${bukti.total} soal · bantuan ${bukti.bantuan} · '
+                  '${bukti.waktu.day}/${bukti.waktu.month}/${bukti.waktu.year}\n'
+                  '${bukti.versiKebijakan} · ${bukti.versiButir.join(', ')}'),
+              Text('Akses: ${data.aksesMateri[topik.id]?.alasan ?? 'Akses tersimpan dari versi sebelumnya.'}'),
+              const SizedBox(height: 16),
+              if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia)
                 _Terkunci(kurang: kurang)
               else ...[
                 for (final (i, l) in lessons.indexed)
@@ -141,7 +150,7 @@ class _Terkunci extends StatelessWidget {
             children: [
               Icon(Icons.lock_rounded, color: NumiWarna.tintaPudar),
               SizedBox(width: 8),
-              Text('Pulau ini masih tertutup kabut', style: TextStyle(fontWeight: FontWeight.w800)),
+              Expanded(child: Text('Pulau ini masih tertutup kabut', style: TextStyle(fontWeight: FontWeight.w800))),
             ],
           ),
           const SizedBox(height: 8),

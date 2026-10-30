@@ -93,7 +93,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         await controller.daftar(nama: _nama.text, kelas: _kelas!);
       }
       if (!mounted) return;
-      final tujuan = ref.read(numiControllerProvider).diagnosticSelesai
+      final tujuan = !ref.read(numiControllerProvider).perluDiagnostic
           ? const HomeShell()
           : const DiagnosticIntroScreen();
       Navigator.of(context).pushReplacement(transisiPudar(tujuan));

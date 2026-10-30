@@ -5,9 +5,10 @@ import '../data/models/lesson.dart';
 import '../data/models/topik.dart';
 
 class Rekomendasi {
-  const Rekomendasi({required this.topik, this.lesson});
+  const Rekomendasi({required this.topik, this.lesson, this.alasan = ''});
 
   final Topik topik;
+  final String alasan;
 
   /// Kosong berarti semua lesson topik ini selesai dan siswa siap mastery test.
   final Lesson? lesson;
@@ -32,9 +33,22 @@ class LearningPathService {
         break;
       }
     }
-    pilihan ??= urut.where((t) => data.statusTopik(t.id) == StatusTopik.belumDikuasai).firstOrNull;
+    pilihan ??= urut
+        .where(
+          (t) =>
+              data.statusTopik(t.id) == StatusTopik.belumDiuji ||
+              data.statusTopik(t.id) == StatusTopik.siapLanjut,
+        )
+        .firstOrNull;
     if (pilihan == null) return null;
-    return Rekomendasi(topik: pilihan, lesson: lessonBerikutnya(pilihan.id, data));
+    final status = data.buktiSkill[pilihan.id];
+    return Rekomendasi(
+      topik: pilihan,
+      lesson: lessonBerikutnya(pilihan.id, data),
+      alasan: status == null
+          ? 'Jangkar ini belum dicoba.'
+          : 'Hasil sampel ${status.benar}/${status.total} menjadi dasar latihan berikutnya.',
+    );
   }
 
   Lesson? lessonBerikutnya(String topikId, DataBelajar data) =>
