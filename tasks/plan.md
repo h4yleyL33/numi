@@ -43,3 +43,7 @@ Pengguna meminta melanjutkan pengembangan dan mengonfirmasi proyek Firebase tim 
 ## Irisan lanjutan I06/I07
 
 Lanjutkan tanpa menunggu layanan cloud: buat paket pengantar enam kelas dengan tujuan, prasyarat, versi, butir awal berbeda, dan status draft tanpa persetujuan validator palsu. Pisahkan BuktiSkill dari AksesMateri; diagnostic tidak menguasai topik tak diuji atau menyalakan mercusuar. Hasil dan rekomendasi memakai indikasi awal, sedangkan lesson/XP bukan bukti mastery. Pertahankan data lama sebagai riwayat tanpa mengangkat status gabungan lama menjadi bukti baru. Periksa domain, roundtrip/migrasi, controller, dan UI sebelum memperbarui hasil verifikasi. Katalog penuh, validasi guru, checkpoint, serta pemeriksaan ulang tetap pekerjaan terbuka.
+
+## Irisan lanjutan I08 lokal
+
+Mulai checkpoint melalui satu alur lengkap mastery: database transaksi lokal, snapshot lima soal, respons pertama/cursor, retry yang menahan soal, resume, dan finalisasi idempoten. Pertahankan isolasi UID/profil serta cache lama. Uji domain/controller/widget, file setelah proses penulis dihentikan pada host, dan IndexedDB/browser. Catat batasnya; bukti host tidak menggantikan uji Android, dan checkpoint dua alur lain serta cloud tetap terbuka.

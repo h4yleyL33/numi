@@ -30,6 +30,6 @@ Paket resmi yang dipasang: firebase_core 5.1.0, firebase_auth 7.0.1, google_sign
 
 Tes baru memeriksa pembatalan/native token kosong, galat jaringan, inisialisasi Google sekali, pembersihan logout, dua UID/dua profil, data salah konteks, gagal tulis/retry, tulis tertunda saat logout, cache rusak, penambahan serentak, form buat/ubah kelas, gerbang, pembongkaran route soal, bootstrap tanpa konfigurasi, dan login pada layar 360×640 serta landscape 844×390 dengan teks besar.
 
-Login nyata, aturan Firestore, impor data lama, sinkronisasi, dan pengujian Android tetap belum diterima. Tidak ada akun uji palsu atau jalur melewati login di build release. Fake akun hanya berada pada test. Pengujian otomatis tidak membuktikan keamanan cloud atau durabilitas SharedPreferences.
+Login nyata, aturan Firestore, impor data tanpa UID, sinkronisasi, dan pengujian Android tetap belum diterima. Tidak ada akun uji palsu atau jalur melewati login di build release. Fake akun hanya berada pada test. Pembaruan I08 memakai database Sembast per UID, migrasi cache ber-UID, dan checkpoint mastery; lihat [CHECKPOINT-MASTERY.md](CHECKPOINT-MASTERY.md). Pengujian otomatis ini tidak membuktikan keamanan cloud atau durabilitas perangkat Android.
 
 Instruksi konfigurasi lengkap dan batas Firestore ada pada [panduan Firebase](../../firebase/README.md). Status pengujian akhir dicatat pada [verifikasi](VERIFIKASI.md); backlog I04/I05 tetap parsial sampai konfigurasi dan pemeriksaan layanan/perangkat selesai.

@@ -2,6 +2,20 @@
 
 Tanggal: 30 Oktober 2026. Pengujian teknis selama implementasi, belum laporan pengujian akhir Bab IV.
 
+## Pembaruan checkpoint mastery lokal
+
+I08 menambahkan database transaksi file/IndexedDB, pembukaan database per UID setelah pemeriksaan akun, snapshot lima soal, command ID tetap, respons pertama/cursor, gagal/retry, resume, dan finalisasi hasil/reward idempoten. Jalur finalisasi mastery lama tanpa checkpoint dihapus; tesnya dipindahkan ke skenario sesi persisten. Rincian dan batas ada di [CHECKPOINT-MASTERY.md](CHECKPOINT-MASTERY.md).
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| `flutter test --no-pub --reporter expanded` | **114 tes lulus**. Termasuk serialisasi seluruh bentuk soal, kegagalan buka/tulis, respons pertama, konteks/versi/urutan, restart, finalisasi ganda, bantuan, transaksi/migrasi/konflik file, isolasi akun/profil, retry/resume UI 390 dp, dan retry finalisasi sesudah lima respons pulih. |
+| `flutter analyze --no-pub` | No issues found setelah pemeriksaan akhir. |
+| `flutter build web --no-pub` | **Berhasil dari `lib/main.dart`**. Wasm dry run berhasil; peringatan font CupertinoIcons yang sudah ada tetap muncul. |
+| `dart run tool/verifikasi_checkpoint_proses.dart` | **Lulus pada Windows**. Writer dihentikan tanpa close setelah commit; respons salah pertama, cursor, snapshot lima soal, pilihan, versi dan command ID pulih. Bukan bukti proses mati Android atau mati listrik di tengah commit. |
+| Browser nyata pada 127.0.0.1:8766 | Fixture sintetis memakai UI mastery dan IndexedDB; mulai dari dua respons, jawab ketiga, reload, lanjut dari soal keempat, selesai 5/5, reload hasil. Log warning/error kosong. Server/tab ditutup sesudah pemeriksaan. |
+
+Checkpoint lesson/diagnostic dan kegagalan simpan akhirnya, sinkronisasi/status server, konflik dua perangkat, aturan Firestore, login nyata, Android SDK/APK/perangkat, validasi guru, serta pilot masih terbuka. I08 dan I12 belum dinyatakan selesai. Bagian di bawah adalah hasil tahap sebelumnya, bukan status fitur terbaru.
+
 ## Pembaruan paket pengantar dan bukti
 
 Irisan I06/I07 menambah enam paket draft (dua butir awal per kelas), versi respons, pemisahan BuktiSkill/AksesMateri, penghapusan inferensi mastery diagnostic, migrasi aman status lama, serta label/alasan pada hasil dan peta. Ringkasan masih per sampel topik; graf subketerampilan lengkap dan validasi guru belum selesai. Lihat [KURIKULUM-BUKTI.md](KURIKULUM-BUKTI.md).

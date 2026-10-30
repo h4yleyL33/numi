@@ -2,7 +2,9 @@
 
 Tanggal: 30 Oktober 2026. Status: init pengembangan lokal; belum memenuhi syarat pengujian akhir Bab IV pada doktek 3.3.4.
 
-Pembaruan terbaru: [paket pengantar dan bukti jangkar](KURIKULUM-BUKTI.md) menambahkan 12 butir awal berversi untuk enam kelas, memisahkan BuktiSkill dari AksesMateri, dan menghapus inferensi mastery untuk topik yang tidak diuji. Cakupan I06/I07 masih parsial; validasi guru, graf subketerampilan lengkap, dan checkpoint belum selesai.
+Pembaruan terbaru: [checkpoint mastery lokal](CHECKPOINT-MASTERY.md) menambahkan database transaksi, snapshot soal, respons pertama/cursor, gagal/retry, resume, dan finalisasi reward sekali per sesi. I08 masih parsial: checkpoint lesson/diagnostic, cloud dan verifikasi proses Android masih terbuka.
+
+[Paket pengantar dan bukti jangkar](KURIKULUM-BUKTI.md) menyediakan 12 butir awal berversi untuk enam kelas, memisahkan BuktiSkill dari AksesMateri, dan menghapus inferensi mastery untuk topik yang tidak diuji. Cakupan I06/I07 masih parsial; validasi guru dan graf subketerampilan lengkap belum selesai.
 
 Pembaruan lanjutan: [akun wali dan beberapa profil](AKUN-PROFIL.md) sudah memiliki adapter, UI, dan isolasi penyimpanan lokal. Proyek Firebase tim belum dibuat, sehingga login nyata/cloud belum dinyatakan selesai. Bagian bertanda “init” di bawah merekam baseline sebelum irisan akun; status terkini ada pada backlog dan catatan verifikasi.
 
@@ -53,7 +55,7 @@ Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberap
 | FR-010 | Satu kelas 1–6, tiga fase, paket berbeda, perubahan tanpa reset. | `data/models/siswa.dart`, `data/content/paket_kelas.dart`, `features/onboarding/`, `state/numi_controller.dart` | Init form/validasi/fase/migrasi lokal tersedia. Paket penuh dan pengaturan ubah kelas oleh wali masih I05/I06. |
 | FR-011 | Katalog fase/prasyarat/aktif/belum tersedia. | `data/content/daftar_topik.dart`, `features/skill_map/` | Awal hanya 12 topik; katalog target I06/I07. |
 | FR-012 | Bukti sumber/waktu/bantuan/versi/jumlah. | `data/models/bukti_skill.dart`, `catatan_belajar.dart` | Metadata tersimpan pada ringkasan sampel; identitas sesi persisten dan riwayat per subskill tetap I07/I08. |
-| FR-013 | Respons+checkpoint atomik, resume butir sama, deduplikasi. | `data/repositories/`, `features/quiz/`, `state/numi_controller.dart` | Init memastikan state menunggu repository dan menahan callback selesai ganda di widget. Belum checkpoint durabel atau finalisasi idempoten; I08. |
+| FR-013 | Respons+checkpoint atomik, resume butir sama, deduplikasi. | `data/models/sesi_mastery.dart`, `data/repositories/`, `features/quiz/`, `state/numi_controller.dart` | Mastery lokal memakai transaksi, snapshot tetap, respons pertama, retry, resume dan finalisasi idempoten. Lesson/diagnostic, cloud dan proses Android masih I08. |
 | FR-014 | Bantuan fleksibel, pengulangan, alternatif ketuk. | `features/quiz/tampilan_soal.dart` | Awal, audit seluruh bentuk dan pencatatan bantuan belum dilakukan; I09. |
 | FR-015 | Ringkasan wali per skill, waktu, jumlah butir. | `features/progress/` | Belum sesuai target; I11. |
 | FR-016 | Butir berversi, tujuan, kunci/rubrik, persetujuan validator. | `data/content/`, `data/models/soal.dart` | Generator pengembangan tersedia; metadata/validasi belum lengkap; I06. |
@@ -65,7 +67,7 @@ Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberap
 | --- | --- | --- |
 | NFR-001 | 80% peserta pilot menyelesaikan lesson tanpa bantuan navigasi. | Widget bukan uji anak; pilot dan validasi bantuan pada I12. |
 | NFR-002 | Respons lokal ≤2 detik pada perangkat uji. | Belum ada pengukuran perangkat; ukur terpisah dari login/sync pada I12. |
-| NFR-003 | Pulih respons/posisi; gagal simpan terlihat; retry tanpa hasil/reward ganda. | Controller menunggu simpan, profil menampilkan gagal/retry. Checkpoint, durabilitas, dan idempotensi belum selesai; I08. |
+| NFR-003 | Pulih respons/posisi; gagal simpan terlihat; retry tanpa hasil/reward ganda. | Mastery diuji pada domain/widget, file Windows setelah writer dihentikan, serta reload browser/IndexedDB. Belum uji proses Android dan dua alur lain; I08/I12. |
 | NFR-004 | Android API 26+, RAM 2/4 GB, 360–412 dp, landscape/teks besar. | Widget memakai beberapa ukuran termasuk 320/390 dp dan landscape; build/perangkat Android tetap perlu I12. |
 | NFR-005 | Data pribadi hanya untuk akun/pemilik yang sah. | Bootstrap menahan akses, adapter auth dan guard UID/profil diuji dengan fake. Login nyata/isolasi cloud belum diuji; I04/I05 belum diterima penuh. |
 | NFR-006 | Tanpa iklan, leaderboard, tautan keluar saat belajar. | Tidak ditambahkan SDK iklan/tautan baru; pemeriksaan alur rilis pada I12. |
@@ -78,10 +80,10 @@ Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberap
 | DATA-002 | Materi/butir: skill/fase/tujuan/prasyarat/versi/kunci/rubrik/validasi. | Topik/Soal/Lesson awal; lengkapi I06. |
 | DATA-003 | Diagnostic: profil/sesi, respons/bantuan/jumlah/waktu/kebijakan. | Respons berversi dan BuktiSkill per sampel topik tersedia; sesi/checkpoint persisten masih I08. |
 | DATA-004 | Aktivitas per profil. | LessonProgress/XP/streak/lencana tersedia satu profil; I05/I10. |
-| DATA-005 | Respons pertama dengan identitas dan versi tetap. | Jawaban tersedia tanpa seluruh metadata; I08. |
+| DATA-005 | Respons pertama dengan identitas dan versi tetap. | Mastery merekam respons dalam snapshot sesi; command ID diturunkan dari ID sesi/indeks, versi/kebenaran divalidasi terhadap butir. Dua alur lain masih I08. |
 | DATA-006 | Akun, hubungan profil dan status autentikasi. | AkunWali dan stream Firebase tersedia; token dikelola SDK. Konfigurasi/login nyata masih I04. |
-| DATA-007 | Sesi/checkpoint: urutan/versi/cursor/status/kebijakan. | Belum ada; I08. |
-| DATA-008 | BuktiSkill dan AksesMateri terpisah. | JSON versi 3 menyimpan bukti/akses terpisah; StatusTopik kini proyeksi UI. skillMap lama dipertahankan sebagai arsip. |
+| DATA-007 | Sesi/checkpoint: urutan/versi/cursor/status/kebijakan. | SesiMastery persisten tersedia, satu sesi terbaru per topik, status lokal dan kebijakan numi-pilot-v1. Sinkronisasi/konflik antarperangkat dan sesi dua alur lain masih I08. |
+| DATA-008 | BuktiSkill dan AksesMateri terpisah. | JSON versi 4 mempertahankan bukti/akses terpisah serta sesi mastery. StatusTopik proyeksi UI; skillMap lama tetap arsip. |
 | DATA-009 | Konten, versi, validator, tanggal, keputusan/catatan. | Belum ada catatan persetujuan konten; I06. |
 
 ## Urutan kerja menurut PPL dan doktek
