@@ -10,5 +10,11 @@ di `lib/core/config/app_config.dart`.
 Baseline pengembangan terbaru, selisih kode terhadap seluruh PRD/PPL/doktek, dan backlog ada
 di [`docs/03-implementasi`](../docs/03-implementasi/README.md) dan [`tasks`](../tasks/plan.md).
 Init memakai kelas tunggal 1–6 dan konfirmasi kelas untuk data usia lama. Enam titik awal
-diagnostic belum berarti enam paket konten tervalidasi tersedia. Data masih lokal satu profil;
-autentikasi wali, beberapa profil, cloud, dan checkpoint per respons menunggu integrasi.
+diagnostic belum berarti enam paket konten tervalidasi tersedia. Adapter Google/Firebase serta
+alur beberapa profil lokal per UID tersedia; konfigurasi proyek tim, login nyata, cloud, dan
+checkpoint per respons masih menunggu integrasi/verifikasi.
+
+Tanpa proyek Firebase, jalankan demo pengembangan dengan `flutter run -d chrome
+--dart-define=NUMI_LOCAL_DEMO=true` (satu baris). Flag demo hanya berlaku pada build non-release.
+Bootstrap bawaan menahan akses jika Firebase belum dikonfigurasi. Panduan setup lengkap ada
+di [`firebase/README.md`](../firebase/README.md).

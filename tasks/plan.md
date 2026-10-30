@@ -35,3 +35,7 @@ Enam titik awal kelas pada init adalah konfigurasi sementara berdasarkan fokus m
 ## Verifikasi dan serah lanjut
 
 Gunakan `flutter test`, `flutter analyze`, dan `flutter build web` dari `app/` untuk pemeriksaan lokal awal. Web hanya media pemeriksaan pengembangan; target rilis tetap Android. APK, proses dimatikan, login, aturan akses cloud, perangkat RAM 2/4 GB, dan uji anak memerlukan bukti tersendiri. Status pekerjaan dan penerimaan tiap irisan ada di `tasks/todo.md`; pemetaan kebutuhan ada di `docs/03-implementasi/README.md`.
+
+## Irisan lanjutan I04/I05
+
+Pengguna meminta melanjutkan pengembangan dan mengonfirmasi proyek Firebase tim belum dibuat. Implementasikan kontrak/adapter Google-Firebase, bootstrap yang menahan akses sebelum login, alur akun, dan penyimpanan beberapa profil lokal per UID. Pertahankan data tanpa UID; jangan impor otomatis atau membuat akun palsu dalam aplikasi. Gunakan fake SDK hanya untuk test. Konfigurasi tim, login nyata, APK, migrasi dengan konfirmasi, dan Firestore tetap kriteria terbuka. Hasil serta instruksi aktivasi ada di `docs/03-implementasi/AKUN-PROFIL.md` dan `firebase/README.md`.

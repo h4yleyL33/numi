@@ -2,6 +2,23 @@
 
 Tanggal: 30 Oktober 2026. Pengujian teknis selama implementasi, belum laporan pengujian akhir Bab IV.
 
+## Pembaruan akun dan profil
+
+Irisan lanjutan pada tanggal yang sama menambahkan adapter Google/Firebase, layar akun dan ruang wali, beberapa profil lokal per UID, guard sesi, serta bootstrap yang menahan akses jika Firebase belum dikonfigurasi. Rinciannya ada pada [AKUN-PROFIL.md](AKUN-PROFIL.md).
+
+| Pemeriksaan lanjutan | Hasil |
+| --- | --- |
+| `flutter test --no-pub --reporter expanded` | **93 tes lulus**, termasuk 21 tes baru adapter, repository akun/profil, bootstrap, dan widget akun. |
+| `flutter analyze --no-pub` | **No issues found.** |
+| `flutter build web --no-pub` | Berhasil; peringatan font CupertinoIcons yang sudah ada tetap muncul saat build. |
+| Browser lokal `127.0.0.1:8765` | Layar Layanan akun belum tersedia tampil, data belajar tidak dibuka; log browser tidak memuat error/warning saat pemeriksaan. Server/tab pengujian ditutup setelah pemeriksaan. |
+| `flutter build apk --debug --no-pub` | Belum dapat dijalankan: **No Android SDK found**. Bukan bukti APK berhasil atau gagal mengompilasi kode native. |
+| Login Google/Firebase nyata | Belum diuji; pengguna mengonfirmasi proyek Firebase tim belum dibuat. Fake SDK hanya dipakai pada test. |
+
+Tes baru mencakup gagal/batal/retry login, token kosong, logout, UID/profil salah, data terpisah dua anak, perubahan kelas tanpa reset, penambahan berbarengan, gagal tulis/retry, tulis tertunda saat logout, cache rusak tidak ditimpa, sesi lama ditolak, buat/ubah profil melalui UI, gerbang wali, pembuangan route soal, dan startup tanpa konfigurasi. Mode demo hanya aktif dengan flag eksplisit pada build non-release; tidak ada fallback demo otomatis pada build release.
+
+Status I04/I05 masih parsial: konfigurasi tim, login nyata/Android, impor data lama dengan persetujuan wali, Firestore/rules emulator, dan sinkronisasi belum selesai. Isolasi cache aplikasi bukan enkripsi penyimpanan perangkat atau bukti keamanan cloud. Tabel dan catatan init awal di bawah dipertahankan sebagai riwayat sebelum irisan akun.
+
 ## Lingkup yang dikerjakan
 
 Baseline seluruh PRD diselaraskan dengan PPL/doktek Bab I–III terbaru. Init melanjutkan Flutter yang sudah tersedia. Model dan form memakai satu kelas 1–6, kelompok fase diturunkan dari kelas, enam titik awal diagnostic dikonfigurasi, dan skor tidak mengganti kelas. Data usia lama mempertahankan ID serta riwayat dan meminta konfirmasi kelas. JSON mendapat versi 2 dengan kunci penyimpanan lama agar data versi 1 tetap terbaca.

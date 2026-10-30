@@ -34,17 +34,21 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 
 ## I04 — Akun Google wali
 
-- [ ] Pasang konfigurasi Firebase tim dan adapter autentikasi; tampilkan login, batal, gagal/retry, dan logout.
+- [x] Siapkan kontrak dan adapter Google/Firebase native serta web; layar login, batal, gagal/retry, dan logout; bootstrap menahan akses sebelum autentikasi.
+- [ ] Pasang konfigurasi Firebase tim dan verifikasi login/logout nyata pada Android. Proyek tim belum dibuat; Android SDK belum tersedia pada lingkungan ini.
 - Penerimaan: data pribadi baru dimuat setelah UID sah; tidak ada token pada data siswa; logout mengosongkan state pribadi.
 - Verifikasi: unit adapter, integrasi login Android, batal/offline/logout; build APK debug.
 - Dependensi: I00, konfigurasi Firebase. Berkas: bootstrap, auth repository/controller, layar akun.
 
 ## I05 — Beberapa profil dan isolasi akun
 
-- [ ] Daftar/pilih/tambah/ubah profil dalam UID wali; migrasi lokal dimiliki akun setelah konfirmasi wali.
+- [x] Daftar/pilih/tambah/ubah profil lokal dalam UID wali; pisahkan riwayat per profil dan buang route/state saat ganti konteks akun/profil.
+- [ ] Migrasi lokal dimiliki akun setelah konfirmasi wali; integrasikan cloud dan buktikan isolasi melalui emulator aturan Firestore.
 - Penerimaan: pergantian profil menghentikan sesi sebelumnya; data profil dan cache tidak bocor antarwali; kelas berubah tanpa reset.
 - Verifikasi: pengujian dua wali dan dua profil; emulator aturan Firestore menolak tanpa login dan UID lain.
 - Dependensi: I02, I04. Berkas: account/profile state, repository, profile screens, Firestore rules/test.
+
+Rincian irisan lokal dan batas penerimaannya ada di `docs/03-implementasi/AKUN-PROFIL.md`. I04/I05 belum selesai seluruhnya; persiapan adapter tidak menggantikan bukti login nyata dan keamanan cloud.
 
 ## I06 — Paket kelas dan konten berversi
 

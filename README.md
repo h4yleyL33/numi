@@ -6,7 +6,8 @@ di skill map, lalu menyusun jalur belajar personal. Materi mengacu ke Capaian Pe
 Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025). Cakupan awal berisi 12 topik numerasi.
 Kelas membantu menentukan titik awal, sementara rancangan pembelajaran mengikuti bukti
 kemampuan per keterampilan. Profil berisi nama panggilan dan satu kelas 1–6. Rancangan terbaru
-memakai akun Google wali dan beberapa profil anak; integrasinya belum tersedia pada init lokal.
+memakai akun Google wali dan beberapa profil anak. Adapter serta alur profil lokal per akun
+sudah tersedia; konfigurasi Firebase tim dan login nyata belum diverifikasi.
 
 Baseline pengembangan berdasarkan seluruh PRD serta PPL/doktek Bab I–III tersedia di
 [`docs/03-implementasi`](docs/03-implementasi/README.md). Urutan dan kriteria pekerjaan ada di
@@ -121,12 +122,15 @@ flutter test
 ```
 
 ```bash
-flutter run
+flutter run -d chrome --dart-define=NUMI_LOCAL_DEMO=true
 ```
 
-Data saat ini disimpan di perangkat (`LocalNumiRepository`). Setelah proyek Firebase tim dibuat,
-jalankan `flutterfire configure` lalu tambahkan `FirestoreNumiRepository` yang memenuhi kontrak
-`NumiRepository`. Rancangan aturan keamanannya sudah ada di `firebase/firestore.rules`.
+Demo memakai `LocalNumiRepository` dan hanya tersedia pada build non-release. Alur akun bawaan
+memakai adapter Google/Firebase dan `LocalProfilRepository` per UID; data belajar tetap di
+perangkat. Sebelum konfigurasi Firebase, aplikasi menampilkan layanan akun belum tersedia.
+Ikuti [panduan Firebase](firebase/README.md) setelah proyek tim dibuat. Firestore, migrasi data
+lama ke akun, dan checkpoint belum diintegrasikan; `firebase/firestore.rules` masih rancangan
+jalur lama dan belum menjadi aturan final beberapa profil.
 
 ## Tautan kerja
 

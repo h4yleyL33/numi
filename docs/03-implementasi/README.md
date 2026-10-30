@@ -2,6 +2,8 @@
 
 Tanggal: 30 Oktober 2026. Status: init pengembangan lokal; belum memenuhi syarat pengujian akhir Bab IV pada doktek 3.3.4.
 
+Pembaruan lanjutan: [akun wali dan beberapa profil](AKUN-PROFIL.md) sudah memiliki adapter, UI, dan isolasi penyimpanan lokal. Proyek Firebase tim belum dibuat, sehingga login nyata/cloud belum dinyatakan selesai. Bagian bertanda “init” di bawah merekam baseline sebelum irisan akun; status terkini ada pada backlog dan catatan verifikasi.
+
 ## Acuan yang berlaku
 
 - [Doktek Bab I–III](../../output/pdf/Numi_Dokumen_Teknis_Bab_I-III.pdf): kebutuhan, arsitektur, model data, kontrak, dan syarat penerimaan implementasi.
@@ -17,7 +19,7 @@ Numi membantu penguatan numerasi siswa SD kelas 1–6 melalui cerita Samudra Ang
 
 Wali menjadi pemilik akun Google/Firebase dan dapat memiliki beberapa profil anak pada rancangan target. Profil meminta nama panggilan serta satu kelas 1–6. Fase A/B/C diturunkan dari kelas; bukti kemampuan tidak mengganti kelas. Anak kelas atas tetap dapat berlatih fondasi dan memakai gambar atau bantuan.
 
-Kode saat init masih satu profil lokal. Login, isolasi akun, sinkronisasi, dan beberapa profil belum terimplementasi. Versi ini untuk pengembangan; keberadaan pilihan kelas belum menyatakan enam paket materi selesai atau tervalidasi.
+Kode saat init awal masih satu profil lokal. Irisan lanjutan menambahkan beberapa profil lokal per UID dan adapter login Google/Firebase. Konfigurasi tim, login nyata, isolasi cloud, dan sinkronisasi belum diterima. Versi ini untuk pengembangan; keberadaan pilihan kelas belum menyatakan enam paket materi selesai atau tervalidasi.
 
 ## Penyelarasan seluruh PRD
 
@@ -53,7 +55,7 @@ Kode saat init masih satu profil lokal. Login, isolasi akun, sinkronisasi, dan b
 | FR-014 | Bantuan fleksibel, pengulangan, alternatif ketuk. | `features/quiz/tampilan_soal.dart` | Awal, audit seluruh bentuk dan pencatatan bantuan belum dilakukan; I09. |
 | FR-015 | Ringkasan wali per skill, waktu, jumlah butir. | `features/progress/` | Belum sesuai target; I11. |
 | FR-016 | Butir berversi, tujuan, kunci/rubrik, persetujuan validator. | `data/content/`, `data/models/soal.dart` | Generator pengembangan tersedia; metadata/validasi belum lengkap; I06. |
-| FR-017 | Google wali, banyak profil, batal/gagal/logout, isolasi. | Bootstrap `main.dart`; `firebase/firestore.rules` di luar app. | Belum diintegrasikan; rules masih rancangan awal dan tidak dipasang; I04/I05. |
+| FR-017 | Google wali, banyak profil, batal/gagal/logout, isolasi. | `features/account/`, `data/repositories/firebase_akun_repository.dart`, `local_profil_repository.dart`, bootstrap `main.dart`. | Adapter/UI dan isolasi cache per UID/profil tersedia. Konfigurasi tim/login nyata/isolasi cloud masih I04/I05; rules belum dipasang. |
 
 ## Kebutuhan nonfungsional
 
@@ -63,19 +65,19 @@ Kode saat init masih satu profil lokal. Login, isolasi akun, sinkronisasi, dan b
 | NFR-002 | Respons lokal ≤2 detik pada perangkat uji. | Belum ada pengukuran perangkat; ukur terpisah dari login/sync pada I12. |
 | NFR-003 | Pulih respons/posisi; gagal simpan terlihat; retry tanpa hasil/reward ganda. | Controller menunggu simpan, profil menampilkan gagal/retry. Checkpoint, durabilitas, dan idempotensi belum selesai; I08. |
 | NFR-004 | Android API 26+, RAM 2/4 GB, 360–412 dp, landscape/teks besar. | Widget memakai beberapa ukuran termasuk 320/390 dp dan landscape; build/perangkat Android tetap perlu I12. |
-| NFR-005 | Data pribadi hanya untuk akun/pemilik yang sah. | Belum ada auth atau isolasi cloud. Lokal pengembangan bukan bukti pemenuhan; I04/I05. |
+| NFR-005 | Data pribadi hanya untuk akun/pemilik yang sah. | Bootstrap menahan akses, adapter auth dan guard UID/profil diuji dengan fake. Login nyata/isolasi cloud belum diuji; I04/I05 belum diterima penuh. |
 | NFR-006 | Tanpa iklan, leaderboard, tautan keluar saat belajar. | Tidak ditambahkan SDK iklan/tautan baru; pemeriksaan alur rilis pada I12. |
 
 ## Kebutuhan data
 
 | ID | Model target | Kondisi awal/init dan irisan |
 | --- | --- | --- |
-| DATA-001 | Profil: ID tetap, UID wali, nama, kelas, preferensi, pembaruan. | Siswa mendapat kelas/fase; UID dan preferensi masih I05. |
+| DATA-001 | Profil: ID tetap, UID wali, nama, kelas, preferensi, pembaruan. | Siswa mendapat kelas/fase dan waliUid; preferensi/cloud masih I05. |
 | DATA-002 | Materi/butir: skill/fase/tujuan/prasyarat/versi/kunci/rubrik/validasi. | Topik/Soal/Lesson awal; lengkapi I06. |
 | DATA-003 | Diagnostic: profil/sesi, respons/bantuan/jumlah/waktu/kebijakan. | DiagnosticResult masih per topik; I07/I08. |
 | DATA-004 | Aktivitas per profil. | LessonProgress/XP/streak/lencana tersedia satu profil; I05/I10. |
 | DATA-005 | Respons pertama dengan identitas dan versi tetap. | Jawaban tersedia tanpa seluruh metadata; I08. |
-| DATA-006 | Akun, hubungan profil dan status autentikasi. | Belum ada; token tetap dikelola SDK pada I04/I05. |
+| DATA-006 | Akun, hubungan profil dan status autentikasi. | AkunWali dan stream Firebase tersedia; token dikelola SDK. Konfigurasi/login nyata masih I04. |
 | DATA-007 | Sesi/checkpoint: urutan/versi/cursor/status/kebijakan. | Belum ada; I08. |
 | DATA-008 | BuktiSkill dan AksesMateri terpisah. | Masih StatusTopik tunggal; I07. |
 | DATA-009 | Konten, versi, validator, tanggal, keputusan/catatan. | Belum ada catatan persetujuan konten; I06. |
