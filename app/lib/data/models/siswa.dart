@@ -29,6 +29,7 @@ class Siswa {
   const Siswa({
     required this.id,
     required this.nama,
+    this.waliUid,
     this.kelas,
     this.usia,
     required this.dibuatPada,
@@ -37,6 +38,7 @@ class Siswa {
 
   final String id;
   final String nama;
+  final String? waliUid;
   final int? kelas;
 
   /// Dipertahankan hanya untuk membaca data lama, tidak dikonversi ke kelas.
@@ -59,6 +61,7 @@ class Siswa {
     return Siswa(
       id: id,
       nama: nama ?? this.nama,
+      waliUid: waliUid,
       kelas: kelas ?? this.kelas,
       usia: usia ?? this.usia,
       kelompokBelajar: kelompokBelajar ?? this.kelompokBelajar,
@@ -69,6 +72,7 @@ class Siswa {
   Map<String, dynamic> toJson() => {
     'id': id,
     'nama': nama,
+    if (waliUid != null) 'waliUid': waliUid,
     'kelas': kelas,
     'usia': usia,
     'kelompokBelajar': kelompokBelajar?.name,
@@ -78,6 +82,7 @@ class Siswa {
   factory Siswa.fromJson(Map<String, dynamic> json) => Siswa(
     id: json['id'] as String,
     nama: json['nama'] as String,
+    waliUid: json['waliUid'] as String?,
     kelas: json['kelas'] as int?,
     usia: json['usia'] as int?,
     kelompokBelajar: json['kelompokBelajar'] == null

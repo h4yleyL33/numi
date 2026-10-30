@@ -77,7 +77,7 @@ class NumiController extends Notifier<DataBelajar> {
 
   Future<void> _perbarui(DataBelajar data) async {
     await _repo.simpan(data);
-    state = data;
+    if (ref.mounted) state = data;
   }
 
   /// UC-008: siswa atau orang tua mengisi profil.
@@ -307,8 +307,11 @@ class NumiController extends Notifier<DataBelajar> {
   }
 
   Future<void> mulaiUlang() async {
-    await _repo.hapus();
-    state = const DataBelajar();
+    final repo = _repo;
+    await repo.hapus();
+    if (!ref.mounted) return;
+    final data = await repo.muat();
+    if (ref.mounted) state = data;
   }
 
   Map<String, SkillMap> _ubahStatus(String topikId, StatusTopik status) => {
