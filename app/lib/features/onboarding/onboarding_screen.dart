@@ -112,78 +112,88 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       resizeToAvoidBottomInset: true,
       body: LatarMalam(
         child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (var i = 0; i <= _cerita.length; i++)
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: i == _posisi ? 28 : 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: i == _posisi
-                              ? NumiWarna.cahaya
-                              : Colors.white24,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Semantics(
+                      label:
+                          'Langkah ${_posisi + 1} dari ${_cerita.length + 1}',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var i = 0; i <= _cerita.length; i++)
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: i == _posisi ? 28 : 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: i == _posisi
+                                    ? NumiWarna.cahaya
+                                    : Colors.white24,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _halaman,
-                  onPageChanged: (i) => setState(() => _posisi = i),
-                  children: [
-                    for (final adegan in _cerita)
-                      _HalamanCerita(adegan: adegan),
-                    _FormProfil(
-                      nama: _nama,
-                      kelas: _kelas,
-                      onKelas: (k) => setState(() => _kelas = k),
-                      onUbah: () => setState(() {}),
                     ),
-                  ],
-                ),
-              ),
-              if (_galat != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    _galat!,
-                    semanticsLabel: _galat,
-                    style: const TextStyle(color: Colors.white),
                   ),
-                ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
-                child: _posisi < _cerita.length
-                    ? TombolNumi(
-                        label: _posisi == _cerita.length - 1
-                            ? 'Aku mau membantu!'
-                            : 'Lanjut',
-                        lebar: double.infinity,
-                        onTap: _berikut,
-                      )
-                    : TombolNumi(
-                        label: _menyimpan
-                            ? 'Menyimpan...'
-                            : 'Mulai Petualangan',
-                        lebar: double.infinity,
-                        onTap:
-                            _menyimpan ||
-                                _nama.text.trim().isEmpty ||
-                                _kelas == null
-                            ? null
-                            : _mulai,
+                  Expanded(
+                    child: PageView(
+                      controller: _halaman,
+                      onPageChanged: (i) => setState(() => _posisi = i),
+                      children: [
+                        for (final adegan in _cerita)
+                          _HalamanCerita(adegan: adegan),
+                        _FormProfil(
+                          nama: _nama,
+                          kelas: _kelas,
+                          onKelas: (k) => setState(() => _kelas = k),
+                          onUbah: () => setState(() {}),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_galat != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        _galat!,
+                        semanticsLabel: _galat,
+                        style: const TextStyle(color: Colors.white),
                       ),
+                    ),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 468),
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
+                    child: _posisi < _cerita.length
+                        ? TombolNumi(
+                            label: _posisi == _cerita.length - 1
+                                ? 'Aku mau membantu!'
+                                : 'Lanjut',
+                            lebar: double.infinity,
+                            onTap: _berikut,
+                          )
+                        : TombolNumi(
+                            label: _menyimpan
+                                ? 'Menyimpan...'
+                                : 'Mulai Petualangan',
+                            lebar: double.infinity,
+                            onTap:
+                                _menyimpan ||
+                                    _nama.text.trim().isEmpty ||
+                                    _kelas == null
+                                ? null
+                                : _mulai,
+                          ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -202,7 +212,7 @@ class _HalamanCerita extends StatelessWidget {
       builder: (context, batas) {
         final mendatar = batas.maxWidth >= 700;
         final gambar = SizedBox(
-          width: mendatar ? 240 : batas.maxWidth - 48,
+          width: mendatar ? 240 : (batas.maxWidth - 48).clamp(0.0, 320.0),
           height: mendatar ? 160 : 220,
           child: Stack(
             alignment: Alignment.center,
@@ -248,7 +258,12 @@ class _HalamanCerita extends StatelessWidget {
                       Expanded(child: teks),
                     ],
                   )
-                : Column(children: [gambar, const SizedBox(height: 28), teks]),
+                : ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Column(
+                      children: [gambar, const SizedBox(height: 24), teks],
+                    ),
+                  ),
           ),
         );
       },
@@ -273,110 +288,127 @@ class _FormProfil extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Center(
-            child: NumiMascot(ukuran: 120, ekspresi: EkspresiMaskot.senang),
-          ),
-          const Text(
-            'Halo, Teman!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'Isi bersama ayah, ibu, atau wali ya.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70, fontSize: 16),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Siapa namamu?',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 17,
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: nama,
-            textCapitalization: TextCapitalization.words,
-            maxLength: 30,
-            onChanged: (_) => onUbah(),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            decoration: const InputDecoration(
-              hintText: 'Contoh: Adi',
-              counterText: '',
-              prefixIcon: Icon(Icons.person_rounded),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Sekarang kelas berapa?',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 17,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              for (var k = 1; k <= 6; k++)
-                Semantics(
-                  selected: kelas == k,
-                  child: SizedBox(
-                    width: 100,
-                    height: 64,
-                    child: OutlinedButton(
-                      onPressed: () => onKelas(k),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: kelas == k
-                            ? NumiWarna.cahaya
-                            : Colors.white.withValues(alpha: 0.12),
-                        foregroundColor: kelas == k
-                            ? NumiWarna.tinta
-                            : Colors.white,
-                        padding: EdgeInsets.zero,
-                        side: BorderSide(
-                          color: kelas == k ? Colors.white : Colors.white24,
+              const Center(
+                child: NumiMascot(ukuran: 120, ekspresi: EkspresiMaskot.senang),
+              ),
+              const Text(
+                'Halo, Teman!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Isi bersama ayah, ibu, atau wali ya.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white70, fontSize: 16),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Siapa namamu?',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: nama,
+                textCapitalization: TextCapitalization.words,
+                maxLength: 30,
+                onChanged: (_) => onUbah(),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Contoh: Adi',
+                  counterText: '',
+                  prefixIcon: Icon(Icons.person_rounded),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Sekarang kelas berapa?',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 10),
+              LayoutBuilder(
+                builder: (context, batas) {
+                  const jarak = 10.0;
+                  final kolom = batas.maxWidth >= 300 ? 3 : 2;
+                  final lebar = (batas.maxWidth - jarak * (kolom - 1)) / kolom;
+                  return Wrap(
+                    spacing: jarak,
+                    runSpacing: jarak,
+                    children: [
+                      for (var k = 1; k <= 6; k++)
+                        Semantics(
+                          selected: kelas == k,
+                          child: SizedBox(
+                            width: lebar,
+                            height: 64,
+                            child: OutlinedButton(
+                              onPressed: () => onKelas(k),
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: kelas == k
+                                    ? NumiWarna.cahaya
+                                    : Colors.white.withValues(alpha: 0.12),
+                                foregroundColor: kelas == k
+                                    ? NumiWarna.tinta
+                                    : Colors.white,
+                                padding: EdgeInsets.zero,
+                                side: BorderSide(
+                                  color: kelas == k
+                                      ? Colors.white
+                                      : Colors.white24,
+                                ),
+                              ),
+                              child: Text(
+                                'Kelas $k',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Kelas $k',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shield_rounded, size: 16, color: Colors.white54),
+                  SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      'Data tersimpan aman di perangkat ini',
+                      style: TextStyle(color: Colors.white54),
                     ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.shield_rounded, size: 16, color: Colors.white54),
-              SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  'Data tersimpan aman di perangkat ini',
-                  style: TextStyle(color: Colors.white54),
-                ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
