@@ -17,12 +17,14 @@ class TampilanSoal extends StatefulWidget {
     super.key,
     required this.soal,
     required this.onPilih,
+    this.pilihanAwal,
     this.terkunci = false,
     this.tampilkanKunci = false,
   });
 
   final Soal soal;
   final ValueChanged<String?> onPilih;
+  final String? pilihanAwal;
 
   /// Setelah dicek, pilihan tidak bisa diubah lagi.
   final bool terkunci;
@@ -35,7 +37,7 @@ class TampilanSoal extends StatefulWidget {
 }
 
 class _TampilanSoalState extends State<TampilanSoal> {
-  String? _pilihan;
+  late String? _pilihan = widget.pilihanAwal;
 
   void _pilih(String? nilai) {
     if (widget.terkunci) return;
@@ -86,6 +88,7 @@ class _TampilanSoalState extends State<TampilanSoal> {
       ),
       JenisSoal.pasangkan => _Pasangkan(
         soal: soal,
+        pilihanAwal: widget.pilihanAwal,
         terkunci: widget.terkunci,
         onLengkap: _pilih,
       ),
@@ -706,11 +709,13 @@ class _Pasangkan extends StatefulWidget {
     required this.soal,
     required this.terkunci,
     required this.onLengkap,
+    this.pilihanAwal,
   });
 
   final Soal soal;
   final bool terkunci;
   final ValueChanged<String?> onLengkap;
+  final String? pilihanAwal;
 
   @override
   State<_Pasangkan> createState() => _PasangkanState();
@@ -725,7 +730,11 @@ class _PasangkanState extends State<_Pasangkan> {
   ];
 
   /// indeks kiri -> nilai kanan
-  final _pasangan = <int, String>{};
+  late final _pasangan = <int, String>{
+    for (final (i, nilai)
+        in (widget.pilihanAwal?.split('|') ?? <String>[]).indexed)
+      i: nilai,
+  };
   int? _kiriAktif;
 
   void _ketukKiri(int i) {

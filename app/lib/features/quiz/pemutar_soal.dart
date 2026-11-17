@@ -207,6 +207,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
               child: TampilanSoal(
                 soal: _soal,
+                pilihanAwal: _sudahCek ? _jawaban[_indeks].jawaban : null,
                 terkunci: _sudahCek || _tertunda != null || _menyimpan,
                 tampilkanKunci: _umpanBalik && _sudahCek,
                 onPilih: (p) => setState(() => _pilihan = p),
