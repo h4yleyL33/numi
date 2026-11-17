@@ -1,6 +1,6 @@
 # Firebase Numi
 
-Proyek tim yang sudah ada adalah `numi-imun`. Aplikasi Android `id.ac.unpad.numi.numi` dan Web telah didaftarkan pada 17 November 2026. Konfigurasi SDK disimpan lokal. Endpoint Firebase Auth proyek berhasil membuat URL otorisasi Google untuk Web. Pengujian login interaktif masih terbuka.
+Proyek tim yang sudah ada adalah `numi-imun`. Aplikasi Android `id.ac.unpad.numi.numi` dan Web telah didaftarkan pada 17 November 2026. Konfigurasi SDK disimpan lokal. Login Google Android telah diuji pada emulator Android 35 dengan akun wali nyata. Pengujian interaktif Web dan perpindahan dua akun masih terbuka.
 
 ## Android
 
@@ -20,7 +20,7 @@ Flutter memakai Android SDK 36 dan JDK 21 pada mesin yang diverifikasi. Gradle m
 
 Pada 18 November 2026, Firebase CLI mengonfirmasi SHA-1 dan SHA-256 sertifikat debug sudah terdaftar untuk aplikasi Numi Android. Konfigurasi terbaru memuat klien OAuth Android untuk package dan sertifikat tersebut serta klien OAuth Web. Kedua APK QA dibangun ulang dan tanda tangan serta resource OAuth-nya diverifikasi. Untuk distribusi, daftarkan sidik jari sertifikat rilis atau Play App Signing yang benar. Pada perangkat Android, uji login, batal, tutup aplikasi, buka kembali, logout, dan pilih akun berbeda. [Panduan Google Sign-In Android](https://firebase.google.com/docs/auth/android/google-signin).
 
-AVD lokal `Numi_QA_API_35` memakai Android 35 dengan Google Play. APK debug sudah terpasang dan formulir Google resmi terbuka pada `emulator-5556`. Pengguna memasukkan akun langsung di jendela emulator. Validasi sesi Firebase sesudah login masih menunggu langkah tersebut.
+AVD lokal `Numi_QA_API_35` memakai Android 35 dengan Google Play. Pada `emulator-5556`, pengguna memasukkan akun langsung pada Google. Login Numi membuka pemilih profil, sesi bertahan setelah proses aplikasi dihentikan, logout kembali ke layar masuk, dan pembatalan pemilih akun menampilkan pesan yang sesuai. Login ulang berhasil. Profil sintetis `Numi-QA`, kelas 1, dipakai untuk pengujian belajar. Pengujian berikutnya mencakup akun kedua dan APK release pada perangkat.
 
 ## Web
 
