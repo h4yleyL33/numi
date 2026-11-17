@@ -7,16 +7,15 @@ import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/tanggal.dart';
 import '../../core/widgets/bilah_progres.dart';
-import '../../core/widgets/chip_status.dart';
 import '../../core/widgets/transisi.dart';
 import '../../data/content/daftar_lencana.dart';
-import '../../data/content/daftar_topik.dart';
 import '../../data/models/badge.dart';
-import '../../data/models/catatan_belajar.dart';
 import '../../data/models/companion_message.dart';
 import '../../state/numi_controller.dart';
+import '../account/gerbang_wali.dart';
 import '../mascot/numi_mascot.dart';
 import '../onboarding/splash_screen.dart';
+import 'progres_wali_screen.dart';
 
 /// UC-006: XP, level, streak, dan lencana. Ringkasan untuk orang tua dan
 /// keterangan aturan ada di bagian bawah yang tertutup sejak awal.
@@ -55,11 +54,12 @@ class ProgressScreen extends ConsumerWidget {
                       Text(data.siswa?.kelompokKelas?.label ?? 'Konfirmasi kelas bersama wali',
                           style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 10),
-                      Row(
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 4,
                         children: [
                           Text('Level $level',
                               style: const TextStyle(color: NumiWarna.cahaya, fontWeight: FontWeight.w900)),
-                          const Spacer(),
                           Text('${progres.xpDiLevel(data.xp)}/${AppConfig.xpPerLevel} XP',
                               style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w700)),
                         ],
@@ -123,27 +123,15 @@ class ProgressScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
-          _Lipatan(
-            judul: 'Untuk orang tua',
-            children: [
-              for (final t in daftarTopik)
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: Text(t.ikon, style: const TextStyle(fontSize: 22)),
-                  title: Text(t.nama, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  subtitle: Text('${t.fase.label} · ${t.fase.kelas}'),
-                  trailing: ChipStatus(status: data.statusTopik(t.id)),
-                ),
-              const SizedBox(height: 8),
-              Text(_ringkasJawaban(data.riwayatJawaban)),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.restart_alt_rounded),
-                label: const Text('Hapus data dan mulai dari awal'),
-                onPressed: () => _konfirmasiUlang(context, ref),
-              ),
-            ],
+          OutlinedButton.icon(
+            icon: const Icon(Icons.family_restroom_rounded),
+            label: const Text('Untuk orang tua'),
+            onPressed: () async {
+              if (!await bukaGerbangWali(context) || !context.mounted) return;
+              await Navigator.of(context).push(
+                transisiPudar(ProgresWaliScreen(onReset: _konfirmasiUlang)),
+              );
+            },
           ),
           _Lipatan(
             judul: 'Keterangan',
@@ -164,31 +152,41 @@ class ProgressScreen extends ConsumerWidget {
     );
   }
 
-  String _ringkasJawaban(List<Jawaban> jawaban) {
-    if (jawaban.isEmpty) return 'Belum ada jawaban tercatat.';
-    final benar = jawaban.where((j) => j.benar).length;
-    final persen = (benar * 100 / jawaban.length).round();
-    final terakhir = jawaban.map((j) => j.waktu).reduce((a, b) => a.isAfter(b) ? a : b);
-    return 'Dari ${jawaban.length} soal terakhir, $benar dijawab benar ($persen%). '
-        'Aktivitas terakhir: ${kunciTanggal(terakhir)}.';
-  }
-
   Future<void> _konfirmasiUlang(BuildContext context, WidgetRef ref) async {
     final yakin = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Mulai dari awal?'),
-        content: const Text('Semua progres, XP, dan lencana di perangkat ini akan dihapus.'),
+        content: const Text(
+          'Progres, XP, dan lencana profil ini akan direset. '
+          'Jika sinkronisasi aktif, reset juga akan dikirim ke Firebase.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Batal')),
-          FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Hapus')),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Hapus'),
+          ),
         ],
       ),
     );
     if (yakin != true || !context.mounted) return;
-    await ref.read(numiControllerProvider.notifier).mulaiUlang();
+    try {
+      await ref.read(numiControllerProvider.notifier).mulaiUlang();
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Progres belum direset. Coba lagi.')),
+        );
+      }
+      return;
+    }
     if (!context.mounted) return;
-    Navigator.of(context).pushAndRemoveUntil(transisiPudar(const SplashScreen()), (_) => false);
+    Navigator.of(context)
+        .pushAndRemoveUntil(transisiPudar(const SplashScreen()), (_) => false);
   }
 }
 
@@ -258,11 +256,23 @@ class _KartuStreakState extends State<_KartuStreak> with SingleTickerProviderSta
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  const Text('Terbaik', style: TextStyle(color: NumiWarna.tintaPudar)),
-                  Text('${widget.terbaik}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
-                ],
+              const SizedBox(width: 8),
+              Flexible(
+                child: Column(
+                  children: [
+                    const Text(
+                      'Terbaik',
+                      style: TextStyle(color: NumiWarna.tintaPudar),
+                    ),
+                    Text(
+                      '${widget.terbaik}',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -18,6 +18,7 @@ class HasilSesiView extends StatelessWidget {
     this.onKedua,
     this.hiasan,
     this.catatan,
+    this.pembahasan,
   });
 
   final RingkasanSesi ringkasan;
@@ -28,6 +29,7 @@ class HasilSesiView extends StatelessWidget {
   final VoidCallback? onKedua;
   final Widget? hiasan;
   final String? catatan;
+  final Widget? pembahasan;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class HasilSesiView extends StatelessWidget {
                       ],
                       const SizedBox(height: 24),
                       MascotBubble(teks: r.pesan.isi, ekspresi: r.pesan.ekspresi, ukuranMaskot: 92),
+                      ?pembahasan,
                     ],
                   ),
                 ),

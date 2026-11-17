@@ -66,6 +66,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 700));
       expect(find.text('Coba simpan lagi'), findsOneWidget);
+      expect(find.text('Pembahasan jawaban'), findsNothing);
       expect(container.read(numiControllerProvider).xp, 0);
       expect(
         container
@@ -81,6 +82,14 @@ void main() {
       await tester.pump(const Duration(milliseconds: 700));
       expect(find.text('Mercusuar menyala!'), findsOneWidget);
       expect(container.read(numiControllerProvider).hasilMastery.length, 1);
+      final pembahasan = find.text('Pembahasan jawaban');
+      await tester.scrollUntilVisible(pembahasan, 200);
+      await tester.tap(pembahasan);
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(
+        find.textContaining(soalCheckpoint.first.penjelasan),
+        findsOneWidget,
+      );
       expect(tester.takeException(), isNull);
     },
   );

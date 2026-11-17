@@ -6,16 +6,23 @@ import '../../core/widgets/tombol_numi.dart';
 import '../../core/widgets/transisi.dart';
 import '../../data/content/daftar_topik.dart';
 import '../../data/models/catatan_belajar.dart';
+import '../../data/models/sesi_soal.dart';
 import '../../data/models/companion_message.dart';
 import '../../core/widgets/chip_status.dart';
 import '../../domain/diagnostic_engine.dart';
 import '../home/home_shell.dart';
 import '../mascot/mascot_bubble.dart';
+import '../quiz/pembahasan_sesi.dart';
 
 class DiagnosticResultScreen extends StatelessWidget {
-  const DiagnosticResultScreen({super.key, required this.hasil});
+  const DiagnosticResultScreen({
+    super.key,
+    required this.hasil,
+    this.blok = const [],
+  });
 
   final HasilAkhirDiagnostic hasil;
+  final List<SesiSoal> blok;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +84,7 @@ class DiagnosticResultScreen extends StatelessWidget {
                           skor: diuji[t.id] == null ? null : '${diuji[t.id]!.benar}/${diuji[t.id]!.total}',
                         ),
                       ),
+                    if (blok.isNotEmpty) PembahasanSesi(blok: blok),
                   ],
                 ),
               ),

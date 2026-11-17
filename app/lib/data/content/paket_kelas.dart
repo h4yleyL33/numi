@@ -11,7 +11,7 @@ class PaketKelas {
   final String fokus;
   String get id => 'kelas-$kelas-pengantar';
   String get versi => '$id-v1';
-  String get statusValidasi => 'draft-belum-divalidasi';
+  String get statusValidasi => 'PENDING_EDUCATOR_REVIEW';
   String get skillId => '$topikAwal-jangkar';
   List<String> get prasyarat => switch (kelas) {
     1 => const [],

@@ -15,12 +15,26 @@ class GeneratorSoal {
   final Random _rng;
 
   static const _benda = ['🍎', '⭐', '🐟', '🌸', '🎈', '🍓', '🐥', '⚽'];
-  static const _nama = ['Adi', 'Sari', 'Budi', 'Ayu', 'Dimas', 'Rina', 'Tono', 'Lala'];
+  static const _nama = [
+    'Adi',
+    'Sari',
+    'Budi',
+    'Ayu',
+    'Dimas',
+    'Rina',
+    'Tono',
+    'Lala',
+  ];
 
-  List<Soal> buat(String topikId, int jumlah, {int tingkat = 1}) {
+  List<Soal> buat(
+    String topikId,
+    int jumlah, {
+    int tingkat = 1,
+    Set<String> hindari = const {},
+  }) {
     final templat = _templatUntuk(topikId);
     final hasil = <Soal>[];
-    final kunci = <String>{};
+    final kunci = {...hindari};
     final mulai = _rng.nextInt(templat.length);
     var coba = 0;
     // Templat dipakai bergiliran supaya bentuk soal dalam satu sesi bervariasi.
@@ -33,20 +47,20 @@ class GeneratorSoal {
   }
 
   List<_Templat> _templatUntuk(String topikId) => switch (topikId) {
-        'T01' => [_t01Hitung, _t01Banding, _t01Urutan, _t01Pasang, _t01Sesudah],
-        'T02' => [_t02NilaiTempat, _t02Urai, _t02Banding, _t02Terbesar],
-        'T03' => [_t03Hitung, _t03Kotak, _t03Pasang, _t03Pilih],
-        'T04' => [_t04Hitung, _t04Kotak, _t04Pasang, _t04Banding],
-        'T05' => [_t05Gambar, _t05Nama, _t05Setengah, _t05Banding],
-        'T06' => [_t06Pilih, _t06Kotak, _t06Banding, _t06Cerita],
-        'T07' => [_t07Pilih, _t07Kotak, _t07Cerita, _t07Berulang],
-        'T08' => [_t08Pilih, _t08Kotak, _t08Cerita, _t08Kebalikan],
-        'T09' => [_t09Senilai, _t09Banding, _t09Gambar],
-        'T10' => [_t10Belanja, _t10Hitung, _t10Kembalian, _t10Kali],
-        'T11' => [_t11Tambah, _t11Kurang, _t11Beda, _t11Cerita],
-        'T12' => [_t12Kpk, _t12Fpb, _t12CeritaKpk, _t12CeritaFpb],
-        _ => throw ArgumentError('Topik $topikId tidak dikenal'),
-      };
+    'T01' => [_t01Hitung, _t01Banding, _t01Urutan, _t01Pasang, _t01Sesudah],
+    'T02' => [_t02NilaiTempat, _t02Urai, _t02Banding, _t02Terbesar],
+    'T03' => [_t03Hitung, _t03Kotak, _t03Pasang, _t03Pilih],
+    'T04' => [_t04Hitung, _t04Kotak, _t04Pasang, _t04Banding],
+    'T05' => [_t05Gambar, _t05Nama, _t05Setengah, _t05Banding],
+    'T06' => [_t06Pilih, _t06Kotak, _t06Banding, _t06Cerita],
+    'T07' => [_t07Pilih, _t07Kotak, _t07Cerita, _t07Berulang],
+    'T08' => [_t08Pilih, _t08Kotak, _t08Cerita, _t08Kebalikan],
+    'T09' => [_t09Senilai, _t09Banding, _t09Gambar],
+    'T10' => [_t10Belanja, _t10Hitung, _t10Kembalian, _t10Kali],
+    'T11' => [_t11Tambah, _t11Kurang, _t11Beda, _t11Cerita],
+    'T12' => [_t12Kpk, _t12Fpb, _t12CeritaKpk, _t12CeritaFpb],
+    _ => throw ArgumentError('Topik $topikId tidak dikenal'),
+  };
 
   // alat bantu
 
@@ -56,7 +70,12 @@ class GeneratorSoal {
 
   List<String> _acakUrutan(Iterable<String> isi) => isi.toList()..shuffle(_rng);
 
-  List<String> _opsiAngka(int benar, {int sebar = 3, int min = 0, String Function(int)? tampil}) {
+  List<String> _opsiAngka(
+    int benar, {
+    int sebar = 3,
+    int min = 0,
+    String Function(int)? tampil,
+  }) {
     final opsi = <int>{benar};
     var jarak = sebar;
     var coba = 0;
@@ -69,15 +88,27 @@ class GeneratorSoal {
   }
 
   /// Pengecoh yang meniru salah hitung yang umum: meleset 1, 10, atau 100.
-  List<String> _opsiDekat(int benar, List<int> langkah, {int min = 0, String Function(int)? tampil}) {
+  List<String> _opsiDekat(
+    int benar,
+    List<int> langkah, {
+    int min = 0,
+    String Function(int)? tampil,
+  }) {
     final opsi = <int>{benar};
-    final calon = [for (final l in langkah) ...[benar + l, benar - l]]..shuffle(_rng);
+    final calon = [
+      for (final l in langkah) ...[benar + l, benar - l],
+    ]..shuffle(_rng);
     for (final c in calon) {
       if (opsi.length == 4) break;
       if (c >= min) opsi.add(c);
     }
     if (opsi.length < 4) {
-      return _opsiAngka(benar, sebar: langkah.first + 2, min: min, tampil: tampil);
+      return _opsiAngka(
+        benar,
+        sebar: langkah.first + 2,
+        min: min,
+        tampil: tampil,
+      );
     }
     return _acakUrutan(opsi.map(tampil ?? (v) => v.toString()));
   }
@@ -102,13 +133,14 @@ class GeneratorSoal {
     return _acakUrutan(opsi.take(4));
   }
 
-  String _tanda(num kiri, num kanan) => kiri < kanan ? '<' : (kiri > kanan ? '>' : '=');
+  String _tanda(num kiri, num kanan) =>
+      kiri < kanan ? '<' : (kiri > kanan ? '>' : '=');
 
   String _kataBanding(String tanda) => switch (tanda) {
-        '<' => 'lebih kecil dari',
-        '>' => 'lebih besar dari',
-        _ => 'sama dengan',
-      };
+    '<' => 'lebih kecil dari',
+    '>' => 'lebih besar dari',
+    _ => 'sama dengan',
+  };
 
   int _fpb(int a, int b) => b == 0 ? a : _fpb(b, a % b);
   int _kpk(int a, int b) => a * b ~/ _fpb(a, b);
@@ -162,7 +194,8 @@ class GeneratorSoal {
       kalimat: '$s ${s + 1} ☐ ${s + 3}',
       pilihan: _opsiAngka(s + 2, sebar: 2, min: 1),
       jawabanBenar: '${s + 2}',
-      penjelasan: 'Bilangannya naik satu-satu: $s, ${s + 1}, ${s + 2}, ${s + 3}.',
+      penjelasan:
+          'Bilangannya naik satu-satu: $s, ${s + 1}, ${s + 2}, ${s + 3}.',
     );
   }
 
@@ -220,7 +253,8 @@ class GeneratorSoal {
       pertanyaan: 'Pada bilangan $n, angka $puluhan bernilai?',
       pilihan: _acakUrutan(['${puluhan * 10}', '$puluhan', '${n % 10}', '$n']),
       jawabanBenar: '${puluhan * 10}',
-      penjelasan: 'Angka $puluhan ada di tempat puluhan, jadi nilainya ${puluhan * 10}.',
+      penjelasan:
+          'Angka $puluhan ada di tempat puluhan, jadi nilainya ${puluhan * 10}.',
     );
   }
 
@@ -272,7 +306,8 @@ class GeneratorSoal {
       pertanyaan: 'Mana bilangan yang paling besar?',
       pilihan: _acakUrutan(isi.map((e) => '$e')),
       jawabanBenar: '$terbesar',
-      penjelasan: 'Lihat angka puluhannya dulu. Yang paling besar adalah $terbesar.',
+      penjelasan:
+          'Lihat angka puluhannya dulu. Yang paling besar adalah $terbesar.',
     );
   }
 
@@ -452,7 +487,8 @@ class GeneratorSoal {
       gambarPecahan: Pecahan(1, penyebut),
       pilihan: _acakUrutan(['1/2', '1/4', '1/3', '1']),
       jawabanBenar: '1/$penyebut',
-      penjelasan: 'Kuenya dibagi $penyebut sama besar dan 1 bagian diwarnai, jadi 1/$penyebut.',
+      penjelasan:
+          'Kuenya dibagi $penyebut sama besar dan 1 bagian diwarnai, jadi 1/$penyebut.',
     );
   }
 
@@ -465,16 +501,20 @@ class GeneratorSoal {
       topikId: 'T05',
       jenis: JenisSoal.pilihanGanda,
       tingkat: tingkat,
-      pertanyaan: 'Satu $benda dibagi $penyebut sama besar. Satu bagiannya disebut?',
+      pertanyaan:
+          'Satu $benda dibagi $penyebut sama besar. Satu bagiannya disebut?',
       pilihan: _acakUrutan(['setengah', 'seperempat', 'sepertiga', 'satu']),
       jawabanBenar: jawaban,
-      penjelasan: 'Dibagi $penyebut sama besar, satu bagiannya disebut $jawaban.',
+      penjelasan:
+          'Dibagi $penyebut sama besar, satu bagiannya disebut $jawaban.',
     );
   }
 
   Soal _t05Setengah(int tingkat) {
     final seperempat = tingkat > 1 && _rng.nextBool();
-    final n = seperempat ? _pilih([4, 8, 12, 16]) : _pilih([2, 4, 6, 8, 10, 12]);
+    final n = seperempat
+        ? _pilih([4, 8, 12, 16])
+        : _pilih([2, 4, 6, 8, 10, 12]);
     final hasil = seperempat ? n ~/ 4 : n ~/ 2;
     final kata = seperempat ? 'Seperempat' : 'Setengah';
     return Soal(
@@ -487,7 +527,8 @@ class GeneratorSoal {
       jumlahBenda: n,
       pilihan: _opsiAngka(hasil, sebar: 2, min: 1),
       jawabanBenar: '$hasil',
-      penjelasan: 'Bagi $n benda menjadi ${seperempat ? 4 : 2} kelompok sama banyak. '
+      penjelasan:
+          'Bagi $n benda menjadi ${seperempat ? 4 : 2} kelompok sama banyak. '
           'Tiap kelompok berisi $hasil.',
     );
   }
@@ -572,7 +613,8 @@ class GeneratorSoal {
       topikId: 'T06',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Di perpustakaan ada $a buku cerita dan $b buku pelajaran. '
+      pertanyaan:
+          'Di perpustakaan ada $a buku cerita dan $b buku pelajaran. '
           'Berapa banyak buku seluruhnya?',
       benda: '📚',
       pilihan: _opsiDekat(a + b, [10, 100, 1]),
@@ -597,7 +639,11 @@ class GeneratorSoal {
       tingkat: tingkat,
       pertanyaan: 'Berapa hasilnya?',
       kalimat: '$a × $b = ☐',
-      pilihan: _lengkapi({'${a * b}', '${a + b}', '${a * (b + 1)}', '${(a - 1) * b}'}, a * b, min: 1),
+      pilihan: _lengkapi(
+        {'${a * b}', '${a + b}', '${a * (b + 1)}', '${(a - 1) * b}'},
+        a * b,
+        min: 1,
+      ),
       jawabanBenar: '${a * b}',
       penjelasan: '$a × $b artinya $a kelompok berisi $b, hasilnya ${a * b}.',
     );
@@ -620,13 +666,18 @@ class GeneratorSoal {
 
   Soal _t07Cerita(int tingkat) {
     final (a, b) = _faktor(tingkat);
-    final isi = _pilih([('kotak', 'pensil', '✏️'), ('keranjang', 'jeruk', '🍊'), ('piring', 'kue', '🧁')]);
+    final isi = _pilih([
+      ('kotak', 'pensil', '✏️'),
+      ('keranjang', 'jeruk', '🍊'),
+      ('piring', 'kue', '🧁'),
+    ]);
     return Soal(
       id: 'T07-cerita-$a-$b-${isi.$2}',
       topikId: 'T07',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Ada $a ${isi.$1}. Setiap ${isi.$1} berisi $b ${isi.$2}. '
+      pertanyaan:
+          'Ada $a ${isi.$1}. Setiap ${isi.$1} berisi $b ${isi.$2}. '
           'Berapa banyak ${isi.$2} seluruhnya?',
       benda: isi.$3,
       pilihan: _opsiAngka(a * b, sebar: b, min: 1),
@@ -646,10 +697,17 @@ class GeneratorSoal {
       tingkat: tingkat,
       pertanyaan: '$jumlahan sama dengan?',
       pilihan: _acakUrutan(
-          {'$kali × $isi', '$isi × $isi', '$kali + $isi', '${kali + 1} × $isi', '$kali × ${isi + 1}'}
-              .take(4)),
+        {
+          '$kali × $isi',
+          '$isi × $isi',
+          '$kali + $isi',
+          '${kali + 1} × $isi',
+          '$kali × ${isi + 1}',
+        }.take(4),
+      ),
       jawabanBenar: '$kali × $isi',
-      penjelasan: 'Angka $isi dijumlahkan sebanyak $kali kali, jadi $kali × $isi.',
+      penjelasan:
+          'Angka $isi dijumlahkan sebanyak $kali kali, jadi $kali × $isi.',
     );
   }
 
@@ -696,7 +754,8 @@ class GeneratorSoal {
       topikId: 'T08',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Bu $nama membuat $c kue. Kue dibagi rata ke $a piring. '
+      pertanyaan:
+          'Bu $nama membuat $c kue. Kue dibagi rata ke $a piring. '
           'Berapa kue di setiap piring?',
       benda: '🍪',
       pilihan: _opsiAngka(b, sebar: 2, min: 1),
@@ -754,7 +813,8 @@ class GeneratorSoal {
       kalimat: '$a/$b ☐ $c/$d',
       pilihan: const ['<', '=', '>'],
       jawabanBenar: tanda,
-      penjelasan: 'Samakan penyebutnya: ${a * d}/${b * d} dan ${c * b}/${b * d}. '
+      penjelasan:
+          'Samakan penyebutnya: ${a * d}/${b * d} dan ${c * b}/${b * d}. '
           'Jadi $a/$b ${_kataBanding(tanda)} $c/$d.',
     );
   }
@@ -763,7 +823,11 @@ class GeneratorSoal {
     final penyebut = _acak(3, 8);
     final pembilang = _acak(1, penyebut - 1);
     final benar = '$pembilang/$penyebut';
-    final opsi = <String>{benar, '${penyebut - pembilang}/$penyebut', '$pembilang/${penyebut + 1}'};
+    final opsi = <String>{
+      benar,
+      '${penyebut - pembilang}/$penyebut',
+      '$pembilang/${penyebut + 1}',
+    };
     return Soal(
       id: 'T09-gambar-$pembilang-$penyebut',
       topikId: 'T09',
@@ -773,7 +837,8 @@ class GeneratorSoal {
       gambarPecahan: Pecahan(pembilang, penyebut),
       pilihan: _lengkapiPecahan(opsi, penyebut),
       jawabanBenar: benar,
-      penjelasan: 'Ada $penyebut bagian sama besar, $pembilang diwarnai, jadi $benar.',
+      penjelasan:
+          'Ada $penyebut bagian sama besar, $pembilang diwarnai, jadi $benar.',
     );
   }
 
@@ -782,13 +847,18 @@ class GeneratorSoal {
   Soal _t10Belanja(int tingkat) {
     final harga = _acak(4, 30) * 500;
     final n = _acak(2, 5);
-    final barang = _pilih([('buku tulis', '📓'), ('kotak susu', '🥛'), ('pensil warna', '🖍️')]);
+    final barang = _pilih([
+      ('buku tulis', '📓'),
+      ('kotak susu', '🥛'),
+      ('pensil warna', '🖍️'),
+    ]);
     return Soal(
       id: 'T10-belanja-$harga-$n-${barang.$1}',
       topikId: 'T10',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Harga satu ${barang.$1} ${_rp(harga)}. Ibu membeli $n ${barang.$1}. '
+      pertanyaan:
+          'Harga satu ${barang.$1} ${_rp(harga)}. Ibu membeli $n ${barang.$1}. '
           'Berapa uang yang harus dibayar?',
       benda: barang.$2,
       pilihan: _opsiDekat(harga * n, [harga, 500, 1000], min: 500, tampil: _rp),
@@ -812,7 +882,8 @@ class GeneratorSoal {
       kalimat: '${formatAngka(a)} $op ${formatAngka(b)} = ☐',
       pilihan: _opsiDekat(hasil, [1000, 100, 10000], tampil: formatAngka),
       jawabanBenar: formatAngka(hasil),
-      penjelasan: 'Susun ke bawah dan kerjakan per kolom. Hasilnya ${formatAngka(hasil)}.',
+      penjelasan:
+          'Susun ke bawah dan kerjakan per kolom. Hasilnya ${formatAngka(hasil)}.',
     );
   }
 
@@ -825,12 +896,14 @@ class GeneratorSoal {
       topikId: 'T10',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: '$nama membeli jajanan seharga ${_rp(harga)} dan membayar dengan '
+      pertanyaan:
+          '$nama membeli jajanan seharga ${_rp(harga)} dan membayar dengan '
           'uang ${_rp(bayar)}. Berapa uang kembaliannya?',
       benda: '🪙',
       pilihan: _opsiDekat(bayar - harga, [500, 1000, 2000], tampil: _rp),
       jawabanBenar: _rp(bayar - harga),
-      penjelasan: 'Kembalian = uang dibayar - harga = ${_rp(bayar)} - ${_rp(harga)} '
+      penjelasan:
+          'Kembalian = uang dibayar - harga = ${_rp(bayar)} - ${_rp(harga)} '
           '= ${_rp(bayar - harga)}.',
     );
   }
@@ -865,9 +938,15 @@ class GeneratorSoal {
       tingkat: tingkat,
       pertanyaan: 'Berapa hasilnya?',
       kalimat: '$a/$d + $b/$d = ☐',
-      pilihan: _acakUrutan({benar, '${a + b}/${d * 2}', '${a + b + 1}/$d', '$a/$d'}),
+      pilihan: _acakUrutan({
+        benar,
+        '${a + b}/${d * 2}',
+        '${a + b + 1}/$d',
+        '$a/$d',
+      }),
       jawabanBenar: benar,
-      penjelasan: 'Penyebutnya sama, jadi jumlahkan pembilangnya: $a + $b = ${a + b}. '
+      penjelasan:
+          'Penyebutnya sama, jadi jumlahkan pembilangnya: $a + $b = ${a + b}. '
           'Hasilnya $benar.',
     );
   }
@@ -884,9 +963,15 @@ class GeneratorSoal {
       tingkat: tingkat,
       pertanyaan: 'Seret hasil yang tepat ke kotak.',
       kalimat: '$a/$d - $b/$d = ☐',
-      pilihan: _lengkapiPecahan({benar, '${a - b}/${d * 2}', '${a + b}/$d', '$b/$d'}, d),
+      pilihan: _lengkapiPecahan({
+        benar,
+        '${a - b}/${d * 2}',
+        '${a + b}/$d',
+        '$b/$d',
+      }, d),
       jawabanBenar: benar,
-      penjelasan: 'Penyebutnya sama, kurangkan pembilangnya: $a - $b = ${a - b}.',
+      penjelasan:
+          'Penyebutnya sama, kurangkan pembilangnya: $a - $b = ${a - b}.',
     );
   }
 
@@ -900,7 +985,12 @@ class GeneratorSoal {
       final pembilang = a * k + b;
       if (pembilang >= d2) continue;
       final benar = '$pembilang/$d2';
-      final opsi = {benar, '${a + b}/${d1 + d2}', '${a + b}/$d2', '${pembilang + 1}/$d2'};
+      final opsi = {
+        benar,
+        '${a + b}/${d1 + d2}',
+        '${a + b}/$d2',
+        '${pembilang + 1}/$d2',
+      };
       if (opsi.length < 4) continue;
       return Soal(
         id: 'T11-beda-$a-$d1-$b-$d2',
@@ -911,7 +1001,8 @@ class GeneratorSoal {
         kalimat: '$a/$d1 + $b/$d2 = ☐',
         pilihan: _acakUrutan(opsi),
         jawabanBenar: benar,
-        penjelasan: 'Samakan penyebut: $a/$d1 = ${a * k}/$d2. Lalu ${a * k}/$d2 + $b/$d2 = $benar.',
+        penjelasan:
+            'Samakan penyebut: $a/$d1 = ${a * k}/$d2. Lalu ${a * k}/$d2 + $b/$d2 = $benar.',
       );
     }
   }
@@ -926,10 +1017,16 @@ class GeneratorSoal {
       topikId: 'T11',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Ibu punya $a/$d kg gula. Sebanyak $b/$d kg dipakai untuk membuat kue. '
+      pertanyaan:
+          'Ibu punya $a/$d kg gula. Sebanyak $b/$d kg dipakai untuk membuat kue. '
           'Berapa kg gula yang tersisa?',
       benda: '🧁',
-      pilihan: _lengkapiPecahan({benar, '${a + b}/$d', '${a - b}/${d * 2}', '$b/$d'}, d),
+      pilihan: _lengkapiPecahan({
+        benar,
+        '${a + b}/$d',
+        '${a - b}/${d * 2}',
+        '$b/$d',
+      }, d),
       jawabanBenar: benar,
       penjelasan: 'Sisa berarti dikurangi: $a/$d - $b/$d = $benar kg.',
     );
@@ -967,7 +1064,8 @@ class GeneratorSoal {
       pertanyaan: 'KPK dari $a dan $b adalah?',
       pilihan: _opsiKpkFpb(kpk, [a * b, _fpb(a, b), kpk * 2]),
       jawabanBenar: '$kpk',
-      penjelasan: 'Kelipatan yang sama paling kecil dari $a dan $b adalah $kpk.',
+      penjelasan:
+          'Kelipatan yang sama paling kecil dari $a dan $b adalah $kpk.',
     );
   }
 
@@ -1002,7 +1100,8 @@ class GeneratorSoal {
       topikId: 'T12',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: '$n1 berenang setiap $a hari sekali, $n2 setiap $b hari sekali. '
+      pertanyaan:
+          '$n1 berenang setiap $a hari sekali, $n2 setiap $b hari sekali. '
           'Hari ini mereka berenang bersama. Setelah berapa hari mereka berenang bersama lagi?',
       benda: '🏊',
       pilihan: _opsiKpkFpb(kpk, [a * b, a + b, kpk + a]),
@@ -1022,7 +1121,8 @@ class GeneratorSoal {
       topikId: 'T12',
       jenis: JenisSoal.soalCerita,
       tingkat: tingkat,
-      pertanyaan: 'Ada $apel apel dan $jeruk jeruk. Semua buah dimasukkan ke keranjang '
+      pertanyaan:
+          'Ada $apel apel dan $jeruk jeruk. Semua buah dimasukkan ke keranjang '
           'sehingga isi setiap keranjang sama. Paling banyak berapa keranjang yang dibutuhkan?',
       benda: '🧺',
       pilihan: _opsiKpkFpb(f, [_kpk(apel, jeruk), apel + jeruk, f + 1]),

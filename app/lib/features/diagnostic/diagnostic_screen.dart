@@ -62,7 +62,7 @@ class _DiagnosticScreenState extends ConsumerState<DiagnosticScreen> {
           .finalisasiDiagnostic(_sesi!.id);
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
-        transisiPudar(DiagnosticResultScreen(hasil: hasil)),
+        transisiPudar(DiagnosticResultScreen(hasil: hasil, blok: _sesi!.blok)),
         (_) => false,
       );
     } else if (mounted) {

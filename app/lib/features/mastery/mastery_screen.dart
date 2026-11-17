@@ -15,14 +15,20 @@ import '../../state/numi_controller.dart';
 import '../lesson/hasil_sesi_view.dart';
 import '../mascot/mascot_bubble.dart';
 import '../quiz/pemutar_soal.dart';
+import '../quiz/pembahasan_sesi.dart';
 
 enum _Tahap { pembuka, soal, menyimpan, gagal, hasil }
 
 /// UC-005. Lima respons benar tanpa bantuan menjadi bukti awal pada sampel.
 class MasteryScreen extends ConsumerStatefulWidget {
-  const MasteryScreen({super.key, required this.topik});
+  const MasteryScreen({
+    super.key,
+    required this.topik,
+    this.periksaUlang = false,
+  });
 
   final Topik topik;
+  final bool periksaUlang;
 
   @override
   ConsumerState<MasteryScreen> createState() => _MasteryScreenState();
@@ -39,7 +45,8 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
   void initState() {
     super.initState();
     _sesi = ref.read(numiControllerProvider).sesiMastery[widget.topik.id];
-    if (_sesi?.hasil case final hasil?) {
+    final hasil = _sesi?.hasil;
+    if (!widget.periksaUlang && hasil != null) {
       _ringkasan = RingkasanSesi.fromJson(hasil);
       _tahap = _Tahap.hasil;
     }
@@ -54,6 +61,15 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
               widget.topik.id,
               AppConfig.soalMastery,
               tingkat: 2,
+              hindari: {
+                for (final soal
+                    in ref
+                            .read(numiControllerProvider)
+                            .sesiMastery[widget.topik.id]
+                            ?.soal ??
+                        const <Soal>[])
+                  soal.id,
+              },
             );
       final sesi = await ref
           .read(numiControllerProvider.notifier)
@@ -118,7 +134,9 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
                   const Spacer(),
                   const PulauHias(menyala: false, ukuran: 130),
                   Text(
-                    'Mercusuar ${t.namaPulau}',
+                    widget.periksaUlang
+                        ? 'Periksa ulang ${t.namaPulau}'
+                        : 'Mercusuar ${t.namaPulau}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -193,6 +211,7 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
           ),
         ),
         _Tahap.hasil => HasilSesiView(
+          pembahasan: PembahasanSesi(blok: [_sesi!]),
           catatan:
               'Hasil dan XP sesi ini sudah tersimpan di perangkat ini. '
               'Membuka hasil kembali tidak menambah XP.',

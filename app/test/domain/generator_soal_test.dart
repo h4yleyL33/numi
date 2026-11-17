@@ -15,17 +15,34 @@ void main() {
           for (var ulang = 0; ulang < 40; ulang++) {
             final daftar = generator.buat(topik.id, 5, tingkat: tingkat);
             expect(daftar, hasLength(5));
-            expect(daftar.map((s) => s.id).toSet(), hasLength(5), reason: 'soal dalam satu sesi tidak boleh kembar');
+            expect(
+              daftar.map((s) => s.id).toSet(),
+              hasLength(5),
+              reason: 'soal dalam satu sesi tidak boleh kembar',
+            );
 
             for (final s in daftar) {
               expect(s.topikId, topik.id);
-              expect(s.pilihan.toSet(), hasLength(s.pilihan.length), reason: 'pilihan kembar di ${s.id}');
+              expect(s.kompetensiId, '${topik.id}-jangkar');
+              expect(s.statusValidasi, 'PENDING_EDUCATOR_REVIEW');
+              expect(s.tingkat, tingkat);
+              expect(
+                s.pilihan.toSet(),
+                hasLength(s.pilihan.length),
+                reason: 'pilihan kembar di ${s.id}',
+              );
 
               switch (s.jenis) {
                 case JenisSoal.pasangkan:
                   expect(s.pasangan, hasLength(3));
-                  expect(s.jawabanBenar, s.pasangan.map((p) => p.kanan).join('|'));
-                  expect(s.pilihan.toSet(), s.pasangan.map((p) => p.kanan).toSet());
+                  expect(
+                    s.jawabanBenar,
+                    s.pasangan.map((p) => p.kanan).join('|'),
+                  );
+                  expect(
+                    s.pilihan.toSet(),
+                    s.pasangan.map((p) => p.kanan).toSet(),
+                  );
                 case JenisSoal.bandingkan:
                   expect(s.pilihan, ['<', '=', '>']);
                   expect(s.kalimat, contains('☐'));
@@ -37,11 +54,21 @@ void main() {
 
               // Soal SD tidak boleh memunculkan bilangan negatif.
               for (final p in s.pilihan) {
-                expect(p.startsWith('-'), isFalse, reason: '${s.id} punya pilihan negatif $p');
+                expect(
+                  p.startsWith('-'),
+                  isFalse,
+                  reason: '${s.id} punya pilihan negatif $p',
+                );
               }
-              if (s.jenis == JenisSoal.seretKeKotak) expect(s.kalimat, contains('☐'));
-              if (s.jenis == JenisSoal.hitungBenda) expect(s.jumlahBenda, greaterThan(0));
-              if (s.jenis == JenisSoal.pecahanGambar) expect(s.gambarPecahan, isNotNull);
+              if (s.jenis == JenisSoal.seretKeKotak) {
+                expect(s.kalimat, contains('☐'));
+              }
+              if (s.jenis == JenisSoal.hitungBenda) {
+                expect(s.jumlahBenda, greaterThan(0));
+              }
+              if (s.jenis == JenisSoal.pecahanGambar) {
+                expect(s.gambarPecahan, isNotNull);
+              }
               expect(s.penjelasan, isNotEmpty);
             }
           }
@@ -56,6 +83,12 @@ void main() {
         expect(int.tryParse(s.jawabanBenar) ?? 0, greaterThanOrEqualTo(0));
       }
     }
+  });
+
+  test('format pasangan lama tetap dapat dipulihkan', () {
+    final pasangan = PasanganSoal.fromJson(['2 + 3', '5']);
+    expect(pasangan.toJson(), {'kiri': '2 + 3', 'kanan': '5'});
+    expect(PasanganSoal.fromJson(pasangan.toJson()).kanan, '5');
   });
 
   test('T05 hanya memakai pecahan setengah dan seperempat sesuai Fase A', () {

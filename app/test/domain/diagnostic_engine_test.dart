@@ -28,7 +28,7 @@ void main() {
         paket.butirAwal.map((s) => s.id),
       );
       expect(sesi.soalSekarang, hasLength(2));
-      expect(paket.statusValidasi, 'draft-belum-divalidasi');
+      expect(paket.statusValidasi, 'PENDING_EDUCATOR_REVIEW');
       for (final soal in sesi.soalSekarang) {
         expect(ids.add(soal.id), isTrue);
         expect(soal.pilihan, contains(soal.jawabanBenar));

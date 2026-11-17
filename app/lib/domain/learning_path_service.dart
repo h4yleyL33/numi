@@ -22,6 +22,13 @@ class LearningPathService {
 
   final List<Topik> topik;
 
+  DateTime? jadwalPeriksaUlang(String topikId, DataBelajar data) {
+    final tes = data.hasilMastery.where((h) => h.topikId == topikId).lastOrNull;
+    if (tes == null || !tes.lulus) return null;
+    final waktu = tes.waktu.toLocal();
+    return DateTime(waktu.year, waktu.month, waktu.day + 5);
+  }
+
   /// Topik yang sedang dilatih didahulukan, supaya siswa menuntaskan satu pulau
   /// sebelum pindah. Setelah itu topik terbuka dengan urutan paling awal.
   Rekomendasi? rekomendasi(DataBelajar data) {
@@ -77,11 +84,25 @@ class LearningPathService {
     );
   }
 
-  Lesson? lessonBerikutnya(String topikId, DataBelajar data) =>
-      lessonUntuk(topikId)
-          .where((l) => data.sesiLesson[l.id]?.selesai == false)
-          .firstOrNull ??
-      lessonUntuk(topikId).where((l) => !data.lessonSelesai(l.id)).firstOrNull;
+  Lesson? lessonBerikutnya(String topikId, DataBelajar data) {
+    final daftar = lessonUntuk(topikId);
+    final berikutnya =
+        daftar
+            .where((l) => data.sesiLesson[l.id]?.selesai == false)
+            .firstOrNull ??
+        daftar.where((l) => !data.lessonSelesai(l.id)).firstOrNull;
+    if (berikutnya != null || daftar.isEmpty) return berikutnya;
+    final tes = data.hasilMastery.where((h) => h.topikId == topikId).lastOrNull;
+    final remedial = daftar.last;
+    final waktuLesson = data.progresLesson[remedial.id]?.waktu;
+    if (tes != null &&
+        !tes.lulus &&
+        waktuLesson != null &&
+        waktuLesson.isBefore(tes.waktu)) {
+      return remedial;
+    }
+    return null;
+  }
 
   bool siapMastery(String topikId, DataBelajar data) =>
       lessonUntuk(topikId).every((l) => data.lessonSelesai(l.id));
