@@ -36,7 +36,8 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 
 - [x] Siapkan kontrak dan adapter Google/Firebase native serta web; layar login, batal, gagal/retry, dan logout; bootstrap menahan akses sebelum autentikasi.
 - [x] Daftarkan Android dan Web di proyek `numi-imun`, unduh konfigurasi SDK, dan integrasikan inisialisasi.
-- [ ] Daftarkan SHA sertifikat Android, lalu verifikasi Google login, pembatalan, persistensi sesi, dan pergantian akun pada perangkat.
+- [x] SHA-1 dan SHA-256 sertifikat debug terdaftar. Konfigurasi OAuth dan tanda tangan APK yang dibangun ulang cocok.
+- [ ] Verifikasi Google login, pembatalan, persistensi sesi, dan pergantian akun pada perangkat.
 - Penerimaan: data pribadi baru dimuat setelah UID sah; tidak ada token pada data siswa; logout mengosongkan state pribadi.
 - Verifikasi: unit adapter, integrasi login Android, batal/offline/logout; build APK debug.
 - Dependensi: I00, konfigurasi Firebase. Berkas: bootstrap, auth repository/controller, layar akun.

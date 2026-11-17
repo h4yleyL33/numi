@@ -18,7 +18,9 @@ flutter build apk --release --no-pub
 
 Flutter memakai Android SDK 36 dan JDK 21 pada mesin yang diverifikasi. Gradle memproses `google-services.json` ketika berkas tersedia. APK release saat ini ditandatangani dengan sertifikat debug untuk QA internal.
 
-Daftar SHA aplikasi Firebase masih kosong saat diperiksa. Sebelum pengujian Google Android, cocokkan SHA-1 dan SHA-256 dengan sertifikat APK yang dipakai, daftarkan di aplikasi Firebase Android, lalu unduh ulang konfigurasi. Untuk distribusi, daftarkan sidik jari sertifikat rilis atau Play App Signing yang benar. Setelah perangkat Android muncul di ADB, uji login, batal, tutup aplikasi, buka kembali, logout, dan pilih akun berbeda. [Panduan Google Sign-In Android](https://firebase.google.com/docs/auth/android/google-signin).
+Pada 18 November 2026, Firebase CLI mengonfirmasi SHA-1 dan SHA-256 sertifikat debug sudah terdaftar untuk aplikasi Numi Android. Konfigurasi terbaru memuat klien OAuth Android untuk package dan sertifikat tersebut serta klien OAuth Web. Kedua APK QA dibangun ulang dan tanda tangan serta resource OAuth-nya diverifikasi. Untuk distribusi, daftarkan sidik jari sertifikat rilis atau Play App Signing yang benar. Pada perangkat Android, uji login, batal, tutup aplikasi, buka kembali, logout, dan pilih akun berbeda. [Panduan Google Sign-In Android](https://firebase.google.com/docs/auth/android/google-signin).
+
+AVD lokal `Numi_QA_API_35` memakai Android 35 dengan Google Play. APK debug sudah terpasang dan formulir Google resmi terbuka pada `emulator-5556`. Pengguna memasukkan akun langsung di jendela emulator. Validasi sesi Firebase sesudah login masih menunggu langkah tersebut.
 
 ## Web
 
