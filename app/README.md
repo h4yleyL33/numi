@@ -13,8 +13,9 @@ Init memakai kelas tunggal 1–6 dan konfirmasi kelas untuk data usia lama. Pake
 memiliki dua butir awal berversi per kelas, masih draft dan belum enam paket konten lengkap.
 Diagnostic hanya menghasilkan indikasi jangkar; BuktiSkill terpisah dari AksesMateri dan XP.
 Riwayat lama tetap ada dan dapat memerlukan pemetaan ulang. Adapter Google/Firebase serta
-alur beberapa profil lokal per UID tersedia; konfigurasi proyek tim, login nyata, cloud, dan
-verifikasi Android masih terbuka. Diagnostic, lesson dan mastery sudah memakai snapshot soal,
+alur beberapa profil lokal per UID tersedia. Firestore menyimpan snapshot profil setelah wali
+menyetujui sinkronisasi. Checkout pengembangan sudah dikonfigurasi untuk `numi-imun`, dengan
+pengujian login Google nyata dan perangkat Android masih terbuka. Diagnostic, lesson dan mastery memakai snapshot soal,
 checkpoint per respons, resume, dan finalisasi aktivitas/reward sekali per sesi dalam database
 lokal. Lesson juga memulihkan pembahasan sebelum Lanjut. Cakupan dan batasnya ada di
 [`CHECKPOINT-ALUR.md`](../docs/03-implementasi/CHECKPOINT-ALUR.md).

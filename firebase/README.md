@@ -1,40 +1,70 @@
-# Menyiapkan Firebase Numi
+# Firebase Numi
 
-Status 30 Oktober 2026: proyek Firebase tim belum dibuat. Kode adapter Authentication sudah tersedia; tidak ada proyek, kredensial contoh, deployment, atau akses cloud yang dibuat oleh perubahan ini.
+Proyek tim yang sudah ada adalah `numi-imun`. Aplikasi Android `id.ac.unpad.numi.numi` dan Web telah didaftarkan pada 17 November 2026. Konfigurasi SDK disimpan lokal. Endpoint Firebase Auth proyek berhasil membuat URL otorisasi Google untuk Web. Pengujian login interaktif masih terbuka.
 
-## Menjalankan sebelum proyek tersedia
+## Android
 
-Dari `app/`, gunakan demo pengembangan lokal:
-
-```powershell
-flutter run -d chrome --dart-define=NUMI_LOCAL_DEMO=true
-```
-
-Demo hanya berjalan pada build non-release dan memakai penyimpanan lama `numi.data_belajar.v1`. Cache akun wali memakai kunci lain. Build release selalu melalui autentikasi, walau flag demo diberikan. Menjalankan tanpa konfigurasi menampilkan Layanan akun belum tersedia dan tidak membaca profil belajar.
-
-## Setelah proyek tim tersedia
-
-1. Siapkan Android SDK/JDK dan perangkat uji Android API 26+. Lingkungan yang diperiksa saat ini belum memiliki Android SDK; build APK belum bisa dijalankan.
-2. Buat proyek tim di Firebase Console dan aktifkan Authentication → Sign-in method → Google. Application ID Android yang dipakai repo saat ini adalah `id.ac.unpad.numi.numi`.
-3. Daftarkan sidik sertifikat SHA-1 Android pada aplikasi Firebase. Siapkan sidik sertifikat build debug dan sertifikat rilis saat rilis benar-benar disiapkan. Konfigurasi SHA/provider mengikuti [dokumentasi autentikasi Firebase Flutter](https://firebase.google.com/docs/auth/flutter/federated-auth).
-4. Pasang Firebase CLI dan FlutterFire CLI pada komputer pengembang, masuk ke akun tim, lalu dari `app/` jalankan perintah konfigurasi berikut dengan project ID yang benar:
+Dari root repositori, unduh konfigurasi Android untuk build lokal.
 
 ```powershell
-firebase login
-dart pub global activate flutterfire_cli
-flutterfire configure --project=PROJECT_ID_TIM --platforms=android,web
+firebase apps:sdkconfig ANDROID '1:262282560966:android:45eaa8dfe92a15af4cdec7' --project numi-imun --out app/android/app/google-services.json
+cd app
+flutter pub get
+flutter analyze --no-pub
+flutter test --no-pub
+flutter build apk --debug --no-pub
+flutter build apk --release --no-pub
 ```
 
-Perintah FlutterFire menghasilkan `lib/firebase_options.dart` dan menyesuaikan konfigurasi platform. Berkas pada repo sekarang adalah placeholder yang sengaja menolak inisialisasi. Ganti dengan hasil CLI, bukan nilai contoh. Alur ini mengikuti [panduan setup Firebase Flutter](https://firebase.google.com/docs/flutter/setup).
+Flutter memakai Android SDK 36 dan JDK 21 pada mesin yang diverifikasi. Gradle memproses `google-services.json` ketika berkas tersedia. APK release saat ini ditandatangani dengan sertifikat debug untuk QA internal.
 
-5. Untuk Android, pastikan konfigurasi Google dari aplikasi Firebase tersedia, termasuk `android/app/google-services.json` dan plugin Gradle Google Services yang sesuai hasil konfigurasi. Jika server OAuth client ID tidak tersedia dari konfigurasi Android, gunakan web OAuth client ID proyek yang benar melalui `--dart-define=NUMI_GOOGLE_SERVER_CLIENT_ID=...`. Mekanisme tersebut mengikuti [panduan plugin Google Sign-In Android](https://pub.dev/packages/google_sign_in_android). Jangan memasukkan client secret atau service-account key ke aplikasi.
-6. Untuk web, pastikan authorized domains pada Authentication mencakup domain pengembangan/rilis yang dipakai. Adapter menggunakan popup Firebase; Android menggunakan plugin Google Sign-In, lalu credential Firebase. Tidak ada scope kontak, Drive, atau Calendar yang diminta.
-7. Jalankan `flutter analyze`, `flutter test`, kemudian `flutter run` dan `flutter build apk --debug`. Periksa Google berhasil/batal/gagal, logout dan retry, dua akun wali, dua profil, serta pergantian akun ketika soal terbuka. Tes otomatis adapter memakai fake SDK; login nyata belum diverifikasi.
+Daftar SHA aplikasi Firebase masih kosong saat diperiksa. Sebelum pengujian Google Android, cocokkan SHA-1 dan SHA-256 dengan sertifikat APK yang dipakai, daftarkan di aplikasi Firebase Android, lalu unduh ulang konfigurasi. Untuk distribusi, daftarkan sidik jari sertifikat rilis atau Play App Signing yang benar. Setelah perangkat Android muncul di ADB, uji login, batal, tutup aplikasi, buka kembali, logout, dan pilih akun berbeda. [Panduan Google Sign-In Android](https://firebase.google.com/docs/auth/android/google-signin).
 
-## Data dan Firestore
+## Web
 
-Data belajar saat ini tetap lokal per UID dan profil, setelah autentikasi Firebase. `LocalProfilRepository` tidak mengunggah data, menyinkronkan antarperangkat, atau mengklaim konfirmasi server. UI menyebutkan data tersimpan di perangkat ini. Data lama tanpa UID tidak otomatis dimiliki wali yang pertama masuk dan tidak diimpor diam-diam.
+Dari root repositori, bentuk berkas pengaturan yang dipakai oleh Dart.
 
-`firestore.rules` masih rancangan lama `users/{uid}` dan belum digunakan oleh adapter baru. Jangan memasangnya sebagai aturan final multi-profil. Tahap cloud harus menggunakan jalur `wali/{uid}/profil/{profilId}` dari doktek, aturan per subkoleksi, validasi data, dan tes emulator penolakan akses tanpa login/antarwali sebelum deployment. Menyiapkan Authentication tidak otomatis menyelesaikan aturan Firestore.
+```powershell
+$hasil = firebase apps:sdkconfig WEB '1:262282560966:web:0003e6768be493834cdec7' --project numi-imun --json
+if ($LASTEXITCODE -ne 0) { throw 'Konfigurasi Web belum diperoleh.' }
+$cfg = ($hasil | ConvertFrom-Json).result.sdkConfig
+[ordered]@{
+  NUMI_FIREBASE_API_KEY = $cfg.apiKey
+  NUMI_FIREBASE_APP_ID = $cfg.appId
+  NUMI_FIREBASE_PROJECT_ID = $cfg.projectId
+  NUMI_FIREBASE_SENDER_ID = $cfg.messagingSenderId
+  NUMI_FIREBASE_AUTH_DOMAIN = $cfg.authDomain
+} | ConvertTo-Json | Set-Content app/firebase-web.local.json -Encoding utf8NoBOM
+cd app
+flutter run -d chrome --dart-define-from-file=firebase-web.local.json
+flutter build web --dart-define-from-file=firebase-web.local.json
+```
 
-Database lokal kini dipisah per UID dan record memvalidasi pemilik/profil. SharedPreferences menjadi sumber migrasi cache ber-UID; salinan lama dipertahankan. Diagnostic, lesson dan mastery memakai snapshot soal, checkpoint respons, resume, dan finalisasi idempoten pada database Sembast. Bukti file Windows/browser serta batasnya ada di [CHECKPOINT-ALUR.md](../docs/03-implementasi/CHECKPOINT-ALUR.md). Proses mati Android, konflik dua perangkat, dan sinkronisasi masih bagian I08. Data lokal belum dienkripsi.
+Domain yang membuka popup login harus terdaftar di Firebase Auth. Konfigurasi SDK lokal diabaikan Git. Credential privat dikelola di luar repositori. [Panduan setup FlutterFire](https://firebase.google.com/docs/flutter/setup).
+
+## Data dan sinkronisasi
+
+Sembast tetap menyimpan respons pertama, snapshot butir, checkpoint dan finalisasi lokal. Kunci database dipisah per UID. Firebase Auth mengelola sesi wali. Tombol **Sinkronisasi** pada pemilih profil meminta persetujuan di perangkat sebelum mengirim nama panggilan, kelas, jawaban, dan progres. Sesudah persetujuan, aplikasi mencoba mengirim perubahan tiap 30 detik selama sesi akun aktif. Gunakan **Sinkronkan sekarang** dari pemilih profil untuk mengambil pembaruan sebelum membuka profil. Mematikan sinkronisasi menghentikan pengiriman berikutnya dari perangkat.
+
+Cloud memakai `wali/{uid}` dan `wali/{uid}/profil/{profilId}`. Setiap profil memiliki snapshot `DataBelajar` dan sidik revisi. Transaksi Firestore membandingkan revisi dasar. Sembast mencatat sidik kiriman sebelum transaksi sehingga respons commit yang hilang dapat dicocokkan saat mencoba lagi. Jika kedua perangkat mengubah profil dari revisi yang sama, aplikasi melaporkan konflik dan menyimpan kedua salinan. Reset progres dari ruang wali menjadi revisi baru dan ikut terkirim jika sinkronisasi aktif.
+
+Implementasi saat ini memakai satu dokumen per profil agar seluruh snapshot dapat dipulihkan secara atomik. Riwayat panjang akan mencapai batas ukuran dokumen Firestore. Rancangan subkoleksi sesi/respons, penggabungan konflik, penghapusan cloud permanen, dan validasi server atas bukti mastery/reward masih terbuka. Data demo tanpa UID tetap milik demo. [Batas ukuran Firestore](https://firebase.google.com/docs/firestore/quotas).
+
+## Emulator lokal
+
+Dari root, gunakan JDK 21 dan Node.js 22 atau lebih baru.
+
+```powershell
+firebase emulators:exec --only auth,firestore --project demo-numi --config firebase/firebase.json "node --test firebase/firestore.rules.test.mjs"
+firebase emulators:start --only auth,firestore --project demo-numi --config firebase/firebase.json
+```
+
+Dengan emulator berjalan, dari terminal lain di folder `app` jalankan:
+
+```powershell
+flutter run -d chrome -t tool/verifikasi_firebase_emulator.dart
+```
+
+Layar menampilkan `NUMI_FIREBASE_LULUS` setelah mengunggah checkpoint lesson, memulihkannya di database lokal kedua, dan membuktikan penolakan antar-UID. Untuk emulator Android, targetkan perangkat dan gunakan `--dart-define=NUMI_FIREBASE_EMULATOR_HOST=10.0.2.2`. Harness membuat akun anonim di emulator dengan proyek `demo-numi`.
+
+Firestore API proyek tim melaporkan HTTP 403 karena layanan masih nonaktif saat diperiksa. Untuk staging, aktifkan Cloud Firestore, pilih lokasi database, kemudian pasang aturan dan pengecualian indeks setelah pengujian dan persetujuan deployment. Hasil emulator tidak mencakup Firestore proyek tim.

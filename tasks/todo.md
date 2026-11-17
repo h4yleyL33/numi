@@ -27,7 +27,7 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 ## I03 — Asesmen tanpa bocoran kunci
 
 - [x] Diagnostic dan mastery menunda umpan balik; lesson tetap langsung; tombol kirim muncul sesudah pilihan.
-- [ ] Pembahasan seluruh blok ditampilkan setelah blok tersimpan, dengan hasil yang sesuai butir pertama.
+- [x] Pembahasan respons pertama dan penjelasan tersedia pada hasil diagnostic dan mastery setelah asesmen tersimpan.
 - Penerimaan: tes widget memastikan kunci/banner/XP tidak muncul saat blok tes; klik ganda tidak menambah respons.
 - Verifikasi: test widget pemutar soal dan integrasi layar hasil.
 - Dependensi: I01; penyelesaian pembahasan bergantung I07.
@@ -35,7 +35,8 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 ## I04 — Akun Google wali
 
 - [x] Siapkan kontrak dan adapter Google/Firebase native serta web; layar login, batal, gagal/retry, dan logout; bootstrap menahan akses sebelum autentikasi.
-- [ ] Pasang konfigurasi Firebase tim dan verifikasi login/logout nyata pada Android. Proyek tim belum dibuat; Android SDK belum tersedia pada lingkungan ini.
+- [x] Daftarkan Android dan Web di proyek `numi-imun`, unduh konfigurasi SDK, dan integrasikan inisialisasi.
+- [ ] Daftarkan SHA sertifikat Android, lalu verifikasi Google login, pembatalan, persistensi sesi, dan pergantian akun pada perangkat.
 - Penerimaan: data pribadi baru dimuat setelah UID sah; tidak ada token pada data siswa; logout mengosongkan state pribadi.
 - Verifikasi: unit adapter, integrasi login Android, batal/offline/logout; build APK debug.
 - Dependensi: I00, konfigurasi Firebase. Berkas: bootstrap, auth repository/controller, layar akun.
@@ -43,7 +44,8 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 ## I05 — Beberapa profil dan isolasi akun
 
 - [x] Daftar/pilih/tambah/ubah profil lokal dalam UID wali; pisahkan riwayat per profil dan buang route/state saat ganti konteks akun/profil.
-- [ ] Migrasi lokal dimiliki akun setelah konfirmasi wali; integrasikan cloud dan buktikan isolasi melalui emulator aturan Firestore.
+- [x] Integrasikan snapshot cloud per profil dengan persetujuan wali dan buktikan isolasi UID melalui emulator aturan.
+- [ ] Migrasi data demo tanpa UID setelah konfirmasi wali. Siapkan Firestore staging, pemecahan snapshot ke subkoleksi, dan siklus penghapusan data cloud.
 - Penerimaan: pergantian profil menghentikan sesi sebelumnya; data profil dan cache tidak bocor antarwali; kelas berubah tanpa reset.
 - Verifikasi: pengujian dua wali dan dua profil; emulator aturan Firestore menolak tanpa login dan UID lain.
 - Dependensi: I02, I04. Berkas: account/profile state, repository, profile screens, Firestore rules/test.
@@ -72,7 +74,8 @@ I06/I07 masih parsial. Rincian cakupan 12 butir awal, migrasi, dan batas bukti a
 
 - [x] Irisan mastery lokal: database transaksi, snapshot butir/versi/urutan, command ID tetap, respons pertama+cursor, gagal/retry, resume dan finalisasi reward sekali per sesi.
 - [x] Checkpoint lesson dan diagnostic adaptif: blok berikutnya atomik, pemulihan pembahasan/Lanjut, retry hasil akhir, finalisasi aktivitas/reward sekali per sesi.
-- [ ] Lengkapkan status sinkronisasi/cloud dan verifikasi proses Android dihentikan.
+- [x] Tampilkan pengiriman tertunda dan konflik. Simpan dasar revisi dan sidik kiriman saat retry.
+- [ ] Selesaikan penyelesaian konflik dari UI dan verifikasi proses Android dihentikan.
 - Penerimaan: command ID tetap dan deduplikasi; jawaban berbeda tidak menimpa pertama; finalisasi ulang tidak menggandakan XP; status lokal/pending/synced/konflik dibedakan.
 - Verifikasi: repository failure/retry/restart, proses Android dihentikan, konflik dua perangkat, emulator cloud.
 - Dependensi: I05–I07. Berkas: session/response models, adapter durabel lokal, cloud repository, quiz/controller/bootstrap.
@@ -90,14 +93,16 @@ I08 masih parsial. [Catatan checkpoint mastery](../docs/03-implementasi/CHECKPOI
 
 ## I10 — Mastery, reward, dan pemeriksaan ulang
 
-- [ ] Lima butir baru, nilai respons pertama, pilot 5/5; pembahasan sesudah blok; paket ulang sepadan dan jadwal 3–7 hari.
+- [x] Lima respons pertama, ambang pilot 5/5, pembahasan setelah tes tersimpan, latihan remedial, dan pemeriksaan ulang setelah lima hari.
+- [ ] Buktikan kesepadanan tingkat kesulitan paket pemeriksaan ulang bersama validator.
 - Penerimaan: reward hanya sekali setelah commit; XP terpisah dari bukti; hasil menjelaskan keterampilan/versi/keterbatasan, bukan penguasaan seluruh fase.
 - Verifikasi: unit batas skor/retensi, integrasi finalisasi ganda dan gagal simpan.
 - Dependensi: I07–I09. Berkas: mastery, progress service, session finalization, hasil sesi.
 
 ## I11 — Progres anak dan wali
 
-- [ ] Pisahkan aktivitas dari kemampuan; tampilkan waktu ukur, jumlah butir, bantuan, retensi, dan materi belum diuji.
+- [x] Pisahkan aktivitas dari kemampuan di balik gerbang wali. Tampilkan hasil penempatan terakhir, mastery, jumlah butir, bantuan, waktu ukur, dan jadwal periksa ulang.
+- [ ] Simpan dan tampilkan riwayat percobaan diagnostic secara terstruktur serta evaluasi retensi per subketerampilan.
 - Penerimaan: wali membuka pengaturan/rincian melalui gerbang; pesan maskot tidak menutupi tugas; status memakai teks/ikon.
 - Verifikasi: widget akses wali, domain streak/lencana/pesan, pemeriksaan aksesibilitas.
 - Dependensi: I05, I07–I10.
@@ -108,3 +113,5 @@ I08 masih parsial. [Catatan checkpoint mastery](../docs/03-implementasi/CHECKPOI
 - [ ] Uji Android API 26+, RAM 2/4 GB, 360–412 dp, landscape, teks besar, kegagalan jaringan/simpan dan proses mati.
 - [ ] Susun rencana pilot enam kelas, ukur target NFR dengan peserta/perangkat/materi/bantuan yang dicatat, baru tulis hasil Bab IV.
 - Dependensi: I03–I11. Target pilot dan tanggal Gantt bukan klaim pekerjaan telah selesai.
+
+Pemetaan kode, tes, dan dependensi per item tersedia di [verifikasi rilis](../docs/04-pengujian/VERIFIKASI-RILIS.md).

@@ -7,7 +7,9 @@ Matematika Kurikulum Merdeka (BSKAP 046/H/KR/2025). Cakupan awal berisi 12 topik
 Kelas membantu menentukan titik awal, sementara rancangan pembelajaran mengikuti bukti
 kemampuan per keterampilan. Profil berisi nama panggilan dan satu kelas 1–6. Rancangan terbaru
 memakai akun Google wali dan beberapa profil anak. Adapter serta alur profil lokal per akun
-sudah tersedia; konfigurasi Firebase tim dan login nyata belum diverifikasi.
+sudah tersedia. Aplikasi Android dan Web terdaftar di proyek Firebase `numi-imun`.
+Sinkronisasi per profil tersedia dengan persetujuan wali dan diuji di Firebase Emulator.
+Rilis masih memerlukan verifikasi login Google dan runtime Android.
 
 Baseline pengembangan berdasarkan seluruh PRD serta PPL/doktek Bab I–III tersedia di
 [`docs/03-implementasi`](docs/03-implementasi/README.md). Urutan dan kriteria pekerjaan ada di
@@ -57,7 +59,7 @@ numi/
     tools/buat_svg.mjs    pembuat aset SVG
   prd/                    PRD, kajian UI anak, kurikulum kelas 1-3 dan 4-6, redesign UI dan mockup
   app/                    aplikasi Flutter
-  firebase/               rancangan aturan Firestore
+  firebase/               aturan, indeks, dan pengujian Firebase Emulator
   output/                 PDF dokumen dan arsip UML
 ```
 
@@ -80,13 +82,13 @@ belum termasuk 12 topik awal.
 
 ```
 app/lib/
-  main.dart               memuat data, lalu menjalankan aplikasi
+  main.dart               inisialisasi Firebase atau demo pengembangan lokal
   app.dart
   core/                   konfigurasi, tema, utilitas, widget bersama
   data/
     models/               entitas sesuai ERD (Siswa, Topik, Soal, Jawaban, SkillMap, ...)
     content/              12 topik, lesson, lencana, kalimat maskot, generator soal
-    repositories/         kontrak NumiRepository dan penyimpanan lokal
+    repositories/         autentikasi, Sembast per UID dan sinkronisasi Firestore
   domain/                 diagnostic adaptif, skill map, learning path, progres, maskot
   state/                  NumiController (Riverpod)
   features/               layar per fitur
@@ -111,7 +113,7 @@ menunjuk ke folder atau berkasnya.
 
 ## Menjalankan
 
-Flutter 3.47 terpasang di `D:\khalee\flutter`. Dari folder `app`:
+Gunakan Flutter 3.47 dan Dart 3.13. Dari folder `app`:
 
 ```bash
 flutter pub get
@@ -125,14 +127,11 @@ flutter test
 flutter run -d chrome --dart-define=NUMI_LOCAL_DEMO=true
 ```
 
-Demo memakai `LocalNumiRepository` dan hanya tersedia pada build non-release. Alur akun bawaan
-memakai adapter Google/Firebase dan `LocalProfilRepository` per UID; data belajar tetap di
-perangkat. Sebelum konfigurasi Firebase, aplikasi menampilkan layanan akun belum tersedia.
-Ikuti [panduan Firebase](firebase/README.md) setelah proyek tim dibuat. Firestore, migrasi data
-tanpa UID ke akun belum diintegrasikan. Checkpoint diagnostic, lesson dan mastery lokal sudah
-tersedia; lihat [catatan implementasi](docs/03-implementasi/CHECKPOINT-ALUR.md).
-`firebase/firestore.rules` masih rancangan
-jalur lama dan belum menjadi aturan final beberapa profil.
+Demo memakai `LocalNumiRepository` dan tersedia pada build non-release. Alur akun memakai
+Google/Firebase dan database belajar lokal per UID. Wali dapat mengaktifkan sinkronisasi dari
+pemilih profil. Konfigurasi SDK, pengujian emulator, dan perintah membuat APK ada di
+[panduan Firebase](firebase/README.md). Bukti verifikasi dan pekerjaan tersisa ada di
+[catatan verifikasi rilis](docs/04-pengujian/VERIFIKASI-RILIS.md).
 
 ## Tautan kerja
 
