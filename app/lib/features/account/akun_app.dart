@@ -98,12 +98,17 @@ class _SesiWaliState extends State<_SesiWali> {
   String? _pesan;
   int _generasi = 0;
   final _navigator = GlobalKey<NavigatorState>();
-  final _navigatorProfil = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> _navigatorProfil = GlobalKey<NavigatorState>();
   Timer? _ulangSinkron;
 
   LocalProfilRepository? get _cloud {
     final repo = _repository;
     return repo is LocalProfilRepository && repo.cloud != null ? repo : null;
+  }
+
+  int _gantiGenerasi() {
+    _navigatorProfil = GlobalKey<NavigatorState>();
+    return ++_generasi;
   }
 
   @override
@@ -164,6 +169,7 @@ class _SesiWaliState extends State<_SesiWali> {
       ),
     );
     if (!mounted || pilihan == null || _menunggu) return;
+    _gantiGenerasi();
     setState(() => _menunggu = true);
     String pesan;
     try {
@@ -191,7 +197,7 @@ class _SesiWaliState extends State<_SesiWali> {
 
   Future<void> _pilih(Siswa siswa, bool baru) async {
     if (_menunggu) return;
-    final generasi = ++_generasi;
+    final generasi = _gantiGenerasi();
     setState(() {
       _aktif = null;
       _menunggu = true;
@@ -218,7 +224,7 @@ class _SesiWaliState extends State<_SesiWali> {
   }
 
   void _kelola() {
-    _generasi++;
+    _gantiGenerasi();
     setState(() {
       _aktif = null;
       _pesan = null;
@@ -227,7 +233,7 @@ class _SesiWaliState extends State<_SesiWali> {
 
   Future<void> _keluar() async {
     if (_menunggu) return;
-    _generasi++;
+    _gantiGenerasi();
     // Tutup data dan route sebelum menunggu SDK keluar.
     setState(() {
       _aktif = null;
