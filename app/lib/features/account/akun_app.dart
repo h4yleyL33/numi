@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +7,7 @@ import '../../app.dart';
 import '../../data/models/data_belajar.dart';
 import '../../data/models/siswa.dart';
 import '../../data/repositories/akun_repository.dart';
+import '../../data/repositories/local_profil_repository.dart';
 import '../../data/repositories/numi_repository.dart';
 import '../../data/repositories/profil_repository.dart';
 import '../../state/numi_controller.dart';
@@ -95,6 +98,96 @@ class _SesiWaliState extends State<_SesiWali> {
   String? _pesan;
   int _generasi = 0;
   final _navigator = GlobalKey<NavigatorState>();
+  final _navigatorProfil = GlobalKey<NavigatorState>();
+  Timer? _ulangSinkron;
+
+  LocalProfilRepository? get _cloud {
+    final repo = _repository;
+    return repo is LocalProfilRepository && repo.cloud != null ? repo : null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final cloud = _cloud;
+    if (cloud != null) {
+      cloud.kirimKeCloud();
+      _ulangSinkron = Timer.periodic(const Duration(seconds: 30), (_) {
+        if (!cloud.cloudAktif) return;
+        unawaited(_ulangKirim(cloud));
+      });
+    }
+  }
+
+  Future<void> _ulangKirim(LocalProfilRepository repo) async {
+    final sebelum = repo.hasilSinkron;
+    final sesudah = await repo.sinkron(tarik: false);
+    if (mounted && _aktif == null && !_menunggu && sebelum != sesudah) {
+      setState(() => _pesan = null);
+    }
+  }
+
+  @override
+  void dispose() {
+    _ulangSinkron?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _aturSinkron(LocalProfilRepository repo) async {
+    final dialogContext = _navigatorProfil.currentState?.overlay?.context;
+    if (dialogContext == null || _menunggu) return;
+    final pilihan = await showDialog<bool>(
+      context: dialogContext,
+      builder: (context) => AlertDialog(
+        title: const Text('Sinkronisasi antarperangkat'),
+        content: const Text(
+          'Akun wali ini dapat menyimpan nama panggilan, kelas, jawaban, dan '
+          'progres anak ke Firebase untuk dipakai di perangkat lain. '
+          'Mematikan sinkronisasi di perangkat ini menghentikan pengiriman '
+          'berikutnya. Salinan yang sudah tersimpan tetap tersedia.',
+        ),
+        actions: [
+          if (repo.cloudAktif)
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Matikan di perangkat ini'),
+            ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(repo.cloudAktif ? 'Sinkronkan sekarang' : 'Setujui'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || pilihan == null || _menunggu) return;
+    setState(() => _menunggu = true);
+    String pesan;
+    try {
+      await repo.aturCloud(pilihan);
+      final hasil = pilihan
+          ? await repo.sinkron(tarik: true)
+          : HasilSinkronProfil.lokal;
+      pesan = switch (hasil) {
+        HasilSinkronProfil.selesai => 'Sinkronisasi selesai.',
+        HasilSinkronProfil.tertunda =>
+          'Sinkronisasi tertunda. Data di perangkat masih tersedia.',
+        HasilSinkronProfil.konflik =>
+          'Profil berubah di dua perangkat. Kedua salinan dipertahankan.',
+        HasilSinkronProfil.lokal => 'Sinkronisasi di perangkat ini dimatikan.',
+      };
+    } catch (_) {
+      pesan = 'Pengaturan sinkronisasi belum tersimpan. Coba lagi.';
+    }
+    if (!mounted) return;
+    setState(() {
+      _menunggu = false;
+      _pesan = pesan;
+    });
+  }
 
   Future<void> _pilih(Siswa siswa, bool baru) async {
     if (_menunggu) return;
@@ -126,7 +219,10 @@ class _SesiWaliState extends State<_SesiWali> {
 
   void _kelola() {
     _generasi++;
-    setState(() => _aktif = null);
+    setState(() {
+      _aktif = null;
+      _pesan = null;
+    });
   }
 
   Future<void> _keluar() async {
@@ -158,13 +254,36 @@ class _SesiWaliState extends State<_SesiWali> {
     }
     final aktif = _aktif;
     if (aktif == null) {
+      final cloud = _cloud;
       return NumiApp(
         key: ValueKey('profil-$_generasi'),
+        navigatorKey: _navigatorProfil,
+        bilahWali: cloud == null
+            ? null
+            : SafeArea(
+                bottom: false,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: () => _aturSinkron(cloud),
+                    icon: const Icon(Icons.cloud_outlined),
+                    label: const Text('Sinkronisasi'),
+                  ),
+                ),
+              ),
         home: ProfilScreen(
           repository: _repository,
           onPilih: _pilih,
           onKeluar: _keluar,
-          pesan: _pesan,
+          pesan:
+              _pesan ??
+              (cloud?.cloudAktif == true
+                  ? switch (cloud!.hasilSinkron) {
+                      HasilSinkronProfil.konflik => 'Profil berubah di dua perangkat. Kedua salinan dipertahankan.',
+                      HasilSinkronProfil.tertunda => 'Sinkronisasi tertunda. Ketuk Sinkronisasi untuk mencoba lagi.',
+                      _ => null,
+                    }
+                  : null),
         ),
       );
     }

@@ -16,6 +16,7 @@ firebase/.firebase/
 firebase-debug.log
 firestore-debug.log
 app/android/app/google-services.json
+app/firebase-web.local.json
 
 # kunci dan rahasia
 *.jks

@@ -23,6 +23,17 @@ class PasanganSoal {
   const PasanganSoal(this.kiri, this.kanan);
   final String kiri;
   final String kanan;
+
+  Map<String, String> toJson() => {'kiri': kiri, 'kanan': kanan};
+
+  factory PasanganSoal.fromJson(Object? nilai) => switch (nilai) {
+    [final String kiri, final String kanan] => PasanganSoal(kiri, kanan),
+    {'kiri': final String kiri, 'kanan': final String kanan} => PasanganSoal(
+      kiri,
+      kanan,
+    ),
+    _ => throw const FormatException('Pasangan soal tidak sah.'),
+  };
 }
 
 /// Entitas Soal (DATA-002). Soal dibangkitkan dari templat di GeneratorSoal.
@@ -72,6 +83,8 @@ class Soal {
   final String jawabanBenar;
   final List<PasanganSoal> pasangan;
   final String penjelasan;
+  String get kompetensiId => skillId ?? '$topikId-jangkar';
+  String get statusValidasi => 'PENDING_EDUCATOR_REVIEW';
 
   bool periksa(String jawaban) => jawaban.trim() == jawabanBenar;
 
@@ -79,6 +92,7 @@ class Soal {
     'id': id,
     'skillId': skillId,
     'versi': versi,
+    'statusValidasi': statusValidasi,
     'topikId': topikId,
     'jenis': jenis.name,
     'tingkat': tingkat,
@@ -93,7 +107,7 @@ class Soal {
         : [gambarPecahan!.pembilang, gambarPecahan!.penyebut],
     'pilihan': pilihan,
     'jawabanBenar': jawabanBenar,
-    'pasangan': pasangan.map((p) => [p.kiri, p.kanan]).toList(),
+    'pasangan': pasangan.map((p) => p.toJson()).toList(),
     'penjelasan': penjelasan,
   };
 
@@ -118,9 +132,7 @@ class Soal {
           ),
     pilihan: List<String>.from(j['pilihan'] as List),
     jawabanBenar: j['jawabanBenar'] as String,
-    pasangan: (j['pasangan'] as List)
-        .map((p) => PasanganSoal((p as List)[0] as String, p[1] as String))
-        .toList(),
+    pasangan: (j['pasangan'] as List).map(PasanganSoal.fromJson).toList(),
     penjelasan: j['penjelasan'] as String,
   );
 }

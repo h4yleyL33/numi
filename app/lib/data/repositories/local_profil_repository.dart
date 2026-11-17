@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +6,7 @@ import 'package:sembast/sembast.dart';
 
 import '../models/data_belajar.dart';
 import '../models/siswa.dart';
+import 'cloud_profil_repository.dart';
 import 'numi_repository.dart';
 import 'profil_repository.dart';
 
@@ -17,6 +19,7 @@ class LocalProfilRepository implements ProfilRepository {
     required this.uidAktif,
     this.database,
     this.databaseUntuk,
+    this.cloud,
   }) {
     if (uid.isEmpty) throw ArgumentError('UID wali wajib diisi.');
   }
@@ -24,6 +27,7 @@ class LocalProfilRepository implements ProfilRepository {
   final SharedPreferences _prefs;
   final Database? database;
   final Future<Database> Function()? databaseUntuk;
+  final CloudProfilRepository? cloud;
   Database? _terbuka;
 
   Future<Database?> _db() async {
@@ -34,10 +38,108 @@ class LocalProfilRepository implements ProfilRepository {
   }
 
   final _store = StoreRef<String, String>('wali');
+  final _metadata = stringMapStoreFactory.store('sinkron-profil');
   final String uid;
   final String? Function() uidAktif;
   Future<void> _antrean = Future.value();
   String get _kunci => 'numi.wali.v1.${base64Url.encode(utf8.encode(uid))}';
+  String get _kunciIzinCloud => '$_kunci.izinCloud';
+  bool get cloudAktif => _prefs.getBool(_kunciIzinCloud) ?? false;
+  Future<HasilSinkronProfil>? _sinkronBerjalan;
+  HasilSinkronProfil hasilSinkron = HasilSinkronProfil.lokal;
+
+  Future<void> aturCloud(bool aktif) async {
+    _periksaAkun();
+    if (!await _prefs.setBool(_kunciIzinCloud, aktif)) {
+      throw StateError('Izin sinkronisasi belum tersimpan.');
+    }
+  }
+
+  void kirimKeCloud() {
+    if (cloudAktif && uidAktif() == uid) {
+      unawaited(sinkron(tarik: false));
+    }
+  }
+
+  Future<HasilSinkronProfil> sinkron({required bool tarik}) async {
+    // Mode tarik hanya dipanggil ketika layar pemilih profil menahan navigasi.
+    if (tarik && _sinkronBerjalan != null) await _sinkronBerjalan;
+    return _sinkronBerjalan ??= _jalankanSinkron(tarik)
+        .then((hasil) => hasilSinkron = hasil)
+        .whenComplete(() => _sinkronBerjalan = null);
+  }
+
+  Future<HasilSinkronProfil> _jalankanSinkron(bool tarik) async {
+    final server = cloud;
+    if (server == null || !cloudAktif || uidAktif() != uid) {
+      return HasilSinkronProfil.lokal;
+    }
+    try {
+      final db = await _db();
+      if (db == null) return HasilSinkronProfil.tertunda;
+      final lokal = await _baca();
+      final remote = await server.daftar();
+      var konflik = false;
+      var adaPembaruanCloud = false;
+      for (final id in {...lokal.keys, ...remote.keys}) {
+        _periksaAkun();
+        if (!cloudAktif) return HasilSinkronProfil.lokal;
+        final data = lokal[id];
+        final dataCloud = remote[id];
+        final versiLokal = data == null ? null : sidikDataBelajar(data);
+        final versiCloud = dataCloud == null
+            ? null
+            : sidikDataBelajar(dataCloud);
+        final record = _metadata.record(id);
+        final metadata = await record.get(db);
+        final sedangDikirim = metadata?['dikirim'];
+        final dasar = sedangDikirim != null && sedangDikirim == versiCloud
+            ? versiCloud
+            : metadata?['dasar'] as String?;
+
+        if (versiLokal == versiCloud) {
+          await record.put(db, {'dasar': versiCloud});
+        } else if (dataCloud != null && (data == null || versiLokal == dasar)) {
+          if (!tarik) {
+            adaPembaruanCloud = true;
+            continue;
+          }
+          final dipulihkan = await db.transaction((txn) async {
+            final profil = _urai(
+              await _store.record(uid).get(txn) ?? _prefs.getString(_kunci),
+            );
+            final terkini = profil[id];
+            if ((terkini == null ? null : sidikDataBelajar(terkini)) !=
+                versiLokal) {
+              return false;
+            }
+            if (!cloudAktif) return false;
+            profil[id] = dataCloud;
+            await _store.record(uid).put(txn, _enkode(profil));
+            await record.put(txn, {'dasar': versiCloud});
+            return true;
+          });
+          konflik = konflik || !dipulihkan;
+        } else if (data != null && versiCloud == dasar) {
+          await record.put(db, {'dasar': dasar, 'dikirim': versiLokal});
+          _periksaAkun();
+          if (!cloudAktif) return HasilSinkronProfil.lokal;
+          if (await server.simpan(data, versiDasar: dasar)) {
+            await record.put(db, {'dasar': versiLokal});
+          } else {
+            konflik = true;
+          }
+        } else {
+          konflik = true;
+        }
+      }
+      if (konflik) return HasilSinkronProfil.konflik;
+      if (adaPembaruanCloud) return HasilSinkronProfil.tertunda;
+      return HasilSinkronProfil.selesai;
+    } catch (_) {
+      return HasilSinkronProfil.tertunda;
+    }
+  }
 
   void _periksaAkun() {
     if (uidAktif() != uid) throw StateError('Sesi akun sudah berubah.');
@@ -154,6 +256,8 @@ class LocalProfilRepository implements ProfilRepository {
   NumiRepository untukProfil(String id, {bool Function()? masihAktif}) =>
       _DataProfilRepository(this, id, masihAktif ?? () => true);
 }
+
+enum HasilSinkronProfil { lokal, selesai, tertunda, konflik }
 
 class _DataProfilRepository implements NumiRepository {
   _DataProfilRepository(this.pemilik, this.id, this.masihAktif);

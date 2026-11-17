@@ -1,31 +1,65 @@
 rules_version = '2';
 
-// Rancangan aturan untuk FirestoreNumiRepository. Belum dipasang karena proyek Firebase
-// tim belum dibuat. Strukturnya mengikuti ERD-001: satu dokumen per siswa, dan setiap
-// entitas milik siswa disimpan sebagai subkoleksi.
-//
-// users/{uid}
-//   skillMap/{topikId}, diagnosticResult/{topikId}, lessonProgress/{lessonId},
-//   masteryResult/{id}, jawaban/{id}, siswaBadge/{badgeId}, streakLog/{tanggal},
-//   companionMessage/{id}
-// konten/{topikId}  (topik, lesson, dan templat soal, hanya dibaca aplikasi)
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Data anak hanya bisa dibaca dan ditulis oleh akunnya sendiri (NFR-005).
-    match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
-
-      match /{koleksi}/{dokumen} {
-        allow read, write: if request.auth != null && request.auth.uid == uid;
-      }
+    function wali(uid) {
+      return request.auth != null && request.auth.uid == uid;
     }
 
-    // Konten belajar diisi tim lewat konsol, aplikasi hanya membaca.
-    match /konten/{dokumen=**} {
-      allow read: if request.auth != null;
-      allow write: if false;
+    function bentuk(data, fields) {
+      return data.keys().hasOnly(fields) && data.keys().hasAll(fields);
+    }
+
+    function siswaSah(siswa, uid, profilId) {
+      return siswa is map && bentuk(siswa, [
+        'id', 'waliUid', 'nama', 'kelas', 'usia', 'kelompokBelajar', 'dibuatPada'
+      ]) && siswa.id == profilId && siswa.waliUid == uid
+        && siswa.nama is string && siswa.nama.size() >= 1 && siswa.nama.size() <= 30
+        && siswa.nama.matches('.*[^ ].*')
+        && siswa.kelas is int && siswa.kelas >= 1 && siswa.kelas <= 6
+        && siswa.usia == null && siswa.kelompokBelajar == null
+        && siswa.dibuatPada is string && siswa.dibuatPada.size() <= 35;
+    }
+
+    function belajarSah(data, uid, profilId) {
+      return data is map && bentuk(data, [
+        'versi', 'siswa', 'sesiLesson', 'sesiDiagnostic', 'sesiMastery',
+        'buktiSkill', 'aksesMateri', 'skillMap', 'hasilDiagnostic', 'progresLesson',
+        'riwayatJawaban', 'hasilMastery', 'lencana', 'streakLog', 'pesanMaskot', 'xp'
+      ]) && data.versi == 5 && siswaSah(data.siswa, uid, profilId)
+        && data.sesiLesson is list
+        && (data.sesiDiagnostic == null || data.sesiDiagnostic is map)
+        && data.sesiMastery is list && data.buktiSkill is list
+        && data.aksesMateri is list && data.skillMap is list
+        && data.hasilDiagnostic is list && data.progresLesson is list
+        && data.riwayatJawaban is list && data.hasilMastery is list
+        && data.lencana is list && data.streakLog is list && data.pesanMaskot is list
+        && data.xp is int && data.xp >= 0;
+    }
+
+    function snapshotSah(uid, profilId) {
+      let isi = request.resource.data;
+      return bentuk(isi, ['versi', 'dasar', 'data'])
+        && profilId.matches('profil-[0-9]{1,20}')
+        && isi.versi is string && isi.versi.matches('[a-f0-9]{64}')
+        && belajarSah(isi.data, uid, profilId);
+    }
+
+    match /wali/{uid} {
+      allow get: if wali(uid);
+      allow create, update: if wali(uid)
+        && bentuk(request.resource.data, ['uid', 'versi'])
+        && request.resource.data.uid == uid && request.resource.data.versi == 1;
+
+      match /profil/{profilId} {
+        allow get, list: if wali(uid);
+        allow create: if wali(uid) && snapshotSah(uid, profilId)
+          && request.resource.data.dasar == null;
+        allow update: if wali(uid) && snapshotSah(uid, profilId)
+          && request.resource.data.dasar == resource.data.versi
+          && request.resource.data.versi != resource.data.versi
+          && request.resource.data.data.siswa.dibuatPada == resource.data.data.siswa.dibuatPada;
+      }
     }
   }
 }

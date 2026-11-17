@@ -70,7 +70,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'numi.data_belajar.v1': '{data-lama}',
     });
-    await bootstrap.main();
+    await tester.runAsync(bootstrap.main);
     await tester.pump();
     expect(find.text('Layanan akun belum tersedia'), findsOneWidget);
     expect(find.byType(DiagnosticIntroScreen), findsNothing);
