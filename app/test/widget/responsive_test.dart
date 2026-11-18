@@ -57,8 +57,13 @@ void main() {
       await tester.ensureVisible(find.text('Kelas 2'));
       await tester.tap(find.text('Kelas 2'));
       await tester.pump();
-      await tester.tap(find.text('Mulai Petualangan'));
+      await tester.tap(find.text('Periksa profil'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.ensureVisible(find.text('Simpan dan lanjut'));
+      await tester.tap(find.text('Simpan dan lanjut'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(milliseconds: 700));
       expect(repo.tersimpan!.siswa!.kelas, 2);
       expect(find.text('Membaca Peta'), findsOneWidget);

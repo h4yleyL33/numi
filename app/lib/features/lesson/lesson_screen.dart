@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/teks_matematika.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../data/content/daftar_topik.dart';
@@ -122,54 +123,59 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     final topik = topikById(widget.lesson.topikId);
     final sesi = _sesi;
     return Scaffold(
-      body: switch (_tahap) {
-        _Tahap.kenalan => _Kenalan(
-          lesson: widget.lesson,
-          namaPulau: topik.namaPulau,
-          onMulai: () => _jalankan(_buatSesi),
-        ),
-        _Tahap.soal => SafeArea(
-          child: PemutarSoal(
-            key: ValueKey(sesi!.id),
-            soal: sesi.soal,
-            konteks: KonteksJawaban.lesson,
-            jawabanAwal: sesi.jawaban,
-            menungguLanjut: sesi.menungguLanjut,
-            judul: '${topik.namaPulau} · ${widget.lesson.judul}',
-            simpanJawaban: (j) => ref
-                .read(numiControllerProvider.notifier)
-                .jawabLesson(
-                  widget.lesson.id,
-                  sesi.id,
-                  sesi.commandId(sesi.soal.indexWhere((s) => s.id == j.soalId)),
-                  j,
-                ),
-            simpanLanjut: (i) => ref
-                .read(numiControllerProvider.notifier)
-                .lanjutLesson(
-                  widget.lesson.id,
-                  sesi.id,
-                  '${sesi.id}/lanjut/$i',
-                ),
-            onSelesai: (_) => _jalankan(_finalisasi),
+      body: LatarKrayon(
+        topikId: topik.id,
+        child: switch (_tahap) {
+          _Tahap.kenalan => _Kenalan(
+            lesson: widget.lesson,
+            namaPulau: topik.namaPulau,
+            onMulai: () => _jalankan(_buatSesi),
           ),
-        ),
-        _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
-        _Tahap.gagal => GagalSimpanSesi(onCobaLagi: _cobaLagi!),
-        _Tahap.hasil => HasilSesiView(
-          ringkasan: _ringkasan!,
-          catatan: 'Hasil dan XP tersimpan di perangkat ini. Membuka hasil kembali tidak menambah XP.',
-          judul: _ringkasan!.lulus ? 'Lesson selesai!' : 'Sedikit lagi!',
-          tombolUtama: _ringkasan!.lulus ? 'Kembali ke Peta' : 'Coba lagi',
-          onUtama: _ringkasan!.lulus
-              ? () => Navigator.of(context).pop()
-              : _ulangi,
-          tombolKedua: _ringkasan!.lulus ? 'Latihan lagi' : 'Kembali ke Peta',
-          onKedua: _ringkasan!.lulus
-              ? _ulangi
-              : () => Navigator.of(context).pop(),
-        ),
-      },
+          _Tahap.soal => SafeArea(
+            child: PemutarSoal(
+              key: ValueKey(sesi!.id),
+              soal: sesi.soal,
+              konteks: KonteksJawaban.lesson,
+              jawabanAwal: sesi.jawaban,
+              menungguLanjut: sesi.menungguLanjut,
+              judul: '${topik.namaPulau} · ${widget.lesson.judul}',
+              simpanJawaban: (j) => ref
+                  .read(numiControllerProvider.notifier)
+                  .jawabLesson(
+                    widget.lesson.id,
+                    sesi.id,
+                    sesi.commandId(
+                      sesi.soal.indexWhere((s) => s.id == j.soalId),
+                    ),
+                    j,
+                  ),
+              simpanLanjut: (i) => ref
+                  .read(numiControllerProvider.notifier)
+                  .lanjutLesson(
+                    widget.lesson.id,
+                    sesi.id,
+                    '${sesi.id}/lanjut/$i',
+                  ),
+              onSelesai: (_) => _jalankan(_finalisasi),
+            ),
+          ),
+          _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
+          _Tahap.gagal => GagalSimpanSesi(onCobaLagi: _cobaLagi!),
+          _Tahap.hasil => HasilSesiView(
+            ringkasan: _ringkasan!,
+            catatan: 'Hasil dan XP tersimpan di perangkat ini. Membuka hasil kembali tidak menambah XP.',
+            judul: _ringkasan!.lulus ? 'Lesson selesai!' : 'Sedikit lagi!',
+            tombolUtama: _ringkasan!.lulus ? 'Kembali ke Peta' : 'Coba lagi',
+            onUtama: _ringkasan!.lulus
+                ? () => Navigator.of(context).pop()
+                : _ulangi,
+            tombolKedua: _ringkasan!.lulus ? 'Latihan lagi' : 'Kembali ke Peta',
+            onKedua: _ringkasan!.lulus
+                ? _ulangi
+                : () => Navigator.of(context).pop(),
+          ),
+        },
+      ),
     );
   }
 }

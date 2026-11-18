@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/chip_status.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../core/widgets/transisi.dart';
 import '../../data/content/daftar_lesson.dart';
@@ -34,12 +35,14 @@ class TopikSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(numiControllerProvider);
     final status = data.statusTopik(topik.id);
+    final kolom = kolomPulauKrayon(topik.id);
     final path = ref.watch(learningPathProvider);
     final lessons = lessonUntuk(topik.id);
     final siapMastery = path.siapMastery(topik.id, data);
-    final kurang = ref
-        .watch(skillMapServiceProvider)
-        .prasyaratBelumDikuasai(topik, {for (final t in daftarTopik) t.id: data.statusTopik(t.id)});
+    final kurang = ref.watch(skillMapServiceProvider).prasyaratBelumDikuasai(
+      topik,
+      {for (final t in daftarTopik) t.id: data.statusTopik(t.id)},
+    );
 
     void buka(Widget halaman) {
       Navigator.of(context).pop();
@@ -47,11 +50,10 @@ class TopikSheet extends ConsumerWidget {
     }
 
     return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.85),
-      decoration: const BoxDecoration(
-        color: NumiWarna.krem,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * 0.85,
       ),
+      decoration: kertasKrayon('panel-cerita'),
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -63,20 +65,41 @@ class TopikSheet extends ConsumerWidget {
                 child: Container(
                   width: 48,
                   height: 5,
-                  decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(topik.ikon, style: const TextStyle(fontSize: 48)),
+                  if (kolom != null)
+                    IlustrasiKrayon(
+                      kolom: kolom,
+                      lebar: 68,
+                      tinggi: 58,
+                      posisiY: 18 / 17,
+                      skalaY: 50 / 17,
+                    )
+                  else
+                    Text(topik.ikon, style: const TextStyle(fontSize: 48)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(topik.namaPulau, style: Theme.of(context).textTheme.headlineSmall),
-                        Text(topik.nama, style: const TextStyle(color: NumiWarna.tintaPudar, fontWeight: FontWeight.w600)),
+                        Text(
+                          topik.namaPulau,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          topik.nama,
+                          style: const TextStyle(
+                            color: NumiWarna.tintaPudar,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -94,28 +117,42 @@ class TopikSheet extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              Text('Bukti pada sampel: ${data.buktiSkill[topik.id]?.label ?? 'Belum dicoba'}',
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(
+                'Bukti pada sampel: ${data.buktiSkill[topik.id]?.label ?? 'Belum dicoba'}',
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
               if (data.buktiSkill[topik.id] case final bukti?)
-                Text('${bukti.benar}/${bukti.total} soal · bantuan ${bukti.bantuan} · '
+                Text(
+                  '${bukti.benar}/${bukti.total} soal · bantuan ${bukti.bantuan} · '
                   '${bukti.waktu.day}/${bukti.waktu.month}/${bukti.waktu.year}\n'
-                  '${bukti.versiKebijakan} · ${bukti.versiButir.join(', ')}'),
-              Text('Akses: ${data.aksesMateri[topik.id]?.alasan ?? 'Akses tersimpan dari versi sebelumnya.'}'),
+                  '${bukti.versiKebijakan} · ${bukti.versiButir.join(', ')}',
+                ),
+              Text(
+                'Akses: ${data.aksesMateri[topik.id]?.alasan ?? 'Akses tersimpan dari versi sebelumnya.'}',
+              ),
               const SizedBox(height: 16),
               if (data.sesiMastery[topik.id] case final sesi?)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: TombolNumi(
-                    label: sesi.selesai ? 'Lihat hasil test tersimpan' :
-                      'Lanjutkan test (${sesi.jawaban.length}/5)',
+                    label: sesi.selesai
+                        ? 'Lihat hasil test tersimpan'
+                        : 'Lanjutkan test (${sesi.jawaban.length}/5)',
                     onTap: () => buka(MasteryScreen(topik: topik)),
                   ),
                 ),
-              for (final lesson in lessons.where((l) => data.sesiLesson[l.id]?.selesai == false))
-                Padding(padding: const EdgeInsets.only(bottom: 12), child: TombolNumi(
-                  label: 'Lanjutkan ${lesson.judul}',
-                  onTap: () => buka(LessonScreen(lesson: lesson)))),
-              if (status == StatusTopik.terkunci || status == StatusTopik.belumTersedia)
+              for (final lesson in lessons.where(
+                (l) => data.sesiLesson[l.id]?.selesai == false,
+              ))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: TombolNumi(
+                    label: 'Lanjutkan ${lesson.judul}',
+                    onTap: () => buka(LessonScreen(lesson: lesson)),
+                  ),
+                ),
+              if (status == StatusTopik.terkunci ||
+                  status == StatusTopik.belumTersedia)
                 _Terkunci(kurang: kurang)
               else ...[
                 for (final (i, l) in lessons.indexed)
@@ -138,7 +175,10 @@ class TopikSheet extends ConsumerWidget {
               const SizedBox(height: 12),
               Text(
                 'Capaian: ${topik.capaian}',
-                style: const TextStyle(color: NumiWarna.tintaPudar, fontSize: 13),
+                style: const TextStyle(
+                  color: NumiWarna.tintaPudar,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
@@ -157,7 +197,10 @@ class _Terkunci extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -165,7 +208,12 @@ class _Terkunci extends StatelessWidget {
             children: [
               Icon(Icons.lock_rounded, color: NumiWarna.tintaPudar),
               SizedBox(width: 8),
-              Expanded(child: Text('Pulau ini masih tertutup kabut', style: TextStyle(fontWeight: FontWeight.w800))),
+              Expanded(
+                child: Text(
+                  'Pulau ini masih tertutup kabut',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -173,7 +221,10 @@ class _Terkunci extends StatelessWidget {
           for (final t in kurang)
             Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text('${t.ikon}  ${t.namaPulau}', style: const TextStyle(fontWeight: FontWeight.w700)),
+              child: Text(
+                '${t.ikon}  ${t.namaPulau}',
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
             ),
         ],
       ),
@@ -204,7 +255,10 @@ class _BarisLesson extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: selesai ? NumiWarna.benar : const Color(0xFFEDE7DA), width: 2),
+        border: Border.all(
+          color: selesai ? NumiWarna.benar : const Color(0xFFEDE7DA),
+          width: 2,
+        ),
       ),
       child: Row(
         children: [
@@ -213,16 +267,30 @@ class _BarisLesson extends StatelessWidget {
             backgroundColor: selesai ? NumiWarna.benar : NumiWarna.cahayaMuda,
             child: selesai
                 ? const Icon(Icons.check_rounded, color: Colors.white)
-                : Text('$nomor', style: const TextStyle(fontWeight: FontWeight.w900, color: NumiWarna.tinta)),
+                : Text(
+                    '$nomor',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: NumiWarna.tinta,
+                    ),
+                  ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(lesson.judul, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                Text('${lesson.tipe.label} · ${AppConfig.soalPerLesson} soal',
-                    style: const TextStyle(color: NumiWarna.tintaPudar)),
+                Text(
+                  lesson.judul,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  '${lesson.tipe.label} · ${AppConfig.soalPerLesson} soal',
+                  style: const TextStyle(color: NumiWarna.tintaPudar),
+                ),
               ],
             ),
           ),
@@ -242,7 +310,11 @@ class _BarisLesson extends StatelessWidget {
 }
 
 class _BarisMercusuar extends StatelessWidget {
-  const _BarisMercusuar({required this.status, required this.siap, required this.onTap});
+  const _BarisMercusuar({
+    required this.status,
+    required this.siap,
+    required this.onTap,
+  });
 
   final StatusTopik status;
   final bool siap;
@@ -254,7 +326,9 @@ class _BarisMercusuar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [NumiWarna.malam, NumiWarna.malamTerang]),
+        gradient: const LinearGradient(
+          colors: [NumiWarna.malam, NumiWarna.malamTerang],
+        ),
         borderRadius: BorderRadius.circular(22),
       ),
       child: Column(
@@ -268,12 +342,20 @@ class _BarisMercusuar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Nyalakan Mercusuar',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17)),
+                    const Text(
+                      'Nyalakan Mercusuar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 17,
+                      ),
+                    ),
                     Text(
                       sudah
                           ? 'Mercusuar sudah menyala. Boleh dicoba lagi.'
-                          : (siap ? 'Mastery test, ${AppConfig.soalMastery} soal' : 'Selesaikan kedua lesson dulu'),
+                          : (siap
+                                ? 'Mastery test, ${AppConfig.soalMastery} soal'
+                                : 'Selesaikan kedua lesson dulu'),
                       style: const TextStyle(color: Colors.white70),
                     ),
                   ],
@@ -282,7 +364,10 @@ class _BarisMercusuar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          TombolNumi(label: sudah ? 'Coba lagi' : 'Mulai Mastery Test', onTap: siap || sudah ? onTap : null),
+          TombolNumi(
+            label: sudah ? 'Coba lagi' : 'Mulai Mastery Test',
+            onTap: siap || sudah ? onTap : null,
+          ),
         ],
       ),
     );

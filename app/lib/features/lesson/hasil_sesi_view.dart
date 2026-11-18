@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/konfeti.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../state/numi_controller.dart';
 import '../mascot/mascot_bubble.dart';
@@ -44,38 +45,68 @@ class HasilSesiView extends StatelessWidget {
                 Expanded(
                   child: ListView(
                     children: [
-                      if (hiasan != null) Center(child: hiasan!),
-                      Text(judul, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
-                      if (catatan != null) Text(catatan!, textAlign: TextAlign.center),
+                      if (hiasan != null)
+                        Container(
+                          decoration: kertasKrayon('panel-mint'),
+                          padding: const EdgeInsets.all(16),
+                          child: Center(child: hiasan!),
+                        ),
+                      Text(
+                        judul,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      if (catatan != null)
+                        Text(catatan!, textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          _Angka(label: 'Benar', nilai: '${r.benar}/${r.total}', warna: NumiWarna.benar),
+                          _Angka(
+                            label: 'Benar',
+                            nilai: '${r.benar}/${r.total}',
+                            warna: NumiWarna.benar,
+                          ),
                           const SizedBox(width: 12),
-                          _Angka(label: 'XP', nilai: '+${r.xpDidapat}', warna: NumiWarna.cahaya, hitung: r.xpDidapat),
+                          _Angka(
+                            label: 'XP',
+                            nilai: '+${r.xpDidapat}',
+                            warna: NumiWarna.cahaya,
+                            hitung: r.xpDidapat,
+                          ),
                         ],
                       ),
                       if (r.levelNaik) ...[
                         const SizedBox(height: 12),
-                        _Pita(teks: 'Level naik ke ${r.levelSesudah}!', ikon: '🚀'),
+                        _Pita(
+                          teks: 'Level naik ke ${r.levelSesudah}!',
+                          ikon: '🚀',
+                        ),
                       ],
                       for (final l in r.lencanaBaru) ...[
                         const SizedBox(height: 12),
                         _Pita(teks: 'Lencana baru: ${l.nama}', ikon: l.ikon),
                       ],
                       const SizedBox(height: 24),
-                      MascotBubble(teks: r.pesan.isi, ekspresi: r.pesan.ekspresi, ukuranMaskot: 92),
+                      MascotBubble(
+                        teks: r.pesan.isi,
+                        ekspresi: r.pesan.ekspresi,
+                        ukuranMaskot: 92,
+                      ),
                       ?pembahasan,
                     ],
                   ),
                 ),
-                TombolNumi(label: tombolUtama, lebar: double.infinity, onTap: onUtama),
+                TombolNumi(
+                  label: tombolUtama,
+                  lebar: double.infinity,
+                  onTap: onUtama,
+                ),
                 if (tombolKedua != null) ...[
                   const SizedBox(height: 10),
                   TombolNumi(
                     label: tombolKedua!,
                     lebar: double.infinity,
-                    warna: Colors.white,
+                    warna: NumiWarna.kartu,
                     onTap: onKedua,
                   ),
                 ],
@@ -90,7 +121,12 @@ class HasilSesiView extends StatelessWidget {
 }
 
 class _Angka extends StatelessWidget {
-  const _Angka({required this.label, required this.nilai, required this.warna, this.hitung});
+  const _Angka({
+    required this.label,
+    required this.nilai,
+    required this.warna,
+    this.hitung,
+  });
 
   final String label;
   final String nilai;
@@ -110,16 +146,33 @@ class _Angka extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w800, color: NumiWarna.tintaPudar)),
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w800,
+                color: NumiWarna.tintaPudar,
+              ),
+            ),
             if (hitung == null)
-              Text(nilai, style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900))
+              Text(
+                nilai,
+                style: const TextStyle(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w900,
+                ),
+              )
             else
               TweenAnimationBuilder<int>(
                 tween: IntTween(begin: 0, end: hitung!),
                 duration: const Duration(milliseconds: 1200),
                 curve: Curves.easeOutCubic,
-                builder: (context, v, _) =>
-                    Text('+$v', style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900)),
+                builder: (context, v, _) => Text(
+                  '+$v',
+                  style: const TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
           ],
         ),
@@ -144,7 +197,9 @@ class _Pita extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [NumiWarna.ungu, NumiWarna.langit]),
+          gradient: const LinearGradient(
+            colors: [NumiWarna.ungu, NumiWarna.langit],
+          ),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -152,7 +207,14 @@ class _Pita extends StatelessWidget {
             Text(ikon, style: const TextStyle(fontSize: 28)),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(teks, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17)),
+              child: Text(
+                teks,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 17,
+                ),
+              ),
             ),
           ],
         ),

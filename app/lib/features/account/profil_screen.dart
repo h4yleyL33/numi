@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_theme.dart';
 import '../../data/models/siswa.dart';
 import '../../data/repositories/profil_repository.dart';
 import '../../core/widgets/tombol_numi.dart';
+import '../mascot/numi_mascot.dart';
+import 'periksa_profil.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({
@@ -39,84 +42,95 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Ruang wali')),
     body: SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          Text(
-            'Pilih profil anak',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Data belajar tersimpan di perangkat ini. Setiap anak memiliki riwayat sendiri.',
-          ),
-          if (widget.pesan != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Semantics(liveRegion: true, child: Text(widget.pesan!)),
-            ),
-          const SizedBox(height: 16),
-          FutureBuilder<List<Siswa>>(
-            future: _profil,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Column(
-                  children: [
-                    const Text(
-                      'Profil belum dapat dibuka. Data sebelumnya tetap disimpan.',
-                    ),
-                    TextButton(
-                      onPressed: () => setState(() {
-                        _profil = widget.repository.daftar();
-                      }),
-                      child: const Text('Coba muat lagi'),
-                    ),
-                  ],
-                );
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.data!.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Belum ada profil. Tambahkan profil anak untuk memulai.',
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 468),
+          child: ListView(
+            padding: const EdgeInsets.all(24),
+            children: [
+              const Center(child: NumiMascot(ukuran: 110, melayang: false)),
+              const SizedBox(height: 12),
+              Text(
+                'Pilih profil anak',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Ketuk profil anak yang akan belajar.',
+                textAlign: TextAlign.center,
+              ),
+              if (widget.pesan != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Semantics(
+                    liveRegion: true,
+                    child: Text(widget.pesan!),
                   ),
-                );
-              }
-              return Column(
-                children: [
-                  for (final siswa in snapshot.data!)
-                    Card(
-                      child: ListTile(
-                        minVerticalPadding: 16,
-                        title: Text(siswa.nama),
-                        subtitle: Text('Kelas ${siswa.kelas}'),
-                        leading: const Icon(Icons.face_rounded),
-                        trailing: IconButton(
-                          tooltip: 'Ubah profil ${siswa.nama}',
-                          icon: const Icon(Icons.edit_rounded),
-                          onPressed: () => _form(siswa),
+                ),
+              const SizedBox(height: 16),
+              FutureBuilder<List<Siswa>>(
+                future: _profil,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Column(
+                      children: [
+                        const Text(
+                          'Profil belum dapat dibuka. Data sebelumnya tetap disimpan.',
                         ),
-                        onTap: () => widget.onPilih(siswa, false),
+                        TextButton(
+                          onPressed: () => setState(() {
+                            _profil = widget.repository.daftar();
+                          }),
+                          child: const Text('Coba muat lagi'),
+                        ),
+                      ],
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Belum ada profil. Tambahkan profil anak untuk memulai.',
                       ),
-                    ),
-                ],
-              );
-            },
+                    );
+                  }
+                  return Column(
+                    children: [
+                      for (final siswa in snapshot.data!)
+                        Card(
+                          color: NumiWarna.krem,
+                          child: ListTile(
+                            minVerticalPadding: 16,
+                            title: Text(siswa.nama),
+                            subtitle: Text('Kelas ${siswa.kelas}'),
+                            trailing: IconButton(
+                              tooltip: 'Ubah profil ${siswa.nama}',
+                              icon: const Icon(Icons.edit_rounded),
+                              onPressed: () => _form(siswa),
+                            ),
+                            onTap: () => widget.onPilih(siswa, false),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              TombolNumi(label: 'Tambah profil anak', onTap: () => _form()),
+              const SizedBox(height: 24),
+              TombolNumi(
+                onTap: widget.onKeluar,
+                warna: NumiWarna.kartu,
+                label: 'Keluar akun',
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          TombolNumi(label: 'Tambah profil anak', onTap: () => _form()),
-          const SizedBox(height: 24),
-          OutlinedButton.icon(
-            onPressed: widget.onKeluar,
-            icon: const Icon(Icons.logout_rounded),
-            label: const Text('Keluar akun'),
-          ),
-        ],
+        ),
       ),
     ),
   );
@@ -143,6 +157,10 @@ class _FormProfilState extends State<_FormProfil> {
 
   Future<void> _simpan() async {
     if (_menyimpan || _kelas == null) return;
+    FocusScope.of(context).unfocus();
+    if (!await periksaProfilAnak(context, _nama.text, _kelas!) || !mounted) {
+      return;
+    }
     setState(() {
       _menyimpan = true;
       _galat = null;
@@ -218,7 +236,7 @@ class _FormProfilState extends State<_FormProfil> {
         onPressed: _menyimpan || _kelas == null || _nama.text.trim().isEmpty
             ? null
             : _simpan,
-        child: Text(_menyimpan ? 'Menyimpan...' : 'Simpan profil'),
+        child: Text(_menyimpan ? 'Menyimpan...' : 'Periksa profil'),
       ),
     ],
   );

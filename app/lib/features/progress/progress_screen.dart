@@ -7,6 +7,7 @@ import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/tanggal.dart';
 import '../../core/widgets/bilah_progres.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/transisi.dart';
 import '../../data/content/daftar_lencana.dart';
 import '../../data/models/badge.dart';
@@ -31,123 +32,170 @@ class ProgressScreen extends ConsumerWidget {
     final level = progres.level(data.xp);
     final aktif = data.streakLog.map((l) => l.tanggal).toSet();
 
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [NumiWarna.malam, NumiWarna.malamTerang]),
-              borderRadius: BorderRadius.circular(28),
+    return LatarKrayon(
+      ilustrasi: 'progres',
+      child: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+          children: [
+            Text('Progres', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 4),
+            const Text(
+              'Jejak petualanganmu',
+              style: TextStyle(color: NumiWarna.tintaPudar),
             ),
-            child: Row(
-              children: [
-                const NumiMascot(ukuran: 90, ekspresi: EkspresiMaskot.bangga),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data.siswa?.nama ?? '',
-                          style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
-                      Text(data.siswa?.kelompokKelas?.label ?? 'Konfirmasi kelas bersama wali',
-                          style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 12,
-                        runSpacing: 4,
-                        children: [
-                          Text('Level $level',
-                              style: const TextStyle(color: NumiWarna.cahaya, fontWeight: FontWeight.w900)),
-                          Text('${progres.xpDiLevel(data.xp)}/${AppConfig.xpPerLevel} XP',
-                              style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w700)),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      BilahProgres(
-                        nilai: progres.xpDiLevel(data.xp) / AppConfig.xpPerLevel,
-                        latar: Colors.white24,
-                      ),
-                    ],
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: NumiWarna.kartu,
+                border: Border.all(color: NumiWarna.garis),
+                borderRadius: BorderRadius.circular(28),
+              ),
+              child: Row(
+                children: [
+                  const NumiMascot(ukuran: 90, ekspresi: EkspresiMaskot.bangga),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.siswa?.nama ?? '',
+                          style: const TextStyle(
+                            color: NumiWarna.tinta,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          data.siswa?.kelas == null
+                              ? 'Konfirmasi kelas bersama wali'
+                              : 'Kelas ${data.siswa!.kelas}',
+                          style: const TextStyle(
+                            color: NumiWarna.tintaPudar,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 4,
+                          children: [
+                            Text(
+                              'Level $level',
+                              style: const TextStyle(
+                                color: NumiWarna.tinta,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Text(
+                              '${progres.xpDiLevel(data.xp)}/${AppConfig.xpPerLevel} XP',
+                              style: const TextStyle(
+                                color: NumiWarna.tintaPudar,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        BilahProgres(
+                          nilai:
+                              progres.xpDiLevel(data.xp) / AppConfig.xpPerLevel,
+                          latar: NumiWarna.cahayaMuda,
+                        ),
+                      ],
+                    ),
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            _KartuStreak(
+              sekarang: streak.sekarang,
+              terbaik: streak.terbaik,
+              terancam: streak.terancam,
+              hari: [
+                for (var i = 6; i >= 0; i--)
+                  hariIni.subtract(Duration(days: i)),
+              ],
+              aktif: aktif,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                _Statistik(
+                  ikon: '🗼',
+                  nilai: '${data.jumlahBuktiAwal}',
+                  label: 'Bukti awal',
                 ),
+                const SizedBox(width: 10),
+                _Statistik(
+                  ikon: '📘',
+                  nilai:
+                      '${data.progresLesson.values.where((p) => p.selesai).length}',
+                  label: 'Lesson selesai',
+                ),
+                const SizedBox(width: 10),
+                _Statistik(ikon: '✨', nilai: '${data.xp}', label: 'Total XP'),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
-          _KartuStreak(
-            sekarang: streak.sekarang,
-            terbaik: streak.terbaik,
-            terancam: streak.terancam,
-            hari: [for (var i = 6; i >= 0; i--) hariIni.subtract(Duration(days: i))],
-            aktif: aktif,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _Statistik(
-                ikon: '🗼',
-                nilai: '${data.jumlahBuktiAwal}',
-                label: 'Bukti awal',
+            const SizedBox(height: 24),
+            Text('Lencanamu', style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 4),
+            const Text(
+              'Ketuk kartu untuk melihat syaratnya',
+              style: TextStyle(color: NumiWarna.tintaPudar),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 200,
+              child: PageView.builder(
+                controller: PageController(viewportFraction: 0.46),
+                padEnds: false,
+                itemCount: daftarLencana.length,
+                itemBuilder: (context, i) {
+                  final l = daftarLencana[i];
+                  final milik = data.lencana
+                      .where((x) => x.badgeId == l.id)
+                      .firstOrNull;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: KartuLencana(
+                      lencana: l,
+                      diperoleh: milik?.waktuDiperoleh,
+                    ),
+                  );
+                },
               ),
-              const SizedBox(width: 10),
-              _Statistik(
-                ikon: '📘',
-                nilai: '${data.progresLesson.values.where((p) => p.selesai).length}',
-                label: 'Lesson selesai',
-              ),
-              const SizedBox(width: 10),
-              _Statistik(ikon: '✨', nilai: '${data.xp}', label: 'Total XP'),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Text('Lencana', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 4),
-          const Text('Ketuk kartu untuk melihat syaratnya', style: TextStyle(color: NumiWarna.tintaPudar)),
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 200,
-            child: PageView.builder(
-              controller: PageController(viewportFraction: 0.46),
-              padEnds: false,
-              itemCount: daftarLencana.length,
-              itemBuilder: (context, i) {
-                final l = daftarLencana[i];
-                final milik = data.lencana.where((x) => x.badgeId == l.id).firstOrNull;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: KartuLencana(lencana: l, diperoleh: milik?.waktuDiperoleh),
+            ),
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.family_restroom_rounded),
+              label: const Text('Untuk orang tua'),
+              onPressed: () async {
+                if (!await bukaGerbangWali(context) || !context.mounted) return;
+                await Navigator.of(context).push(
+                  transisiPudar(ProgresWaliScreen(onReset: _konfirmasiUlang)),
                 );
               },
             ),
-          ),
-          const SizedBox(height: 24),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.family_restroom_rounded),
-            label: const Text('Untuk orang tua'),
-            onPressed: () async {
-              if (!await bukaGerbangWali(context) || !context.mounted) return;
-              await Navigator.of(context).push(
-                transisiPudar(ProgresWaliScreen(onReset: _konfirmasiUlang)),
-              );
-            },
-          ),
-          _Lipatan(
-            judul: 'Keterangan',
-            children: const [
-              Text(
-                'Setiap jawaban benar memberi ${AppConfig.xpPerBenar} XP. Lesson yang selesai memberi tambahan '
-                '${AppConfig.xpLessonSelesai} XP, dan mercusuar yang menyala memberi ${AppConfig.xpMasteryLulus} XP. '
-                'Setiap ${AppConfig.xpPerLevel} XP, level naik satu.\n\n'
-                'Nyala api bertambah setiap hari kamu belajar. Kalau satu hari terlewat, nyalanya mulai dari nol lagi.\n\n'
-                'Lesson dianggap selesai kalau minimal ${AppConfig.minBenarLesson} dari ${AppConfig.soalPerLesson} '
-                'soal benar. Bukti awal mastery memakai lima jawaban benar tanpa bantuan.',
-                style: TextStyle(height: 1.5),
-              ),
-            ],
-          ),
-        ],
+            _Lipatan(
+              judul: 'Keterangan',
+              children: const [
+                Text(
+                  'Setiap jawaban benar memberi ${AppConfig.xpPerBenar} XP. Lesson yang selesai memberi tambahan '
+                  '${AppConfig.xpLessonSelesai} XP, dan mercusuar yang menyala memberi ${AppConfig.xpMasteryLulus} XP. '
+                  'Setiap ${AppConfig.xpPerLevel} XP, level naik satu.\n\n'
+                  'Nyala api bertambah setiap hari kamu belajar. Kalau satu hari terlewat, nyalanya mulai dari nol lagi.\n\n'
+                  'Lesson dianggap selesai kalau minimal ${AppConfig.minBenarLesson} dari ${AppConfig.soalPerLesson} '
+                  'soal benar. Bukti awal mastery memakai lima jawaban benar tanpa bantuan.',
+                  style: TextStyle(height: 1.5),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -209,9 +257,12 @@ class _KartuStreak extends StatefulWidget {
   State<_KartuStreak> createState() => _KartuStreakState();
 }
 
-class _KartuStreakState extends State<_KartuStreak> with SingleTickerProviderStateMixin {
-  late final AnimationController _api =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
+class _KartuStreakState extends State<_KartuStreak>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _api = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat(reverse: true);
   static const _namaHari = ['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'];
 
   @override
@@ -240,17 +291,27 @@ class _KartuStreakState extends State<_KartuStreak> with SingleTickerProviderSta
                   alignment: Alignment.bottomCenter,
                   child: child,
                 ),
-                child: Text(widget.terancam ? '🕯️' : '🔥', style: const TextStyle(fontSize: 44)),
+                child: Text(
+                  widget.terancam ? '🕯️' : '🔥',
+                  style: const TextStyle(fontSize: 44),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${widget.sekarang} hari',
-                        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
                     Text(
-                      widget.terancam ? 'Belajar hari ini supaya nyalanya tidak padam' : 'Nyala api belajarmu',
+                      '${widget.sekarang} hari',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      widget.terancam
+                          ? 'Belajar hari ini supaya nyalanya tidak padam'
+                          : 'Nyala api belajarmu',
                       style: const TextStyle(color: NumiWarna.tintaPudar),
                     ),
                   ],
@@ -289,14 +350,26 @@ class _KartuStreakState extends State<_KartuStreak> with SingleTickerProviderSta
                       height: 34,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: widget.aktif.contains(kunciTanggal(h)) ? NumiWarna.cahaya : const Color(0xFFF1ECE1),
+                        color: widget.aktif.contains(kunciTanggal(h))
+                            ? NumiWarna.cahaya
+                            : const Color(0xFFF1ECE1),
                       ),
                       child: widget.aktif.contains(kunciTanggal(h))
-                          ? const Icon(Icons.local_fire_department_rounded, size: 20, color: Colors.white)
+                          ? const Icon(
+                              Icons.local_fire_department_rounded,
+                              size: 20,
+                              color: Colors.white,
+                            )
                           : null,
                     ),
                     const SizedBox(height: 4),
-                    Text(_namaHari[h.weekday - 1], style: const TextStyle(fontSize: 12, color: NumiWarna.tintaPudar)),
+                    Text(
+                      _namaHari[h.weekday - 1],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: NumiWarna.tintaPudar,
+                      ),
+                    ),
                   ],
                 ),
             ],
@@ -308,7 +381,11 @@ class _KartuStreakState extends State<_KartuStreak> with SingleTickerProviderSta
 }
 
 class _Statistik extends StatelessWidget {
-  const _Statistik({required this.ikon, required this.nilai, required this.label});
+  const _Statistik({
+    required this.ikon,
+    required this.nilai,
+    required this.label,
+  });
 
   final String ikon;
   final String nilai;
@@ -319,12 +396,21 @@ class _Statistik extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Column(
           children: [
             Text(ikon, style: const TextStyle(fontSize: 24)),
-            Text(nilai, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
-            Text(label, style: const TextStyle(fontSize: 12, color: NumiWarna.tintaPudar)),
+            Text(
+              nilai,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+            ),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: NumiWarna.tintaPudar),
+            ),
           ],
         ),
       ),
@@ -334,7 +420,11 @@ class _Statistik extends StatelessWidget {
 
 /// Kartu lencana yang berbalik saat diketuk: depan ikon, belakang syarat.
 class KartuLencana extends StatefulWidget {
-  const KartuLencana({super.key, required this.lencana, required this.diperoleh});
+  const KartuLencana({
+    super.key,
+    required this.lencana,
+    required this.diperoleh,
+  });
 
   final Lencana lencana;
   final DateTime? diperoleh;
@@ -343,9 +433,12 @@ class KartuLencana extends StatefulWidget {
   State<KartuLencana> createState() => _KartuLencanaState();
 }
 
-class _KartuLencanaState extends State<KartuLencana> with SingleTickerProviderStateMixin {
-  late final AnimationController _balik =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 550));
+class _KartuLencanaState extends State<KartuLencana>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _balik = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 550),
+  );
 
   @override
   void dispose() {
@@ -377,13 +470,24 @@ class _KartuLencanaState extends State<KartuLencana> with SingleTickerProviderSt
                       isi: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget.lencana.syarat,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, height: 1.4)),
+                          Text(
+                            widget.lencana.syarat,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              height: 1.4,
+                            ),
+                          ),
                           if (milik) ...[
                             const SizedBox(height: 8),
-                            Text('Didapat ${kunciTanggal(widget.diperoleh!)}',
-                                style: const TextStyle(color: NumiWarna.cahayaMuda, fontSize: 12)),
+                            Text(
+                              'Didapat ${kunciTanggal(widget.diperoleh!)}',
+                              style: const TextStyle(
+                                color: NumiWarna.cahayaMuda,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ],
                       ),
@@ -396,16 +500,28 @@ class _KartuLencanaState extends State<KartuLencana> with SingleTickerProviderSt
                       children: [
                         Opacity(
                           opacity: milik ? 1 : 0.35,
-                          child: Text(widget.lencana.ikon, style: const TextStyle(fontSize: 56)),
+                          child: Text(
+                            widget.lencana.ikon,
+                            style: const TextStyle(fontSize: 56),
+                          ),
                         ),
                         const SizedBox(height: 8),
-                        Text(widget.lencana.nama,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 17,
-                              color: milik ? NumiWarna.tinta : NumiWarna.tintaPudar,
-                            )),
-                        if (!milik) const Icon(Icons.lock_rounded, size: 18, color: NumiWarna.tintaPudar),
+                        Text(
+                          widget.lencana.nama,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 17,
+                            color: milik
+                                ? NumiWarna.tinta
+                                : NumiWarna.tintaPudar,
+                          ),
+                        ),
+                        if (!milik)
+                          const Icon(
+                            Icons.lock_rounded,
+                            size: 18,
+                            color: NumiWarna.tintaPudar,
+                          ),
                       ],
                     ),
                   ),
@@ -416,14 +532,19 @@ class _KartuLencanaState extends State<KartuLencana> with SingleTickerProviderSt
   }
 
   Widget _sisi({required Color warna, required Widget isi}) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: warna,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [BoxShadow(color: Color.lerp(warna, Colors.black, 0.25)!, offset: const Offset(0, 6))],
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: warna,
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: [
+        BoxShadow(
+          color: Color.lerp(warna, Colors.black, 0.25)!,
+          offset: const Offset(0, 6),
         ),
-        child: isi,
-      );
+      ],
+    ),
+    child: isi,
+  );
 }
 
 class _Lipatan extends StatelessWidget {
@@ -440,7 +561,13 @@ class _Lipatan extends StatelessWidget {
         tilePadding: EdgeInsets.zero,
         childrenPadding: const EdgeInsets.only(bottom: 12),
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-        title: Text(judul, style: const TextStyle(fontWeight: FontWeight.w800, color: NumiWarna.tintaPudar)),
+        title: Text(
+          judul,
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            color: NumiWarna.tintaPudar,
+          ),
+        ),
         children: children,
       ),
     );

@@ -31,3 +31,19 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/krayon/
+    - assets/fonts/mali-OFL.txt
+    - assets/fonts/cabinsketch-OFL.txt
+  fonts:
+    - family: Mali
+      fonts:
+        - asset: assets/fonts/Mali-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Mali-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Mali-Bold.ttf
+          weight: 700
+    - family: Cabin Sketch
+      fonts:
+        - asset: assets/fonts/CabinSketch-Bold.ttf
+          weight: 700

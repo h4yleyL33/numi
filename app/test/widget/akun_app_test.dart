@@ -74,7 +74,7 @@ void main() {
     await tester.pump();
     expect(find.text('Layanan akun belum tersedia'), findsOneWidget);
     expect(find.byType(DiagnosticIntroScreen), findsNothing);
-    expect(find.text('Halo, Teman!'), findsNothing);
+    expect(find.text('Profil anak'), findsNothing);
   });
 
   testWidgets('wali dapat membuat dan mengubah profil dari form enam kelas', (
@@ -99,7 +99,11 @@ void main() {
     await tester.enterText(find.byType(TextField), 'Sari');
     await tester.tap(find.widgetWithText(ChoiceChip, 'Kelas 4'));
     await tester.pump();
-    await tester.tap(find.text('Simpan profil'));
+    await tester.tap(find.text('Periksa profil'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.ensureVisible(find.text('Simpan dan lanjut'));
+    await tester.tap(find.text('Simpan dan lanjut'));
     await frame(tester);
     expect((await repo.daftar()).single.kelas, 4);
     expect((await repo.daftar()).single.waliUid, 'wali-a');
@@ -109,7 +113,11 @@ void main() {
     await tester.enterText(find.byType(TextField), 'Sari Baru');
     await tester.tap(find.widgetWithText(ChoiceChip, 'Kelas 5'));
     await tester.pump();
-    await tester.tap(find.text('Simpan profil'));
+    await tester.tap(find.text('Periksa profil'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.ensureVisible(find.text('Simpan dan lanjut'));
+    await tester.tap(find.text('Simpan dan lanjut'));
     await frame(tester);
     expect(find.text('Sari Baru'), findsOneWidget);
     expect((await repo.daftar()).single.kelas, 5);

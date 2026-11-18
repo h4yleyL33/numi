@@ -161,7 +161,9 @@ class _PemutarSoalState extends State<PemutarSoal> {
               ),
               Expanded(
                 child: BilahProgres(
-                  nilai: (nomor - 1 + (_sudahCek ? 1 : 0)) / total,
+                  nilai: nomor / total,
+                  tinggi: 12,
+                  latar: NumiWarna.kartu,
                 ),
               ),
               const SizedBox(width: 12),
@@ -195,6 +197,10 @@ class _PemutarSoalState extends State<PemutarSoal> {
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
+            layoutBuilder: (aktif, sebelumnya) => Stack(
+              alignment: Alignment.topCenter,
+              children: [...sebelumnya, ?aktif],
+            ),
             transitionBuilder: (child, anim) => SlideTransition(
               position: Tween(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(
@@ -242,7 +248,14 @@ class _PemutarSoalState extends State<PemutarSoal> {
                   ),
                 )
               : _pilihan == null
-              ? const SizedBox.shrink()
+              ? const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 4, 20, 20),
+                  child: TombolNumi(
+                    label: 'Pilih jawaban dulu',
+                    lebar: double.infinity,
+                    onTap: null,
+                  ),
+                )
               : Padding(
                   key: const ValueKey('cek'),
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
@@ -265,9 +278,7 @@ class _PemutarSoalState extends State<PemutarSoal> {
                               ? 'Coba simpan lagi'
                               : (_umpanBalik ? 'Cek Jawaban' : 'Kirim'),
                           lebar: double.infinity,
-                          warna: NumiWarna.malam,
-                          warnaTeks: Colors.white,
-                          onTap: _pilihan == null ? null : _cek,
+                          onTap: _cek,
                         ),
                       ],
                     ),

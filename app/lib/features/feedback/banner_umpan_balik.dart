@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/teks_matematika.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../data/models/companion_message.dart';
@@ -49,10 +50,7 @@ class BannerUmpanBalik extends StatelessWidget {
           Transform.translate(offset: Offset(0, v * 260), child: child),
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-        decoration: BoxDecoration(
-          color: benar ? NumiWarna.benarMuda : NumiWarna.salahMuda,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        ),
+        decoration: kertasKrayon(benar ? 'panel-mint' : 'panel-koral'),
         child: SafeArea(
           top: false,
           child: Column(
@@ -61,12 +59,7 @@ class BannerUmpanBalik extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  NumiMascot(
-                    ukuran: 64,
-                    ekspresi: benar
-                        ? EkspresiMaskot.bangga
-                        : EkspresiMaskot.semangat,
-                  ),
+                  NumiMascot(ukuran: 64, ekspresi: EkspresiMaskot.semangat),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -119,12 +112,7 @@ class BannerUmpanBalik extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 16),
-              TombolNumi(
-                label: labelLanjut,
-                warna: warna,
-                warnaTeks: Colors.white,
-                onTap: onLanjut,
-              ),
+              TombolNumi(label: labelLanjut, onTap: onLanjut),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'krayon.dart';
 
 /// Tombol bertebal seperti tombol mainan: ada sisi bawah yang terlihat, dan
 /// saat ditekan permukaannya turun menutupi sisi itu.
@@ -37,6 +38,46 @@ class _TombolNumiState extends State<TombolNumi> {
   @override
   Widget build(BuildContext context) {
     final aktif = widget.onTap != null;
+    if (widget.warna == NumiWarna.cahaya || widget.warna == NumiWarna.kartu) {
+      return Opacity(
+        opacity: aktif ? 1 : 0.58,
+        child: DecoratedBox(
+          decoration: kertasKrayon(
+            widget.warna == NumiWarna.cahaya ? 'tombol-utama' : 'tombol-putih',
+          ),
+          child: TextButton(
+            onPressed: widget.onTap,
+            style: TextButton.styleFrom(
+              minimumSize: Size(widget.lebar ?? 0, widget.tinggi + _tebal),
+              foregroundColor: widget.warnaTeks,
+              disabledForegroundColor: widget.warnaTeks,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              textStyle: const TextStyle(
+                fontFamily: 'Mali',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.ikon case final ikon?) ...[
+                  Icon(ikon),
+                  const SizedBox(width: 8),
+                ],
+                Flexible(
+                  child: Text(widget.label, textAlign: TextAlign.center),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     final warna = aktif ? widget.warna : const Color(0xFFD9D6E4);
     final turun = _ditekan && aktif ? _tebal : 0.0;
 
@@ -74,13 +115,19 @@ class _TombolNumiState extends State<TombolNumi> {
                 top: turun,
                 height: widget.tinggi,
                 child: DecoratedBox(
-                  decoration: BoxDecoration(color: warna, borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(
+                    color: warna,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Center(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (widget.ikon != null) ...[
-                          Icon(widget.ikon, color: aktif ? widget.warnaTeks : Colors.white),
+                          Icon(
+                            widget.ikon,
+                            color: aktif ? widget.warnaTeks : Colors.white,
+                          ),
                           const SizedBox(width: 8),
                         ],
                         Flexible(

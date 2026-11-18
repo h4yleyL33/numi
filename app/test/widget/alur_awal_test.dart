@@ -37,12 +37,17 @@ void main() {
         await tester.pump();
       }
 
-      expect(find.text('Halo, Teman!'), findsOneWidget);
+      expect(find.text('Profil anak'), findsOneWidget);
       await tester.enterText(find.byType(TextField), 'Sari');
       await tester.tap(find.text('Kelas 2'));
       await tester.pump();
-      await tester.tap(find.text('Mulai Petualangan'));
+      await tester.tap(find.text('Periksa profil'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(repo.tersimpan, isNull);
+      await tester.tap(find.text('Simpan dan lanjut'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(milliseconds: 700));
 
       expect(repo.tersimpan!.siswa!.nama, 'Sari');
@@ -86,13 +91,21 @@ void main() {
       await tester.ensureVisible(find.text('Kelas 6'));
       await tester.tap(find.text('Kelas 6'));
       await tester.pump();
-      await tester.tap(find.text('Mulai Petualangan'));
+      await tester.tap(find.text('Periksa profil'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(repo.tersimpan, isNull);
+      await tester.tap(find.text('Simpan dan lanjut'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       expect(find.text('Profil belum tersimpan. Coba lagi.'), findsOneWidget);
       expect(repo.tersimpan, isNull);
       repo.gagalSimpan = false;
-      await tester.tap(find.text('Mulai Petualangan'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.tap(find.text('Coba simpan lagi'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(milliseconds: 700));
       expect(repo.tersimpan!.siswa!.id, 'lama');
       expect(repo.tersimpan!.siswa!.kelas, 6);

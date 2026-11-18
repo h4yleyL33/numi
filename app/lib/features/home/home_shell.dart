@@ -35,7 +35,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     if (!mounted) return;
     CompanionMessage? pesan;
     try {
-      pesan = await ref.read(numiControllerProvider.notifier).periksaPesanMaskot();
+      pesan = await ref
+          .read(numiControllerProvider.notifier)
+          .periksaPesanMaskot();
     } catch (_) {
       // Sesi yang ditutup atau simpan gagal tidak boleh membuka pesan lama.
       return;
@@ -50,7 +52,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     if (!mounted || pesan == null) return;
     setState(() => _pesan = null);
     try {
-      await ref.read(numiControllerProvider.notifier).tandaiPesanDibaca(pesan.id);
+      await ref
+          .read(numiControllerProvider.notifier)
+          .tandaiPesanDibaca(pesan.id);
     } catch (_) {
       // Pesan sudah ditutup; status baca dapat diperiksa pada pembukaan berikutnya.
     }
@@ -73,7 +77,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               if (mendatar)
                 SafeArea(
                   child: NavigationRail(
-                    backgroundColor: Colors.white,
+                    backgroundColor: NumiWarna.kartu,
                     indicatorColor: NumiWarna.cahayaMuda,
                     labelType: NavigationRailLabelType.all,
                     selectedIndex: _tab,
@@ -99,23 +103,24 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                       index: _tab,
                       children: const [SkillMapScreen(), ProgressScreen()],
                     ),
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeOutBack,
-                      left: 12,
-                      right: 12,
-                      bottom: _pesan == null ? -220 : 12,
-                      child: GestureDetector(
-                        onTap: _sembunyikan,
-                        child: _pesan == null
-                            ? const SizedBox(height: 160)
-                            : MascotBubble(
-                                teks: _pesan!.isi,
-                                ekspresi: _pesan!.ekspresi,
-                                ukuranMaskot: 88,
-                              ),
+                    if (_tab == 0)
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeOutBack,
+                        left: 12,
+                        right: 12,
+                        bottom: _pesan == null ? -220 : 12,
+                        child: GestureDetector(
+                          onTap: _sembunyikan,
+                          child: _pesan == null
+                              ? const SizedBox(height: 160)
+                              : MascotBubble(
+                                  teks: _pesan!.isi,
+                                  ekspresi: _pesan!.ekspresi,
+                                  ukuranMaskot: 88,
+                                ),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -124,7 +129,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           bottomNavigationBar: mendatar
               ? null
               : NavigationBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: NumiWarna.kartu,
                   indicatorColor: NumiWarna.cahayaMuda,
                   selectedIndex: _tab,
                   onDestinationSelected: (i) => setState(() => _tab = i),

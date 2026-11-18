@@ -7,18 +7,19 @@ class NumiWarna {
   static const malam = Color(0xFF174951);
   static const malamTerang = Color(0xFF287C88);
   static const laut = Color(0xFF238FA0);
-  static const cahaya = Color(0xFFFFBF58);
+  static const cahaya = Color(0xFFF7B75B);
   static const cahayaMuda = Color(0xFFFFD98A);
   static const krem = Color(0xFFFFF8E9);
-  static const tinta = Color(0xFF19373D);
-  static const tintaPudar = Color(0xFF536970);
+  static const tinta = Color(0xFF244D51);
+  static const tintaPudar = Color(0xFF5D7675);
+  static const garis = Color(0xFFCBBDA1);
   static const benar = Color(0xFF2EBD8E);
   static const benarMuda = Color(0xFFD7F5EA);
   static const salah = Color(0xFFFF6B6B);
   static const salahMuda = Color(0xFFFFE1E1);
   static const ungu = Color(0xFF7C5CFF);
   static const langit = Color(0xFF4FC3F7);
-  static const kartu = Colors.white;
+  static const kartu = Color(0xFFFFFDF5);
 }
 
 class NumiTema {
@@ -27,6 +28,7 @@ class NumiTema {
   static ThemeData get terang {
     final dasar = ThemeData(
       useMaterial3: true,
+      fontFamily: 'Mali',
       colorScheme: ColorScheme.fromSeed(
         seedColor: NumiWarna.cahaya,
         primary: NumiWarna.malam,
@@ -43,14 +45,17 @@ class NumiTema {
     return dasar.copyWith(
       textTheme: teks.copyWith(
         displaySmall: teks.displaySmall?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontFamily: 'Cabin Sketch',
+          fontWeight: FontWeight.w700,
           letterSpacing: -0.5,
         ),
         headlineMedium: teks.headlineMedium?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontFamily: 'Cabin Sketch',
+          fontWeight: FontWeight.w700,
         ),
         headlineSmall: teks.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w800,
+          fontFamily: 'Cabin Sketch',
+          fontWeight: FontWeight.w700,
         ),
         titleLarge: teks.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         titleMedium: teks.titleMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -58,7 +63,7 @@ class NumiTema {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: NumiWarna.kartu,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 18,

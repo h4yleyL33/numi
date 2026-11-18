@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/widgets/latar_malam.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../data/repositories/akun_repository.dart';
+import '../mascot/numi_mascot.dart';
 
 class MasukScreen extends StatefulWidget {
   const MasukScreen({super.key, required this.akun});
@@ -42,7 +44,7 @@ class _MasukScreenState extends State<MasukScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: LatarMalam(
+    body: LatarKrayon(
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -52,26 +54,30 @@ class _MasukScreenState extends State<MasukScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.family_restroom_rounded,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Petualangan dimulai bersama wali',
+                  const NumiMascot(ukuran: 110, melayang: false),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Masuk bersama wali',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Ayah, ibu, atau wali masuk dengan akun Google. Anak belajar lewat profilnya sendiri.',
+                    'Minta ayah, ibu, atau wali menemani, ya.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white70, fontSize: 18),
+                  ),
+                  const SizedBox(height: 36),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: NumiWarna.krem,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(18),
+                      child: Text(
+                        'Gunakan akun Google ayah, ibu, atau wali. Nama dan kelas anak diisi setelah masuk.',
+                      ),
+                    ),
                   ),
                   if (_pesan != null)
                     Padding(
@@ -81,7 +87,7 @@ class _MasukScreenState extends State<MasukScreen> {
                         child: Text(
                           _pesan!,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: NumiWarna.tinta),
                         ),
                       ),
                     ),

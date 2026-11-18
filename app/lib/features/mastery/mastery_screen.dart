@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/config/app_config.dart';
-import '../../core/widgets/latar_malam.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/pulau_hias.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../data/content/generator_soal.dart';
@@ -124,9 +125,10 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
   Widget build(BuildContext context) {
     final t = widget.topik;
     return Scaffold(
-      body: switch (_tahap) {
-        _Tahap.pembuka => LatarMalam(
-          child: SafeArea(
+      body: LatarKrayon(
+        topikId: t.id,
+        child: switch (_tahap) {
+          _Tahap.pembuka => SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -134,7 +136,7 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
-                      color: Colors.white,
+                      color: NumiWarna.tinta,
                       icon: const Icon(Icons.close_rounded, size: 30),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -147,7 +149,7 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
                         : 'Mercusuar ${t.namaPulau}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: NumiWarna.tinta,
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
                     ),
@@ -157,10 +159,9 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
                     Text(
                       '${_sesi!.jawaban.length}/5 jawaban tersimpan di perangkat ini.',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: NumiWarna.tinta),
                     ),
                   const MascotBubble(
-                    gelap: true,
                     ekspresi: EkspresiMaskot.semangat,
                     teks:
                         'Jawab ${AppConfig.soalMastery} soal sendiri. '
@@ -178,64 +179,64 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
               ),
             ),
           ),
-        ),
-        _Tahap.soal => SafeArea(
-          child: PemutarSoal(
-            soal: _sesi!.soal,
-            jawabanAwal: _sesi!.jawaban,
-            konteks: KonteksJawaban.mastery,
-            simpanJawaban: (j) {
-              final indeks = _sesi!.soal.indexWhere((s) => s.id == j.soalId);
-              return ref
-                  .read(numiControllerProvider.notifier)
-                  .jawabMastery(t.id, _sesi!.id, _sesi!.commandId(indeks), j);
-            },
-            judul: 'Mastery Test · ${t.namaPulau}',
-            onSelesai: _selesai,
+          _Tahap.soal => SafeArea(
+            child: PemutarSoal(
+              soal: _sesi!.soal,
+              jawabanAwal: _sesi!.jawaban,
+              konteks: KonteksJawaban.mastery,
+              simpanJawaban: (j) {
+                final indeks = _sesi!.soal.indexWhere((s) => s.id == j.soalId);
+                return ref
+                    .read(numiControllerProvider.notifier)
+                    .jawabMastery(t.id, _sesi!.id, _sesi!.commandId(indeks), j);
+              },
+              judul: 'Mastery Test · ${t.namaPulau}',
+              onSelesai: _selesai,
+            ),
           ),
-        ),
-        _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
-        _Tahap.gagal => SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Sesi belum berhasil disimpan. Coba lagi. '
-                    'Jika tetap gagal, buka ulang profil untuk memuat data terbaru.',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  TombolNumi(label: 'Coba simpan lagi', onTap: _cobaLagi),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Kembali ke Peta'),
-                  ),
-                ],
+          _Tahap.menyimpan => const Center(child: CircularProgressIndicator()),
+          _Tahap.gagal => SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Sesi belum berhasil disimpan. Coba lagi. '
+                      'Jika tetap gagal, buka ulang profil untuk memuat data terbaru.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    TombolNumi(label: 'Coba simpan lagi', onTap: _cobaLagi),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Kembali ke Peta'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        _Tahap.hasil => HasilSesiView(
-          pembahasan: PembahasanSesi(blok: [_sesi!]),
-          catatan:
-              'Hasil dan XP sesi ini sudah tersimpan di perangkat ini. '
-              'Membuka hasil kembali tidak menambah XP.',
-          ringkasan: _ringkasan!,
-          hiasan: PulauHias(menyala: _ringkasan!.lulus, ukuran: 110),
-          judul: _ringkasan!.lulus ? 'Mercusuar menyala!' : 'Belum menyala',
-          tombolUtama: 'Kembali ke Peta',
-          onUtama: () => Navigator.of(context).pop(),
-          tombolKedua: 'Mulai test baru',
-          onKedua: () {
-            _soalBaru = null;
-            _sesi = null;
-            _mulai();
-          },
-        ),
-      },
+          _Tahap.hasil => HasilSesiView(
+            pembahasan: PembahasanSesi(blok: [_sesi!]),
+            catatan:
+                'Hasil dan XP sesi ini sudah tersimpan di perangkat ini. '
+                'Membuka hasil kembali tidak menambah XP.',
+            ringkasan: _ringkasan!,
+            hiasan: PulauHias(menyala: _ringkasan!.lulus, ukuran: 110),
+            judul: _ringkasan!.lulus ? 'Mercusuar menyala!' : 'Belum menyala',
+            tombolUtama: 'Kembali ke Peta',
+            onUtama: () => Navigator.of(context).pop(),
+            tombolKedua: 'Mulai test baru',
+            onKedua: () {
+              _soalBaru = null;
+              _sesi = null;
+              _mulai();
+            },
+          ),
+        },
+      ),
     );
   }
 }

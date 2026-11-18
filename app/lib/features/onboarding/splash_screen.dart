@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/widgets/latar_malam.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/krayon.dart';
 import '../../data/models/companion_message.dart';
 import '../../state/numi_controller.dart';
 import '../diagnostic/diagnostic_intro_screen.dart';
@@ -41,14 +42,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LatarMalam(
+      body: LatarKrayon(
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const NumiMascot(ukuran: 170, ekspresi: EkspresiMaskot.senang),
+                const NumiMascot(
+                  ukuran: 170,
+                  ekspresi: EkspresiMaskot.senang,
+                  melayang: false,
+                ),
                 const SizedBox(height: 12),
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0, end: 1),
@@ -61,26 +66,31 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                       child: child,
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Numi',
-                        style: Theme.of(context).textTheme.displayMedium
-                            ?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 2,
-                            ),
-                      ),
-                      const Text(
-                        'Petualangan di Samudra Angka',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 320),
+                    width: double.infinity,
+                    decoration: kertasKrayon('panel-cerita'),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 14,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Numi',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(fontSize: 56, letterSpacing: 2),
                         ),
-                      ),
-                    ],
+                        const Text(
+                          'Petualangan di Samudra Angka',
+                          style: TextStyle(
+                            color: NumiWarna.tinta,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

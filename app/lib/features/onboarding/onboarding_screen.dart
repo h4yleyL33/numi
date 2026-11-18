@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/latar_malam.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../data/models/companion_message.dart';
 import '../../state/numi_controller.dart';
+import '../account/periksa_profil.dart';
 import '../diagnostic/diagnostic_intro_screen.dart';
 import '../mascot/numi_mascot.dart';
 import '../home/home_shell.dart';
@@ -37,7 +38,7 @@ const _cerita = [
   ),
   _AdeganCerita(
     'Suatu malam Kabut Lupa datang dan memadamkan semua mercusuar. Pulau-pulau jadi gelap.',
-    EkspresiMaskot.sedih,
+    EkspresiMaskot.berpikir,
     false,
   ),
   _AdeganCerita(
@@ -48,6 +49,7 @@ const _cerita = [
 ];
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+  static const _galatSimpan = 'Profil belum tersimpan. Coba lagi.';
   late final PageController _halaman;
   late final TextEditingController _nama;
   int _posisi = 0;
@@ -79,6 +81,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 
+  Future<void> _periksa() async {
+    final kelas = _kelas;
+    if (kelas == null || _nama.text.trim().isEmpty) {
+      setState(() => _galat = 'Isi nama panggilan dan pilih kelas anak.');
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    if (await periksaProfilAnak(context, _nama.text, kelas) && mounted) {
+      await _mulai();
+    }
+  }
+
   Future<void> _mulai() async {
     if (_menyimpan || _kelas == null) return;
     setState(() {
@@ -101,7 +115,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (!mounted) return;
       setState(() {
         _menyimpan = false;
-        _galat = 'Profil belum tersimpan. Coba lagi.';
+        _galat = _galatSimpan;
       });
     }
   }
@@ -110,7 +124,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: LatarMalam(
+      body: LatarKrayon(
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -118,7 +132,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
                     child: Semantics(
                       label:
                           'Langkah ${_posisi + 1} dari ${_cerita.length + 1}',
@@ -134,7 +148,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               decoration: BoxDecoration(
                                 color: i == _posisi
                                     ? NumiWarna.cahaya
-                                    : Colors.white24,
+                                    : NumiWarna.kartu,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
@@ -152,8 +166,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         _FormProfil(
                           nama: _nama,
                           kelas: _kelas,
-                          onKelas: (k) => setState(() => _kelas = k),
-                          onUbah: () => setState(() {}),
+                          onKelas: (k) => setState(() {
+                            _kelas = k;
+                            _galat = null;
+                          }),
+                          onUbah: () => setState(() => _galat = null),
                         ),
                       ],
                     ),
@@ -161,10 +178,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   if (_galat != null)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        _galat!,
-                        semanticsLabel: _galat,
-                        style: const TextStyle(color: Colors.white),
+                      child: Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          _galat!,
+                          style: const TextStyle(color: NumiWarna.tinta),
+                        ),
                       ),
                     ),
                   Container(
@@ -181,14 +200,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         : TombolNumi(
                             label: _menyimpan
                                 ? 'Menyimpan...'
-                                : 'Mulai Petualangan',
+                                : _galat == _galatSimpan
+                                ? 'Coba simpan lagi'
+                                : 'Periksa profil',
                             lebar: double.infinity,
-                            onTap:
-                                _menyimpan ||
-                                    _nama.text.trim().isEmpty ||
-                                    _kelas == null
+                            onTap: _menyimpan
                                 ? null
-                                : _mulai,
+                                : _galat == _galatSimpan
+                                ? _mulai
+                                : _periksa,
                           ),
                   ),
                 ],
@@ -213,18 +233,18 @@ class _HalamanCerita extends StatelessWidget {
         final mendatar = batas.maxWidth >= 700;
         final gambar = SizedBox(
           width: mendatar ? 240 : (batas.maxWidth - 48).clamp(0.0, 320.0),
-          height: mendatar ? 160 : 220,
+          height: mendatar ? 208 : 266,
           child: Stack(
             alignment: Alignment.center,
             children: [
               Positioned(
                 left: 0,
-                bottom: 20,
+                bottom: 0,
                 child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 90),
               ),
               Positioned(
                 right: 0,
-                bottom: 40,
+                bottom: 6,
                 child: PulauHias(menyala: adegan.pulauMenyala, ukuran: 70),
               ),
               Positioned(
@@ -232,24 +252,34 @@ class _HalamanCerita extends StatelessWidget {
                 child: NumiMascot(
                   ukuran: mendatar ? 120 : 150,
                   ekspresi: adegan.ekspresi,
+                  melayang: false,
                 ),
               ),
             ],
           ),
         );
-        final teks = Text(
-          adegan.teks,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 21,
-            height: 1.45,
-            fontWeight: FontWeight.w700,
+        final teks = DecoratedBox(
+          decoration: kertasKrayon('panel-cerita'),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 18, 24, 22),
+            child: Text(
+              adegan.teks,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: NumiWarna.tinta,
+                fontSize: 19,
+                height: 1.45,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         );
-        return Center(
+        return Align(
+          alignment: mendatar ? Alignment.center : Alignment.topCenter,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            padding: mendatar
+                ? const EdgeInsets.symmetric(horizontal: 24, vertical: 12)
+                : const EdgeInsets.fromLTRB(20, 36, 20, 12),
             child: mendatar
                 ? Row(
                     children: [
@@ -294,57 +324,61 @@ class _FormProfil extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Center(
-                child: NumiMascot(ukuran: 120, ekspresi: EkspresiMaskot.senang),
-              ),
-              const Text(
-                'Halo, Teman!',
+              const Center(child: NumiMascot(ukuran: 78, melayang: false)),
+              Text(
+                'Profil anak',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 4),
               const Text(
-                'Isi bersama ayah, ibu, atau wali ya.',
+                'Diisi bersama ayah, ibu, atau wali.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                style: TextStyle(fontSize: 15),
               ),
               const SizedBox(height: 24),
               const Text(
-                'Siapa namamu?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 17,
+                '1. Nama panggilan anak',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+              ),
+              const SizedBox(height: 8),
+              DecoratedBox(
+                decoration: kertasKrayon('kolom-nama'),
+                child: TextField(
+                  controller: nama,
+                  textCapitalization: TextCapitalization.words,
+                  maxLength: 30,
+                  onChanged: (_) => onUbah(),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: 'Ketuk untuk mengisi nama',
+                    filled: false,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 12,
+                    ),
+                    counterText: '',
+                    prefixIcon: Icon(Icons.person_rounded),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-              TextField(
-                controller: nama,
-                textCapitalization: TextCapitalization.words,
-                maxLength: 30,
-                onChanged: (_) => onUbah(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-                decoration: const InputDecoration(
-                  hintText: 'Contoh: Adi',
-                  counterText: '',
-                  prefixIcon: Icon(Icons.person_rounded),
-                ),
+              const Text(
+                'Contoh: Adi. Tidak perlu nama lengkap.',
+                style: TextStyle(color: NumiWarna.tintaPudar, fontSize: 13),
               ),
               const SizedBox(height: 20),
               const Text(
-                'Sekarang kelas berapa?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 17,
-                ),
+                '2. Kelas anak saat ini',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Pilih satu kelas SD, sesuai kelas sekarang.',
+                style: TextStyle(color: NumiWarna.tintaPudar, fontSize: 13),
               ),
               const SizedBox(height: 10),
               LayoutBuilder(
@@ -359,30 +393,27 @@ class _FormProfil extends StatelessWidget {
                       for (var k = 1; k <= 6; k++)
                         Semantics(
                           selected: kelas == k,
-                          child: SizedBox(
+                          child: Container(
                             width: lebar,
                             height: 64,
-                            child: OutlinedButton(
+                            decoration: kelas == k
+                                ? BoxDecoration(
+                                    color: NumiWarna.cahaya,
+                                    border: Border.all(color: NumiWarna.garis),
+                                    borderRadius: BorderRadius.circular(12),
+                                  )
+                                : kertasKrayon('kelas-netral'),
+                            child: TextButton(
                               onPressed: () => onKelas(k),
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: kelas == k
-                                    ? NumiWarna.cahaya
-                                    : Colors.white.withValues(alpha: 0.12),
-                                foregroundColor: kelas == k
-                                    ? NumiWarna.tinta
-                                    : Colors.white,
+                              style: TextButton.styleFrom(
+                                foregroundColor: NumiWarna.tinta,
                                 padding: EdgeInsets.zero,
-                                side: BorderSide(
-                                  color: kelas == k
-                                      ? Colors.white
-                                      : Colors.white24,
-                                ),
                               ),
                               child: Text(
                                 'Kelas $k',
                                 style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -392,19 +423,13 @@ class _FormProfil extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 20),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.shield_rounded, size: 16, color: Colors.white54),
-                  SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      'Data tersimpan aman di perangkat ini',
-                      style: TextStyle(color: Colors.white54),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 12),
+              Text(
+                kelas == null
+                    ? 'Belum ada kelas yang dipilih.'
+                    : 'Kelas $kelas dipilih.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 13),
               ),
             ],
           ),

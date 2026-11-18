@@ -72,9 +72,16 @@ class _TampilanSoalState extends State<TampilanSoal> {
           JenisSoal.pilihanGanda =>
             soal.kalimat == null
                 ? const SizedBox.shrink()
-                : Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TeksMatematika(soal.kalimat!, ukuran: 42),
+                : Container(
+                    alignment: Alignment.center,
+                    constraints: const BoxConstraints(minHeight: 120),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: NumiWarna.kartu,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: NumiWarna.garis),
+                    ),
+                    child: TeksMatematika(soal.kalimat!, ukuran: 30),
                   ),
         },
       ],
@@ -148,13 +155,16 @@ class _GridPilihan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final panjang = pilihan.any((p) => p.length > 9);
+    final ringkas =
+        pilihan.length == 4 &&
+        pilihan.every((p) => p.length <= 3 && !p.contains('/'));
     return GridView.count(
-      crossAxisCount: panjang ? 1 : 2,
+      crossAxisCount: panjang ? 1 : (ringkas ? 4 : 2),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: panjang ? 5.2 : 2.1,
+      mainAxisExtent: 70,
       children: [
         for (final (i, p) in pilihan.indexed)
           KartuPilihan(
@@ -226,7 +236,8 @@ class _KartuPilihanState extends State<KartuPilihan>
   @override
   void didUpdateWidget(covariant KartuPilihan lama) {
     super.didUpdateWidget(lama);
-    if (widget.status == StatusKartu.salah && lama.status != StatusKartu.salah) {
+    if (widget.status == StatusKartu.salah &&
+        lama.status != StatusKartu.salah) {
       _getar.forward(from: 0);
     }
   }
@@ -247,7 +258,7 @@ class _KartuPilihanState extends State<KartuPilihan>
       StatusKartu.biasa =>
         widget.terpilih
             ? (const Color(0xFFFFF0CF), NumiWarna.cahaya)
-            : (Colors.white, const Color(0xFFE6E0D2)),
+            : (NumiWarna.kartu, NumiWarna.garis),
     };
     final angkat = widget.terpilih && widget.status == StatusKartu.biasa
         ? -4.0
@@ -274,14 +285,8 @@ class _KartuPilihanState extends State<KartuPilihan>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: latar,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: garis, width: 3),
-              boxShadow: [
-                BoxShadow(
-                  color: garis.withValues(alpha: 0.9),
-                  offset: Offset(0, widget.terpilih ? 2 : 5),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(13),
+              border: Border.all(color: garis),
             ),
             child: Center(
               child: Column(
@@ -470,6 +475,16 @@ class _GambarPecahan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (pecahan.pembilang == 1 && pecahan.penyebut == 2) {
+      return Image.asset(
+        'assets/krayon/jeruk-setengah.png',
+        width: 156,
+        height: 156,
+        fit: BoxFit.contain,
+        semanticLabel:
+            'Jeruk dibagi dua bagian sama besar, satu bagian diwarnai',
+      );
+    }
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 700),

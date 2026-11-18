@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/latar_malam.dart';
+import '../../core/widgets/krayon.dart';
 import '../../core/widgets/tombol_numi.dart';
 import '../../core/widgets/transisi.dart';
-import '../../data/models/companion_message.dart';
 import '../../state/numi_controller.dart';
 import '../mascot/numi_mascot.dart';
 import 'diagnostic_screen.dart';
@@ -18,7 +17,7 @@ class DiagnosticIntroScreen extends ConsumerWidget {
     final data = ref.watch(numiControllerProvider);
     final nama = data.siswa?.namaPanggilan ?? 'Teman';
     return Scaffold(
-      body: LatarMalam(
+      body: LatarKrayon(
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -28,41 +27,51 @@ class DiagnosticIntroScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     Expanded(
-                      child: Center(
+                      child: Align(
+                        alignment: const Alignment(0, -0.52),
                         child: SingleChildScrollView(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Column(
                             children: [
-                              const NumiMascot(
-                                ekspresi: EkspresiMaskot.berpikir,
-                                ukuran: 120,
-                              ),
+                              const Text('🗺️', style: TextStyle(fontSize: 72)),
                               const SizedBox(height: 12),
-                              const Text(
+                              Text(
                                 'Membaca Peta',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium,
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 44),
                               DecoratedBox(
                                 decoration: BoxDecoration(
-                                  color: NumiWarna.malamTerang,
-                                  borderRadius: BorderRadius.circular(24),
+                                  color: NumiWarna.kartu,
+                                  border: Border.all(color: NumiWarna.garis),
+                                  borderRadius: BorderRadius.circular(18),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Text(
-                                    '$nama, ayo jawab beberapa soal. Jawabanmu membantu Numi memilih pulau tempatmu mulai belajar. Jawab sebisamu, ya!',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      height: 1.4,
-                                    ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const NumiMascot(
+                                        ukuran: 64,
+                                        melayang: false,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          'Sebelum berlayar, kita coba beberapa soal dulu, $nama. Kerjakan sebisamu. Hasilnya membantu memilih latihan.',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            height: 1.45,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
