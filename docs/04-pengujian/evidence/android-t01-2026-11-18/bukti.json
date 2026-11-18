@@ -1,0 +1,100 @@
+{
+  "tanggal": "2026-11-18",
+  "avd": "Numi_QA_API_35",
+  "androidApi": 35,
+  "renderer": "host / NVIDIA RTX 3050",
+  "commitAplikasi": "09d503f + redesign lokal yang dipertahankan",
+  "apkSha256": "A8D6897C8C8698CA8A16F5D1BDC5BC977AAE38047209B44BE05E5D36F84B6EBF",
+  "lesson": [
+    {
+      "frame": "1795016047895",
+      "benar": 4,
+      "total": 5,
+      "xp": 60
+    },
+    {
+      "frame": "1795016264201",
+      "benar": 5,
+      "total": 5,
+      "xp": 70
+    }
+  ],
+  "mastery": {
+    "frame": "1795016551676",
+    "benar": 5,
+    "total": 5,
+    "xp": 100
+  },
+  "hasilDibukaUlang": {
+    "frame": "1795016780129",
+    "benar": 5,
+    "total": 5,
+    "xp": 100
+  },
+  "resume": {
+    "jawabanTersimpan": 2,
+    "frameSebelum": "1795016353622",
+    "frameSesudah": "1795016482800",
+    "deskripsiIdentik": true,
+    "isi": [
+      "Keluar",
+      "3/5",
+      "Mastery Test · Pulau Kerikil",
+      "Bilangan sesudah 15 adalah?",
+      "14\n14",
+      "18\n18",
+      "17\n17",
+      "16\n16",
+      "Pilih jawaban dulu"
+    ]
+  },
+  "xpUiAkhir": 230,
+  "cloudSebelumSesudahIdentik": true,
+  "cloud": {
+    "project": "numi-imun",
+    "jumlahProfilQA": 1,
+    "aksesTanpaLoginDitolak": true,
+    "anonymousStatus": 403,
+    "profiles": [
+      {
+        "profil": "Numi-QA",
+        "kelas": 1,
+        "xp": 230,
+        "jumlahDiagnostic": 1,
+        "jumlahMastery": 1,
+        "hasilMastery": [
+          {
+            "topikId": "T01",
+            "skor": 100,
+            "lulus": true
+          }
+        ],
+        "jawabanMastery": [
+          5
+        ],
+        "percobaanLesson": [
+          {
+            "lessonId": "T01-L1",
+            "jumlahPercobaan": 1
+          },
+          {
+            "lessonId": "T01-L2",
+            "jumlahPercobaan": 1
+          }
+        ],
+        "jawabanLesson": [
+          5,
+          5
+        ],
+        "revisiValid": true,
+        "serverUpdateTime": "2026-11-18T15:42:45.494135Z"
+      }
+    ]
+  },
+  "fatalPadaBufferCrashProsesAkhir": 0,
+  "batas": [
+    "APK debug; bukan verifikasi APK release distribusi.",
+    "Satu AVD API 35; bukan perangkat fisik/API 26/RAM 2-4 GB.",
+    "Tidak mengukur NFR startup; am start -W sempat timeout sebelum UI profil tampil."
+  ]
+}

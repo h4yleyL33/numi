@@ -112,6 +112,7 @@ I08 masih parsial. [Catatan checkpoint mastery](../docs/03-implementasi/CHECKPOI
 
 ## I12 — Pemeriksaan akhir implementasi sebelum Bab IV
 
+- [x] Uji alur T01 pada APK debug Android 35: kedua lesson, mastery 5/5, force-stop/resume dengan isi soal identik, dan pembukaan hasil ulang tanpa XP/percobaan ganda; UI dan Firestore sama-sama memuat 230 XP. Bukti dan batas cakupan ada pada verifikasi rilis.
 - [ ] Analyzer/test/build lulus; login/profile/checkpoint/cloud diverifikasi; konten disetujui validator.
 - [ ] Uji Android API 26+, RAM 2/4 GB, 360–412 dp, landscape, teks besar, kegagalan jaringan/simpan dan proses mati.
 - [ ] Susun rencana pilot enam kelas, ukur target NFR dengan peserta/perangkat/materi/bantuan yang dicatat, baru tulis hasil Bab IV.

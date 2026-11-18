@@ -95,3 +95,11 @@ Ditemukan celah pada retry mastery dari layar hasil: handler mengosongkan `_sesi
 Pengecualian isi kini membaca mastery terakhir langsung dari state tersimpan. Tes yang sama kemudian lulus; paket baru berisi lima soal, kedua isi gambar lama tidak muncul, dan XP tidak bertambah saat baru memulai tes. Paket tes terfokus retry, pemulihan mastery dan generator lulus 32 tes.
 
 Pengulangan QA Android belum dimulai: pemeriksaan host menunjukkan RAM bebas sekitar 0,8 GB, sedangkan AVD meminta sekitar 2,5 GB. Ini merupakan faktor lingkungan yang mungkin berkontribusi pada masalah boot sebelumnya, bukan pembuktian tunggal penyebab Watchdog. Menunggu RAM dilonggarkan sebelum menyalakan AVD. APK QA yang dibangun sebelumnya belum memuat perbaikan retry terbaru ini dan harus dibangun ulang sebelum pengujian perangkat.
+
+## Hasil pengulangan Android setelah RAM dilonggarkan
+
+Status tertunda di atas sudah ditindaklanjuti. APK dibangun ulang dan berhasil dipasang tanpa menghapus profil. AVD memakai GPU host; konfigurasi GPU hardware disimpan dengan cadangan, dan pengaturan keyboard tetap dipertahankan.
+
+Pada profil QA, lesson pertama lulus 4/5 dengan 60 XP, lesson latihan lulus 5/5 dengan 70 XP, lalu mastery lulus 5/5 dengan 100 XP. Mastery dipulihkan dari force-stop setelah dua jawaban; deskripsi UI soal ketiga dan seluruh pilihan identik sebelum/sesudah restart. Setelah finalisasi dan restart berikutnya, membuka hasil tersimpan tetap mempertahankan 230 total XP serta tepat satu mastery. Data Firestore sama dengan UI, digest valid, satu percobaan tiap lesson, dan snapshot bukti cloud sebelum/sesudah pembukaan hasil identik. Akses anonim tetap ditolak 403.
+
+Detail APK, renderer, bukti terstruktur, koreksi pemeriksaan nama layanan Android, dan batas uji startup/perangkat fisik ada pada [verifikasi rilis](VERIFIKASI-RILIS.md#verifikasi-android-apk-terbaru). Tidak ada perubahan kode aplikasi atau deployment baru pada pengulangan ini.
