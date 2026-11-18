@@ -75,6 +75,8 @@ flutter run -d chrome -t tool/verifikasi_firebase_emulator.dart
 
 Layar menampilkan `NUMI_FIREBASE_LULUS` setelah mengunggah checkpoint lesson, memulihkannya di database lokal kedua, dan membuktikan penolakan antar-UID. Untuk emulator Android, targetkan perangkat dan gunakan `--dart-define=NUMI_FIREBASE_EMULATOR_HOST=10.0.2.2`. Harness membuat akun anonim di emulator dengan proyek `demo-numi`.
 
+Harness Web memakai long polling dan menonaktifkan persistensi Firestore untuk pengujian koneksi lokal; pengaturan aplikasi produksi tetap menggunakan konfigurasi normal. Verifikasi terbaru lulus setelah suite REST menguji aturan pada layanan emulator yang sama. Koneksi awal Web sempat timeout, sehingga hasil ini tidak boleh dibaca sebagai bukti login Google Web produksi.
+
 Database `(default)` proyek tim kini aktif di `asia-southeast2` (Jakarta), edisi Standard, dengan `freeTier: true`. Setelah persetujuan pengguna, aturan dan pengecualian indeks berhasil diterapkan ke `numi-imun`. Aplikasi Android mengirim profil sintetis `Numi-QA` dengan hasil diagnostic dan dua respons lesson. Pemeriksaan dokumen tepat mengonfirmasi sidik revisi valid. Permintaan tanpa autentikasi ditolak HTTP 403.
 
 Pemulihan server diuji dengan mencadangkan database belajar emulator, membuka cache belajar baru yang kosong, lalu memilih **Sinkronkan sekarang**. Profil QA dan rekomendasi lesson 2/5 kembali dari Firestore. Database awal tetap disimpan di penyimpanan privat aplikasi dengan akhiran `.qa-cloud-restore-backup`. Pergantian dua akun Google nyata pada satu emulator juga teruji: akun kedua tidak menampilkan profil QA dan akun pertama memulihkan checkpoint 2/5. Konflik dua perangkat fisik dan siklus penghapusan permanen tetap terbuka.

@@ -62,7 +62,10 @@ Future<void> _ujiEmulator() async {
   );
   final auth = FirebaseAuth.instanceFor(app: app);
   final firestore = FirebaseFirestore.instanceFor(app: app);
-  firestore.settings = const Settings(persistenceEnabled: false);
+  firestore.settings = const Settings(
+    persistenceEnabled: false,
+    webExperimentalForceLongPolling: true,
+  );
   await auth.useAuthEmulator(host, 9099);
   firestore.useFirestoreEmulator(host, 8080);
 
