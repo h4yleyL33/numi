@@ -23,9 +23,10 @@ enum _Tahap { kenalan, soal, menyimpan, gagal, hasil }
 /// UC-003 dan UC-004. Lesson kenalan dimulai dari penjelasan maskot yang dibuka
 /// satu per satu, lalu lima soal dengan umpan balik langsung.
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({super.key, required this.lesson});
+  const LessonScreen({super.key, required this.lesson, this.latihanUlang = false});
 
   final Lesson lesson;
+  final bool latihanUlang;
 
   @override
   ConsumerState<LessonScreen> createState() => _LessonScreenState();
@@ -61,7 +62,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   Future<void> _siapkan() => _jalankan(() async {
     _sesi = ref.read(numiControllerProvider).sesiLesson[widget.lesson.id];
-    if (_sesi != null) {
+    if (widget.latihanUlang && _sesi?.selesai == true) {
+      await _buatSesi();
+    } else if (_sesi != null) {
       await _tampilkan();
     } else if (widget.lesson.tipe == TipeLesson.kenalan) {
       setState(() => _tahap = _Tahap.kenalan);

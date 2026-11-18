@@ -10,6 +10,7 @@ import 'package:numi/data/models/sesi_soal.dart';
 import 'package:numi/features/diagnostic/diagnostic_screen.dart';
 import 'package:numi/features/feedback/banner_umpan_balik.dart';
 import 'package:numi/features/lesson/lesson_screen.dart';
+import 'package:numi/features/quiz/pemutar_soal.dart';
 import 'package:numi/state/numi_controller.dart';
 
 import '../domain/checkpoint_diagnostic_test.dart' show jawabDiagnostic;
@@ -45,6 +46,47 @@ void main() {
     addTearDown(container.dispose);
     return container;
   }
+
+  testWidgets('remedial membuka latihan baru tanpa menambah XP hasil lama', (
+    tester,
+  ) async {
+    final lesson = lessonUntuk('T01').last;
+    var sesi = SesiSoal(
+      id: 'lesson-lama',
+      topikId: 'T01',
+      soal: soalCheckpoint,
+      konteks: KonteksJawaban.lesson,
+      lessonId: lesson.id,
+      mulaiPada: DateTime(2026),
+    );
+    for (var i = 0; i < 5; i++) {
+      sesi = sesi.catat(
+        sesi.commandId(i),
+        responsSoal(sesi.soal[i], KonteksJawaban.lesson),
+      );
+      sesi = sesi.lanjut('${sesi.id}/lanjut/$i');
+    }
+    final container = buka(
+      RepositoryMemori(),
+      profilSiap().copyWith(sesiLesson: {lesson.id: sesi}),
+    );
+    await container
+        .read(numiControllerProvider.notifier)
+        .finalisasiLesson(lesson.id, sesi.id);
+    final xp = container.read(numiControllerProvider).xp;
+    await tampil(
+      tester,
+      container,
+      LessonScreen(lesson: lesson, latihanUlang: true),
+    );
+    final baru = container.read(numiControllerProvider).sesiLesson[lesson.id]!;
+    expect(baru.id, isNot(sesi.id));
+    expect(baru.jawaban, isEmpty);
+    expect(baru.selesai, isFalse);
+    expect(container.read(numiControllerProvider).xp, xp);
+    expect(find.text('Lesson selesai!'), findsNothing);
+    expect(find.byType(PemutarSoal), findsOneWidget);
+  });
 
   testWidgets(
     'diagnostic pulih lengkap: gagal simpan hasil terlihat dan retry tidak mengulang respons',

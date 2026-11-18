@@ -61,6 +61,11 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
               widget.topik.id,
               AppConfig.soalMastery,
               tingkat: 2,
+              hindariButir: [
+                for (final sesi in ref.read(numiControllerProvider).sesiLesson.values)
+                  if (sesi.topikId == widget.topik.id) ...sesi.soal,
+                ...?_sesi?.soal,
+              ],
               hindari: {
                 for (final soal
                     in ref

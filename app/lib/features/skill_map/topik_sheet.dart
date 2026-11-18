@@ -124,7 +124,9 @@ class TopikSheet extends ConsumerWidget {
                     lesson: l,
                     selesai: data.lessonSelesai(l.id),
                     terbuka: i == 0 || data.lessonSelesai(lessons[i - 1].id),
-                    onTap: () => buka(LessonScreen(lesson: l)),
+                    onTap: () => buka(LessonScreen(lesson: l,
+                      latihanUlang: data.lessonSelesai(l.id) &&
+                        path.lessonBerikutnya(topik.id, data)?.id == l.id)),
                   ),
                 const SizedBox(height: 8),
                 _BarisMercusuar(

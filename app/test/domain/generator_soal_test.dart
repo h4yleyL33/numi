@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:numi/data/content/daftar_topik.dart';
@@ -7,6 +8,46 @@ import 'package:numi/data/models/soal.dart';
 
 void main() {
   final generator = GeneratorSoal(Random(42));
+
+  test(
+    'mastery berbeda dari lesson dan paket sebelumnya, termasuk ID acak',
+    () {
+      String isi(Soal s) => jsonEncode(
+        s.toJson()
+          ..remove('id')
+          ..remove('pilihan')
+          ..remove('penjelasan')
+          ..remove('versi')
+          ..remove('tingkat')
+          ..remove('statusValidasi'),
+      );
+      for (final topik in daftarTopik) {
+        final acak = GeneratorSoal(Random(42));
+        var sebelumnya = <Soal>[];
+        for (var i = 0; i < 100; i++) {
+          final lesson = [
+            ...acak.buat(topik.id, 5, tingkat: 1),
+            ...acak.buat(topik.id, 5, tingkat: 2),
+          ];
+          final hindari = [...lesson, ...sebelumnya];
+          final mastery = acak.buat(
+            topik.id,
+            5,
+            tingkat: 2,
+            hindariButir: hindari,
+          );
+          expect(mastery, hasLength(5), reason: '${topik.id}/$i');
+          expect(mastery.map(isi).toSet(), hasLength(5));
+          expect(
+            mastery.map(isi).toSet().intersection(hindari.map(isi).toSet()),
+            isEmpty,
+            reason: '${topik.id}/$i',
+          );
+          sebelumnya = mastery;
+        }
+      }
+    },
+  );
 
   for (final topik in daftarTopik) {
     group('${topik.id} ${topik.nama}', () {

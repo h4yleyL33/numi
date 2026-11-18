@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:convert';
 
 import '../../core/utils/tanggal.dart';
 import '../models/soal.dart';
@@ -31,17 +32,32 @@ class GeneratorSoal {
     int jumlah, {
     int tingkat = 1,
     Set<String> hindari = const {},
+    Iterable<Soal> hindariButir = const [],
   }) {
     final templat = _templatUntuk(topikId);
     final hasil = <Soal>[];
     final kunci = {...hindari};
+    // ID beberapa templat mengandung angka acak; bandingkan isi soalnya juga.
+    String isi(Soal s) => jsonEncode(
+      s.toJson()
+        ..remove('id')
+        ..remove('pilihan')
+        ..remove('penjelasan')
+        ..remove('versi')
+        ..remove('tingkat')
+        ..remove('statusValidasi'),
+    );
+    final isiTerpakai = hindariButir.map(isi).toSet();
     final mulai = _rng.nextInt(templat.length);
     var coba = 0;
     // Templat dipakai bergiliran supaya bentuk soal dalam satu sesi bervariasi.
     while (hasil.length < jumlah && coba < jumlah * 30) {
       final soal = templat[(mulai + coba) % templat.length](tingkat);
       coba++;
-      if (kunci.add(soal.id)) hasil.add(soal);
+      if (!kunci.contains(soal.id) && isiTerpakai.add(isi(soal))) {
+        kunci.add(soal.id);
+        hasil.add(soal);
+      }
     }
     return hasil;
   }
