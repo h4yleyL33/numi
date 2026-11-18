@@ -87,3 +87,11 @@ APK debug QA berhasil dibangun. Build harness Web juga berhasil menggunakan path
 Instalasi APK terbaru belum terverifikasi: AVD cold boot headless mengalami restart SystemServer oleh Watchdog dan layanan PackageManager/Storage belum siap pada percobaan instalasi. AVD QA yang dijalankan untuk pemeriksaan ini ditutup tanpa menghapus data. Pengujian APK baru dan mastery lengkap di Android tetap terbuka. Build Android juga mengeluarkan peringatan kompatibilitas Kotlin Gradle Plugin pada firebase_auth/firebase_core untuk versi Flutter mendatang; build saat ini tetap lulus.
 
 Penguatan aturan dan indeks kemudian berhasil dideploy ke numi-imun sesuai izin Firestore sebelumnya. Pemeriksaan sesudah deployment dibatasi pada dokumen QA yang sama: satu diagnostic, dua jawaban lesson, XP 0, digest valid dan waktu pembaruan server tetap 2026-11-18T05:14:49.582911Z. Akses anonim ditolak HTTP 403. Data QA tidak diubah oleh deployment atau pembacaan verifikasi tersebut.
+
+## Pemeriksaan tombol Mulai test baru
+
+Ditemukan celah pada retry mastery dari layar hasil: handler mengosongkan `_sesi`, sementara daftar pengecualian isi butir memakai `_sesi.soal`. Pengecualian ID tetap berjalan, tetapi templat dengan ID acak dapat mengulang isi mastery sebelumnya. Tes widget T05 menyimpan kedua bentuk gambar pecahan pada mastery lama lalu menekan Mulai test baru. Sebelum perbaikan, paket baru mengandung gambar dengan isi yang sudah dipakai dan tes gagal.
+
+Pengecualian isi kini membaca mastery terakhir langsung dari state tersimpan. Tes yang sama kemudian lulus; paket baru berisi lima soal, kedua isi gambar lama tidak muncul, dan XP tidak bertambah saat baru memulai tes. Paket tes terfokus retry, pemulihan mastery dan generator lulus 32 tes.
+
+Pengulangan QA Android belum dimulai: pemeriksaan host menunjukkan RAM bebas sekitar 0,8 GB, sedangkan AVD meminta sekitar 2,5 GB. Ini merupakan faktor lingkungan yang mungkin berkontribusi pada masalah boot sebelumnya, bukan pembuktian tunggal penyebab Watchdog. Menunggu RAM dilonggarkan sebelum menyalakan AVD. APK QA yang dibangun sebelumnya belum memuat perbaikan retry terbaru ini dan harus dibangun ulang sebelum pengujian perangkat.

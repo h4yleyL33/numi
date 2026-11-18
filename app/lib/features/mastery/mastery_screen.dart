@@ -64,7 +64,10 @@ class _MasteryScreenState extends ConsumerState<MasteryScreen> {
               hindariButir: [
                 for (final sesi in ref.read(numiControllerProvider).sesiLesson.values)
                   if (sesi.topikId == widget.topik.id) ...sesi.soal,
-                ...?_sesi?.soal,
+                ...?ref
+                    .read(numiControllerProvider)
+                    .sesiMastery[widget.topik.id]
+                    ?.soal,
               ],
               hindari: {
                 for (final soal
