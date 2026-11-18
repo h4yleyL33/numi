@@ -47,6 +47,8 @@ class LocalProfilRepository implements ProfilRepository {
   bool get cloudAktif => _prefs.getBool(_kunciIzinCloud) ?? false;
   Future<HasilSinkronProfil>? _sinkronBerjalan;
   HasilSinkronProfil hasilSinkron = HasilSinkronProfil.lokal;
+  final _konflik = <String, KonflikProfil>{};
+  List<KonflikProfil> get konflik => List.unmodifiable(_konflik.values);
 
   Future<void> aturCloud(bool aktif) async {
     _periksaAkun();
@@ -78,12 +80,16 @@ class LocalProfilRepository implements ProfilRepository {
       final db = await _db();
       if (db == null) return HasilSinkronProfil.tertunda;
       final lokal = await _baca();
-      final remote = await server.daftar();
+      final hasilCloud = await server.daftar();
+      final remote = hasilCloud.profil;
+      _konflik.clear();
       var konflik = false;
       var adaPembaruanCloud = false;
       for (final id in {...lokal.keys, ...remote.keys}) {
         _periksaAkun();
         if (!cloudAktif) return HasilSinkronProfil.lokal;
+        // Snapshot rusak bukan profil yang dihapus; jangan unggah menimpanya.
+        if (hasilCloud.tidakValid.contains(id)) continue;
         final data = lokal[id];
         final dataCloud = remote[id];
         final versiLokal = data == null ? null : sidikDataBelajar(data);
@@ -131,14 +137,95 @@ class LocalProfilRepository implements ProfilRepository {
           }
         } else {
           konflik = true;
+          if (data != null && dataCloud != null) {
+            _konflik[id] = KonflikProfil(data, dataCloud);
+          }
         }
+      }
+      if (hasilCloud.tidakValid.isNotEmpty) {
+        return HasilSinkronProfil.dataTidakValid;
       }
       if (konflik) return HasilSinkronProfil.konflik;
       if (adaPembaruanCloud) return HasilSinkronProfil.tertunda;
       return HasilSinkronProfil.selesai;
+    } on FormatException {
+      return HasilSinkronProfil.dataTidakValid;
     } catch (_) {
       return HasilSinkronProfil.tertunda;
     }
+  }
+
+  Future<HasilSinkronProfil> selesaikanKonflik(
+    KonflikProfil pilihan, {
+    required bool gunakanCloud,
+  }) async {
+    if (_sinkronBerjalan != null) await _sinkronBerjalan;
+    return _sinkronBerjalan = _selesaikanKonflik(pilihan, gunakanCloud)
+        .then((hasil) => hasilSinkron = hasil)
+        .whenComplete(() => _sinkronBerjalan = null);
+  }
+
+  Future<HasilSinkronProfil> _selesaikanKonflik(
+    KonflikProfil pilihan,
+    bool gunakanCloud,
+  ) async {
+    _periksaAkun();
+    final server = cloud;
+    final db = await _db();
+    if (!cloudAktif ||
+        server == null ||
+        db == null ||
+        pilihan.lokal.siswa?.waliUid != uid ||
+        pilihan.cloud.siswa?.waliUid != uid) {
+      throw StateError('Sinkronisasi atau akun sudah berubah.');
+    }
+    final id = pilihan.lokal.siswa!.id;
+    final versiLokal = sidikDataBelajar(pilihan.lokal);
+    final versiCloud = sidikDataBelajar(pilihan.cloud);
+    final terbaru = (await server.daftar()).profil[id];
+    _periksaAkun();
+    if (terbaru == null || sidikDataBelajar(terbaru) != versiCloud) {
+      throw StateError('Versi cloud berubah. Sinkronkan lagi sebelum memilih.');
+    }
+    final record = _metadata.record(id);
+    await db.transaction((txn) async {
+      _periksaAkun();
+      if (!cloudAktif) throw StateError('Sinkronisasi sudah dimatikan.');
+      final profil = _urai(
+        await _store.record(uid).get(txn) ?? _prefs.getString(_kunci),
+      );
+      final lokal = profil[id];
+      if (lokal == null || sidikDataBelajar(lokal) != versiLokal) {
+        throw StateError(
+          'Versi perangkat berubah. Sinkronkan lagi sebelum memilih.',
+        );
+      }
+      await stringMapStoreFactory
+          .store('cadangan-konflik')
+          .record('$id-${DateTime.now().microsecondsSinceEpoch}')
+          .put(txn, {
+            'lokal': pilihan.lokal.toJson(),
+            'cloud': pilihan.cloud.toJson(),
+          });
+      if (gunakanCloud) {
+        profil[id] = terbaru;
+        await _store.record(uid).put(txn, _enkode(profil));
+        await record.put(txn, {'dasar': versiCloud});
+      } else {
+        await record.put(txn, {'dasar': versiCloud, 'dikirim': versiLokal});
+      }
+    });
+    if (!gunakanCloud) {
+      _periksaAkun();
+      if (!cloudAktif) throw StateError('Sinkronisasi sudah dimatikan.');
+      if (!await server.simpan(pilihan.lokal, versiDasar: versiCloud)) {
+        throw StateError(
+          'Versi cloud berubah. Sinkronkan lagi sebelum memilih.',
+        );
+      }
+      await record.put(db, {'dasar': versiLokal});
+    }
+    return _jalankanSinkron(true);
   }
 
   void _periksaAkun() {
@@ -257,7 +344,13 @@ class LocalProfilRepository implements ProfilRepository {
       _DataProfilRepository(this, id, masihAktif ?? () => true);
 }
 
-enum HasilSinkronProfil { lokal, selesai, tertunda, konflik }
+enum HasilSinkronProfil { lokal, selesai, tertunda, konflik, dataTidakValid }
+
+class KonflikProfil {
+  const KonflikProfil(this.lokal, this.cloud);
+  final DataBelajar lokal;
+  final DataBelajar cloud;
+}
 
 class _DataProfilRepository implements NumiRepository {
   _DataProfilRepository(this.pemilik, this.id, this.masihAktif);

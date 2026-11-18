@@ -21,20 +21,52 @@ service cloud.firestore {
         && siswa.dibuatPada is string && siswa.dibuatPada.size() <= 35;
     }
 
+    // Dua lesson per topik, satu checkpoint mastery per topik; tanpa loop rules.
+    // shortcut: isi butir/respons tetap divalidasi klien; penilaian tepercaya memerlukan backend.
+    function daftarSesi(daftar, konteks) {
+      let wajib = ['id', 'topikId', 'versiKebijakan', 'statusSimpan', 'soal',
+        'jawaban', 'hasil', 'konteks'];
+      let n = daftar.size();
+      return daftar is list && n <= (konteks == 'lesson' ? 24 : 12)
+        && (n <= 0 || daftar[0].keys().hasAll(wajib)) && (n <= 1 || daftar[1].keys().hasAll(wajib))
+        && (n <= 2 || daftar[2].keys().hasAll(wajib)) && (n <= 3 || daftar[3].keys().hasAll(wajib))
+        && (n <= 4 || daftar[4].keys().hasAll(wajib)) && (n <= 5 || daftar[5].keys().hasAll(wajib))
+        && (n <= 6 || daftar[6].keys().hasAll(wajib)) && (n <= 7 || daftar[7].keys().hasAll(wajib))
+        && (n <= 8 || daftar[8].keys().hasAll(wajib)) && (n <= 9 || daftar[9].keys().hasAll(wajib))
+        && (n <= 10 || daftar[10].keys().hasAll(wajib)) && (n <= 11 || daftar[11].keys().hasAll(wajib))
+        && (konteks != 'lesson' || (
+          (n <= 12 || daftar[12].keys().hasAll(wajib)) && (n <= 13 || daftar[13].keys().hasAll(wajib))
+          && (n <= 14 || daftar[14].keys().hasAll(wajib)) && (n <= 15 || daftar[15].keys().hasAll(wajib))
+          && (n <= 16 || daftar[16].keys().hasAll(wajib)) && (n <= 17 || daftar[17].keys().hasAll(wajib))
+          && (n <= 18 || daftar[18].keys().hasAll(wajib)) && (n <= 19 || daftar[19].keys().hasAll(wajib))
+          && (n <= 20 || daftar[20].keys().hasAll(wajib)) && (n <= 21 || daftar[21].keys().hasAll(wajib))
+          && (n <= 22 || daftar[22].keys().hasAll(wajib)) && (n <= 23 || daftar[23].keys().hasAll(wajib))));
+    }
+
+    function diagnosticSah(s) {
+      return s == null || (s is map && s.keys().hasAll([
+        'id', 'kelas', 'versiKebijakan', 'statusSimpan', 'blok', 'ditutup'
+      ]) && s.id is string && s.kelas is int && s.kelas >= 1 && s.kelas <= 6
+        && s.versiKebijakan == 'numi-pilot-v1' && s.statusSimpan == 'lokal'
+        && s.ditutup is bool && s.blok is list && s.blok.size() >= 1 && s.blok.size() <= 6);
+    }
+
     function belajarSah(data, uid, profilId) {
       return data is map && bentuk(data, [
         'versi', 'siswa', 'sesiLesson', 'sesiDiagnostic', 'sesiMastery',
         'buktiSkill', 'aksesMateri', 'skillMap', 'hasilDiagnostic', 'progresLesson',
         'riwayatJawaban', 'hasilMastery', 'lencana', 'streakLog', 'pesanMaskot', 'xp'
       ]) && data.versi == 5 && siswaSah(data.siswa, uid, profilId)
-        && data.sesiLesson is list
-        && (data.sesiDiagnostic == null || data.sesiDiagnostic is map)
-        && data.sesiMastery is list && data.buktiSkill is list
+        && daftarSesi(data.sesiLesson, 'lesson')
+        && diagnosticSah(data.sesiDiagnostic)
+        && daftarSesi(data.sesiMastery, 'mastery')
+        && data.buktiSkill is list && data.buktiSkill.size() <= 12
         && data.aksesMateri is list && data.skillMap is list
         && data.hasilDiagnostic is list && data.progresLesson is list
         && data.riwayatJawaban is list && data.hasilMastery is list
         && data.lencana is list && data.streakLog is list && data.pesanMaskot is list
-        && data.xp is int && data.xp >= 0;
+        && data.xp is int && data.xp >= 0
+        && (data.xp == 0 || data.progresLesson.size() > 0 || data.hasilMastery.size() > 0);
     }
 
     function snapshotSah(uid, profilId) {

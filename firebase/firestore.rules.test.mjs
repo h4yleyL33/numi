@@ -24,6 +24,7 @@ async function akun() {
 function nilai(value) {
   if (value === null) return { nullValue: null };
   if (typeof value === 'string') return { stringValue: value };
+  if (typeof value === 'boolean') return { booleanValue: value };
   if (Number.isInteger(value)) return { integerValue: String(value) };
   if (Array.isArray(value)) return { arrayValue: { values: value.map(nilai) } };
   return { mapValue: { fields: bidang(value) } };
@@ -107,9 +108,44 @@ test('Firestore membatasi profil ke UID dan menolak skema atau revisi tidak sah'
   const baru = structuredClone(data);
   baru.dasar = data.versi;
   baru.versi = 'b'.repeat(64);
-  baru.data.xp = 10;
+  baru.data.siswa.nama = 'Raka QA';
   await status(403, profil, b.idToken, 'PATCH', baru);
   await status(200, profil, a.idToken, 'PATCH', baru);
   baru.versi = 'c'.repeat(64);
   await status(403, profil, a.idToken, 'PATCH', baru);
+
+  for (const field of ['sesiLesson', 'sesiMastery']) {
+    const rusak = structuredClone(data);
+    rusak.dasar = 'b'.repeat(64);
+    rusak.versi = 'd'.repeat(64);
+    rusak.data[field] = [{ id: 'checkpoint-tidak-lengkap' }];
+    await status(403, profil, a.idToken, 'PATCH', rusak);
+  }
+  const palsu = structuredClone(data);
+  palsu.dasar = 'b'.repeat(64);
+  palsu.versi = 'e'.repeat(64);
+  palsu.data.xp = 999999999;
+  await status(403, profil, a.idToken, 'PATCH', palsu);
+
+  // Uji batas evaluator rules pada seluruh slot checkpoint yang didukung.
+  const penuh = structuredClone(data);
+  penuh.dasar = 'b'.repeat(64);
+  penuh.versi = 'f'.repeat(64);
+  const sesi = (i, konteks) => ({
+    id: `${konteks}-${i}`, topikId: `T${String(i % 12 + 1).padStart(2, '0')}`,
+    versiKebijakan: 'numi-pilot-v1', statusSimpan: 'lokal', konteks,
+    soal: Array.from({length: konteks === 'diagnostic' ? 2 : 5}, () => ({})),
+    jawaban: [], hasil: null,
+  });
+  penuh.data.sesiLesson = Array.from({length: 24}, (_, i) => sesi(i, 'lesson'));
+  penuh.data.sesiMastery = Array.from({length: 12}, (_, i) => sesi(i, 'mastery'));
+  penuh.data.sesiDiagnostic = {id: 'diag', kelas: 6, versiKebijakan: 'numi-pilot-v1',
+    statusSimpan: 'lokal', ditutup: false,
+    blok: Array.from({length: 6}, (_, i) => sesi(i, 'diagnostic'))};
+  await status(200, profil, a.idToken, 'PATCH', penuh);
+  const rusakTerakhir = structuredClone(penuh);
+  rusakTerakhir.dasar = penuh.versi;
+  rusakTerakhir.versi = '9'.repeat(64);
+  rusakTerakhir.data.sesiLesson[23] = {id: 'rusak-di-slot-terakhir'};
+  await status(403, profil, a.idToken, 'PATCH', rusakTerakhir);
 });

@@ -183,6 +183,9 @@ class _SesiWaliState extends State<_SesiWali> {
           'Sinkronisasi tertunda. Data di perangkat masih tersedia.',
         HasilSinkronProfil.konflik =>
           'Profil berubah di dua perangkat. Kedua salinan dipertahankan.',
+        HasilSinkronProfil.dataTidakValid =>
+          'Ada profil cloud yang tidak valid. Profil lain tetap disinkronkan; '
+              'data di perangkat ini tetap tersedia.',
         HasilSinkronProfil.lokal => 'Sinkronisasi di perangkat ini dimatikan.',
       };
     } catch (_) {
@@ -221,6 +224,63 @@ class _SesiWaliState extends State<_SesiWali> {
         _pesan = 'Profil belum dapat dibuka. Coba lagi.';
       });
     }
+  }
+
+  Future<void> _atasiKonflik(LocalProfilRepository repo) async {
+    final contextDialog = _navigatorProfil.currentState?.overlay?.context;
+    if (_menunggu || contextDialog == null || repo.konflik.isEmpty) return;
+    final konflik = repo.konflik.first;
+    String ringkas(DataBelajar data) =>
+        '${data.siswa!.nama}, kelas ${data.siswa!.kelas}\n'
+        '${data.xp} XP · ${data.progresLesson.values.where((l) => l.selesai).length} lesson selesai\n'
+        '${data.hasilMastery.length} percobaan mastery';
+    final gunakanCloud = await showDialog<bool>(
+      context: contextDialog,
+      builder: (context) => AlertDialog(
+        title: const Text('Pilih progres yang dipakai'),
+        content: SingleChildScrollView(
+          child: Text(
+            'Perangkat ini:\n${ringkas(konflik.lokal)}\n\n'
+            'Cloud:\n${ringkas(konflik.cloud)}\n\n'
+            'Pilihan ini mengganti progres profil dengan salinan yang dipilih. '
+            'Kedua salinan dicadangkan di perangkat ini sebelum perubahan.',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Pakai cloud'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Pakai perangkat ini'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || gunakanCloud == null || _menunggu) return;
+    _gantiGenerasi();
+    setState(() => _menunggu = true);
+    String pesan;
+    try {
+      await repo.selesaikanKonflik(konflik, gunakanCloud: gunakanCloud);
+      pesan =
+          'Pilihan tersimpan dan kedua salinan dicadangkan di perangkat ini. '
+          'Ketuk Sinkronisasi untuk memeriksa profil lainnya.';
+    } catch (_) {
+      pesan =
+          'Konflik belum selesai. Data atau koneksi mungkin berubah. '
+          'Ketuk Sinkronisasi sebelum memilih lagi; salinan lokal tetap tersedia.';
+    }
+    if (!mounted) return;
+    setState(() {
+      _menunggu = false;
+      _pesan = pesan;
+    });
   }
 
   void _kelola() {
@@ -270,10 +330,20 @@ class _SesiWaliState extends State<_SesiWali> {
                 bottom: false,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton.icon(
-                    onPressed: () => _aturSinkron(cloud),
-                    icon: const Icon(Icons.cloud_outlined),
-                    label: const Text('Sinkronisasi'),
+                  child: Wrap(
+                    children: [
+                      if (cloud.konflik.isNotEmpty)
+                        TextButton.icon(
+                          onPressed: () => _atasiKonflik(cloud),
+                          icon: const Icon(Icons.compare_arrows),
+                          label: const Text('Selesaikan konflik'),
+                        ),
+                      TextButton.icon(
+                        onPressed: () => _aturSinkron(cloud),
+                        icon: const Icon(Icons.cloud_outlined),
+                        label: const Text('Sinkronisasi'),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -287,6 +357,7 @@ class _SesiWaliState extends State<_SesiWali> {
                   ? switch (cloud!.hasilSinkron) {
                       HasilSinkronProfil.konflik => 'Profil berubah di dua perangkat. Kedua salinan dipertahankan.',
                       HasilSinkronProfil.tertunda => 'Sinkronisasi tertunda. Ketuk Sinkronisasi untuk mencoba lagi.',
+                      HasilSinkronProfil.dataTidakValid => 'Ada profil cloud yang tidak valid. Profil lain tetap disinkronkan; data di perangkat ini tetap tersedia.',
                       _ => null,
                     }
                   : null),
