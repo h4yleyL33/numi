@@ -47,7 +47,8 @@ Status: `[x]` terimplementasi dan diperiksa pada init; `[ ]` belum memenuhi selu
 
 - [x] Daftar/pilih/tambah/ubah profil lokal dalam UID wali; pisahkan riwayat per profil dan buang route/state saat ganti konteks akun/profil.
 - [x] Integrasikan snapshot cloud per profil dengan persetujuan wali dan buktikan isolasi UID melalui emulator aturan.
-- [ ] Migrasi data demo tanpa UID setelah konfirmasi wali. Siapkan Firestore staging, pemecahan snapshot ke subkoleksi, dan siklus penghapusan data cloud.
+- [x] Database Standard Jakarta aktif. Aturan dan indeks diterapkan setelah persetujuan pengguna. Unggah profil QA, penolakan baca tanpa login, dan pemulihan ke cache kosong terverifikasi pada Firestore tim.
+- [ ] Migrasi data demo tanpa UID setelah konfirmasi wali, pemecahan snapshot ke subkoleksi, pengujian dua akun nyata, dan siklus penghapusan data cloud.
 - Penerimaan: pergantian profil menghentikan sesi sebelumnya; data profil dan cache tidak bocor antarwali; kelas berubah tanpa reset.
 - Verifikasi: pengujian dua wali dan dua profil; emulator aturan Firestore menolak tanpa login dan UID lain.
 - Dependensi: I02, I04. Berkas: account/profile state, repository, profile screens, Firestore rules/test.

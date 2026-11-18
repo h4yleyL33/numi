@@ -11,14 +11,14 @@ Eksekusi 17 November 2026 pada `codex/init-development`. Baseline checkout sebel
 | I02 | Implemented & verified | Tes model, diagnostic, dan widget mencakup enam kelas, konfirmasi data usia lama, dan pergantian profil. | |
 | I03 | Implemented & verified | Diagnostic dan mastery menahan pembahasan sampai hasil tersimpan. Hasil memakai snapshot soal dan respons pertama. | |
 | I04 | Partially implemented | Login Google Android nyata, persistensi setelah force-stop, pembatalan, logout dan login ulang teruji pada emulator Android 35. SHA-1/SHA-256 debug dan OAuth terverifikasi. | Pergantian dua akun, login Web interaktif dan build release pada perangkat. |
-| I05 | Partially implemented | Sembast dipisah per UID. Aturan emulator menolak baca, daftar, dan tulis lintas UID. Sinkronisasi memakai persetujuan wali. | Staging, migrasi demo, dan siklus penghapusan cloud. |
+| I05 | Partially implemented | Sembast dipisah per UID. Aturan emulator menolak akses lintas UID. Firestore tim menerima snapshot QA melalui persetujuan aplikasi dan memulihkannya ke cache kosong. Permintaan anonim ditolak 403. | Dua akun nyata, migrasi demo, dan siklus penghapusan cloud. |
 | I06 | Partially implemented | Dua butir pengantar per kelas, 12 topik dengan generator, metadata kompetensi, versi, kunci dan pembahasan. Tes memeriksa 4.800 butir dari 12 topik dan dua tingkat. | Paket lesson dan bank soal enam kelas, pemeriksaan sumber kurikulum per butir dan persetujuan guru. Semua konten berstatus `PENDING_EDUCATOR_REVIEW`. |
 | I07 | Partially implemented | Bukti kemampuan, akses, dan XP terpisah. Tes domain memastikan topik yang belum diukur tidak menjadi bukti mastery. | Graf dan bukti per subketerampilan serta validasi kebijakan bersama guru. |
-| I08 | Partially implemented | Checkpoint tiga alur, finalisasi lokal idempoten, retry cloud dan deteksi konflik berbasis revisi. | Penyelesaian konflik dari UI, skema subkoleksi, pengujian dua perangkat fisik dan proses Android dihentikan. |
+| I08 | Partially implemented | Checkpoint tiga alur, finalisasi lokal idempoten, retry cloud dan deteksi konflik berbasis revisi. Diagnostic dan lesson pulih setelah force-stop Android; checkpoint QA dipulihkan dari Firestore tim. | Penyelesaian konflik dari UI, skema subkoleksi, dua perangkat fisik, dan force-stop mastery Android. |
 | I09 | Partially implemented | MAIN menggunakan rekomendasi yang ada. Kegagalan mastery memprioritaskan pengulangan lesson latihan. | Pembaca soal dan audit bantuan/aksesibilitas seluruh bentuk soal di perangkat. |
 | I10 | Partially implemented | Ambang 5/5, pembahasan setelah commit, menghindari ID butir paket mastery sebelumnya, dan jadwal periksa ulang setelah lima hari. | Kesepadanan soal, hasil retensi dan kebijakan reward untuk pilot guru. |
 | I11 | Partially implemented | Laporan wali lewat gerbang menampilkan data kemampuan per topik, tes penempatan terakhir, mastery, aktivitas dan langkah berikutnya. | Riwayat beberapa percobaan diagnostic secara terstruktur dan verifikasi dengan wali. |
-| I12 | Blocked by external dependency | Jalur build dan tes otomatis tersedia. | Runtime Android, login nyata, Firestore staging, penandatanganan distribusi, validasi pendidik, dan pilot siswa. |
+| I12 | Blocked by external dependency | Build, tes otomatis, login Google Android dan unggah/pemulihan Firestore tim tersedia. | Uji akhir Android menyeluruh dan dua akun, penandatanganan distribusi, validasi pendidik, dan pilot siswa. |
 
 ## Menjalankan ulang
 
@@ -28,7 +28,7 @@ Eksekusi 17 November 2026 pada `codex/init-development`. Baseline checkout sebel
 | Firebase Security Rules | Lulus pada Firestore dan Auth Emulator. Akun B ditolak membaca, mendaftar, mengubah atau menghapus profil akun A. Tulis anonim, kelas tidak sah, UID salah, dan revisi usang ditolak. |
 | FlutterFire di Chrome | `NUMI_FIREBASE_LULUS`. SDK mengirim checkpoint lesson dengan butir pasangan ke Firestore Emulator, memulihkannya di database kedua, lalu penolakan antar-UID dikonfirmasi. |
 | Proses penulis Windows | 3/3 lulus. Snapshot, jawaban pertama, posisi, versi dan urutan dipulihkan setelah penulis dihentikan. |
-| Firebase tim | Aplikasi Android dan Web terdaftar. Endpoint Auth menghasilkan URL otorisasi Google. API Firestore mengembalikan 403 karena belum diaktifkan. |
+| Firebase tim | Standard Jakarta, database `(default)`, `freeTier: true`. Deployment aturan/indeks lulus. Profil QA tersimpan dengan sidik revisi valid dan pulih ke cache belajar kosong. Akses tanpa autentikasi ditolak 403. |
 | Android | APK debug dan release dibangun untuk `id.ac.unpad.numi.numi`, min SDK 26 dan target 36. Tanda tangan debug valid. APK debug diuji pada emulator Android 35 Google Play, termasuk login, profil, diagnostic, offline dan force-stop. |
 | Web | Build aplikasi dengan konfigurasi SDK Web tim lulus. |
 
@@ -58,3 +58,11 @@ Wi-Fi serta data seluler emulator dimatikan untuk pengujian lesson. Materi terse
 Setelah perbaikan, tujuh tes terfokus pemulihan diagnostic/lesson/mastery lulus, analyzer bersih, dan suite lengkap lulus 145/145. Tes regresi baru memastikan respons pertama tampil saat pembahasan dipulihkan dan interaksi tetap terkunci.
 
 APK debug yang diperbarui dipasang dengan `adb install -r`. Data profil dan checkpoint sebelumnya tetap dapat dibuka. Pembahasan yang sama kini menampilkan **9 < 17**, **Hebat!**, dan **Lanjut**, sehingga cacat tanda tanya terselesaikan pada emulator Android. Skenario mastery lengkap, finalisasi XP pada perangkat, pergantian dua akun, cloud staging dan pengujian APK release pada perangkat masih terbuka.
+
+## Firestore tim setelah aktivasi
+
+Database `numi-imun/(default)` terverifikasi sebagai Standard, Firestore Native, Jakarta `asia-southeast2`, dengan kuota gratis aktif. Setelah dry-run lulus dan pengguna menyetujui deployment, `firebase deploy --only firestore` berhasil menerapkan aturan serta pengecualian indeks.
+
+Tombol **Sinkronisasi** pada pemilih profil emulator digunakan untuk menyetujui pengiriman data sintetis `Numi-QA`. Pembacaan server dibatasi pada UID wali emulator dan dokumen QA. Snapshot server memuat kelas 1, satu hasil diagnostic dan dua respons lesson, XP 0 karena lesson belum difinalisasi, dengan sidik revisi SHA-256 cocok. Pembacaan ulang mempertahankan waktu pembaruan yang sama. Pembacaan dokumen tepat tanpa autentikasi ditolak HTTP 403. Isolasi dua UID tetap dibuktikan oleh emulator aturan, dengan dua akun Google nyata masih terbuka.
+
+Pemulihan dari server diuji tanpa menghapus data awal. Proses aplikasi dihentikan, database belajar dipindah ke cadangan privat berakhiran `.qa-cloud-restore-backup`, lalu aplikasi membuka cache baru yang menampilkan **Belum ada profil**. Sesi Firebase Auth tetap aktif. **Sinkronkan sekarang** mengembalikan **Sinkronisasi selesai**, profil QA kelas 1 dan rekomendasi **Lanjutkan lesson tersimpan: 2/5 jawaban**.
