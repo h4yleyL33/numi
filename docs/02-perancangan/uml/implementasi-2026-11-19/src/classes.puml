@@ -1,0 +1,99 @@
+@startuml
+!include _style.iuml
+title Model aktif Numi - atribut utama dan checkpoint
+hide circle
+hide empty methods
+class AkunWali {
+  uid: String
+  nama: String
+}
+class Siswa {
+  id: String
+  waliUid: String?
+  nama: String
+  kelas: int? {profil baru 1..6}
+  /kelompokKelas: KelompokKelas?
+}
+class DataBelajar {
+  xp: int
+  sesiDiagnostic: CheckpointDiagnostic?
+  sesiLesson: Map
+  sesiMastery: Map
+}
+class CheckpointDiagnostic {
+  id: String
+  kelas: int
+  ditutup: bool
+}
+class SesiSoal {
+  id: String
+  topikId: String
+  konteks: diagnostic | lesson | mastery
+  lessonId: String?
+  menungguLanjut: bool
+  hasil: Map?
+  /selesai: bool
+}
+class Soal {
+  id: String
+  topikId: String
+  skillId: String?
+  versi: String
+  jawabanBenar: String
+}
+class Jawaban {
+  soalId: String
+  versiButir: String
+  jawaban: String
+  benar: bool
+  bantuan: int
+}
+class BuktiSkill {
+  topikId: String
+  skillId: String
+  status: StatusBukti
+  benar / total / bantuan: int
+  sumberSesi: String
+  waktu: DateTime
+}
+class AksesMateri {
+  topikId: String
+  terbuka: bool
+  tersedia: bool
+  alasan: String
+}
+class LessonProgress {
+  lessonId: String
+  selesai: bool
+  skorTerbaik: int
+  jumlahPercobaan: int
+}
+class MasteryResult {
+  topikId: String
+  skor: int
+  lulus: bool
+  waktu: DateTime
+}
+AkunWali "1" -- "0..*" Siswa : waliUid (profil milik wali)
+DataBelajar "1" *-- "0..1" Siswa : siswa
+DataBelajar "1" *-- "0..1" CheckpointDiagnostic : sesiDiagnostic
+DataBelajar "1" *-- "0..36" SesiSoal : sesiLesson + sesiMastery
+CheckpointDiagnostic "1" *-- "1..6" SesiSoal : blok diagnostic
+SesiSoal "1" *-- "1..*" Soal : snapshot soal
+SesiSoal "1" *-- "0..5" Jawaban : respons pertama berurutan
+DataBelajar "1" *-- "0..12" BuktiSkill
+DataBelajar "1" *-- "0..12" AksesMateri
+DataBelajar "1" *-- "0..24" LessonProgress
+DataBelajar "1" *-- "0..*" MasteryResult
+note bottom of SesiSoal
+  SesiMastery adalah alias SesiSoal, bukan model berbeda.
+  Diagnostic: 2 butir/blok; lesson/mastery: 5 butir/sesi.
+  Posisi diturunkan dari jawaban.length dan menungguLanjut;
+  tidak ada field cursor atau responseId tersendiri.
+end note
+note bottom of Siswa
+  Kelompok kelas turunan: 1-2 fase A, 3-4 fase B, 5-6 fase C.
+  usia/kelompokBelajar hanya kompatibilitas data lama.
+  Diagram menampilkan atribut utama, bukan seluruh anggota kelas.
+end note
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+!include _style.iuml
+title Aktor dan use case Numi - implementasi 19 November 2026
+left to right direction
+actor Siswa
+actor Wali
+actor "Google +\nFirebase Auth" as Auth
+actor "Cloud Firestore" as Cloud
+rectangle "Aplikasi Numi" {
+  usecase "UC-014\nMasuk dan keluar akun" as Login
+  usecase "UC-008\nPilih / tambah / ubah profil\nNama dan kelas 1..6" as Profil
+  usecase "UC-001\nPemetaan awal" as Diag
+  usecase "UC-002\nLihat peta dan rekomendasi" as Peta
+  usecase "UC-003\nIkuti lesson" as Lesson
+  usecase "UC-005\nTes penguasaan / periksa ulang" as Tes
+  usecase "UC-011\nLanjutkan sesi tersimpan" as Resume
+  usecase "UC-006\nLihat progres anak" as Progres
+  usecase "Lihat rincian belajar\nmelalui gerbang wali" as Rincian
+  usecase "Setujui / matikan sinkronisasi;\nkirim / pulihkan profil" as Sync
+  usecase "Pilih versi untuk konflik\ndengan cadangan kedua salinan" as Konflik
+}
+Siswa -- Diag
+Siswa -- Peta
+Siswa -- Lesson
+Siswa -- Tes
+Siswa -- Resume
+Siswa -- Progres
+Wali -- Login
+Wali -- Profil
+Wali -- Rincian
+Wali -- Sync
+Wali -- Konflik
+Auth -- Login
+Cloud -- Sync
+Cloud -- Konflik
+Konflik ..> Sync : <<extend>>\n[revisi berbeda]
+note bottom of Sync
+  Cloud opsional; belajar tetap dapat berjalan lokal.
+  UID wali membatasi akses, bukan peran siswa/guru di server.
+end note
+note bottom of Tes
+  Lesson memberi feedback langsung setelah simpan lokal.
+  Diagnostic/mastery menunda pembahasan sampai hasil tersimpan.
+  Guru memvalidasi materi di luar aplikasi; belum ada portal guru.
+end note
+@enduml

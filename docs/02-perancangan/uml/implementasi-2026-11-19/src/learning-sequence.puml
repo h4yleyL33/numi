@@ -1,0 +1,57 @@
+@startuml
+!include _style.iuml
+title Respons pertama, checkpoint dan finalisasi lokal Numi
+autonumber
+actor Siswa
+participant "UI soal / sesi wali" as UI
+participant "NumiController" as C
+database "Repository profil lokal\nSembast" as Lokal
+database "FirestoreProfilRepository\nCloud Firestore" as Cloud
+Siswa -> UI : Kirim jawaban
+UI -> C : jawabLesson / jawabDiagnostic / jawabMastery\n(id sesi, commandId, jawaban pertama)
+C -> C : Validasi snapshot dan urutan;\nrespons lama tidak ditimpa
+C -> Lokal : simpan(DataBelajar baru)
+Lokal -> Lokal : Transaksi snapshot milik UID/profil;\nperiksa versi lokal sebelumnya
+alt Gagal simpan lokal
+  Lokal --> C : Exception; state belum maju
+  C --> UI : Coba simpan lagi dengan respons yang sama
+else Tersimpan lokal
+  Lokal --> C : Commit lokal selesai
+  C -> C : Publikasikan state yang tersimpan
+  alt Lesson
+    C --> UI : Feedback + tombol Lanjut
+    Siswa -> UI : Lanjut
+    UI -> C : lanjutLesson(commandId)
+    C -> Lokal : Simpan menungguLanjut = false
+    Lokal --> C : Commit / exception
+    C --> UI : Boleh maju / coba simpan lagi
+  else Diagnostic / mastery
+    C --> UI : Lanjut tanpa pembahasan benar/salah
+  end
+  opt Blok / sesi lengkap
+    UI -> C : Finalisasi berdasarkan id sesi
+    alt Hasil sudah tersimpan
+      C --> UI : Kembalikan ringkasan lama; reward tidak diulang
+    else Belum difinalisasi
+      C -> C : Hitung hasil; bukti dan XP sesuai alur
+      C -> Lokal : Satu commit: hasil + sesi ditutup + progres/reward
+      Lokal --> C : Commit / exception
+      C --> UI : Hasil dan pembahasan setelah commit;\njika gagal: coba simpan lagi
+    end
+  end
+end
+opt Sinkronisasi independen: izin wali aktif, timer / perintah manual
+  UI -> Lokal : sinkron(tarik: false / true)
+  Lokal -> Cloud : Baca snapshot milik UID
+  Cloud --> Lokal : Snapshot yang valid / profil invalid dipisahkan
+  Lokal -> Cloud : Unggah perubahan dengan versiDasar (CAS)
+  Cloud --> Lokal : Selesai / konflik / galat jaringan
+  Lokal --> UI : Status sinkronisasi; salinan lokal dipertahankan
+end
+note over C, Cloud
+  Hasil belajar tidak menunggu konfirmasi server.
+  commandId diturunkan dari id sesi dan indeks respons.
+  Finalisasi diagnostic tidak memberi XP; lesson/mastery idempoten per sesi.
+  Tidak ada responseId atau reward-ID tambahan pada model saat ini.
+end note
+@enduml

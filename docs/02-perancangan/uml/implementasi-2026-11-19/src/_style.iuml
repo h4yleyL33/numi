@@ -1,0 +1,5 @@
+!include ../../src/_gaya.iuml
+skinparam defaultFontSize 16
+skinparam dpi 144
+skinparam packageStyle rectangle
+hide footbox

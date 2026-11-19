@@ -1,0 +1,50 @@
+@startuml
+!include _style.iuml
+title Alur belajar Numi - implementasi 19 November 2026
+start
+:Wali masuk dengan Google / Firebase Auth\natau gunakan sesi yang masih sah;
+:Pilih profil milik UID wali;\nprofil baru: nama, kelas 1..6, konfirmasi;
+if (Data lama belum memiliki kelas sah?) then (ya)
+  :Wali mengonfirmasi kelas;\nusia lama tidak dikonversi otomatis;
+endif
+if (Perlu diagnostic?) then (ya)
+  if (Checkpoint diagnostic masih terbuka?) then (ya)
+    :Pulihkan blok, butir, dan respons tersimpan;
+  else (tidak)
+    :Mulai dari paket kelas dan prasyarat;\n2 soal per topik, maksimum 6 topik;
+  endif
+  :Simpan respons pertama dan checkpoint lokal;\ngagal simpan: coba lagi, belum maju;
+  :Tanpa pembahasan benar/salah selama diagnostic;
+  :Finalisasi hasil lokal sekali;\nisi bukti hanya untuk topik yang diukur;
+endif
+repeat
+  :Peta membedakan bukti kemampuan,\nakses materi, dan rekomendasi;
+  if (Ada lesson / mastery belum selesai?) then (ya)
+    :Tawarkan lanjut dari checkpoint yang sama;
+  else (tidak)
+    :Pilih topik terbuka dan kegiatan belajar;
+  endif
+  switch (Kegiatan yang dipilih)
+    case (Lesson)
+      :Kenalan atau latihan: 5 soal;\nrespons tersimpan sebelum feedback;
+      :Feedback langsung; tombol Lanjut\nmenyimpan checkpoint berikutnya;
+      :Finalisasi lokal: lulus minimal 3/5;\nXP dan progres diberikan sekali per sesi;
+    case (Mastery)
+      :Pastikan kedua lesson selesai\ndan topik dapat diakses;
+      :5 soal; hindari isi kedua lesson\ndan mastery sebelumnya;
+      :Simpan respons lokal, lanjut tanpa pembahasan;\nresume mempertahankan butir dan urutannya;
+      :Finalisasi lokal; bukti awal hanya jika\n5/5 benar dengan bantuan 0;
+      :Tampilkan hasil dan pembahasan;\nlulus: periksa ulang 5 hari kemudian;\ngagal: rekomendasikan latihan remedial;
+    case (Progres)
+      :Tampilkan XP, level, streak, lencana;\nrincian wali melalui gerbang wali;
+  endswitch
+repeat while (Lanjut belajar?) is (ya) not (tidak)
+:Progres tetap tersimpan pada profil aktif;
+note right
+  Penyimpanan lokal tidak menunggu server.
+  Cloud opsional setelah persetujuan wali:
+  kirim berkala 30 detik; tarik dari pemilih profil.
+  Konflik: wali memilih versi, kedua salinan dicadangkan.
+end note
+stop
+@enduml

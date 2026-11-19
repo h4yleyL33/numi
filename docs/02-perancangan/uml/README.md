@@ -1,8 +1,16 @@
 # UML Numi
 
-## Status revisi 29 Oktober 2026
+## Acuan implementasi 19 November 2026
 
-Diagram pada `src/` mempertahankan struktur implementasi dan rancangan lama. Sebagian masih memuat perilaku kode seperti kelompok global, ambang 95, dan feedback mastery per butir; perilaku tersebut belum sesuai target kurikulum. Gunakan `target-v3-2026-10-29/` sebagai spesifikasi rancangan terbaru. Nama kelas target sengaja dibedakan dari kelas Dart yang tersedia. Kode aplikasi belum diperbarui dalam audit ini.
+Gunakan [tujuh diagram implementasi terbaru](implementasi-2026-11-19/README.md) untuk mengganti activity, use case, sequence akun, sequence belajar, package, class, dan ERD pada dokumen saat ini. Paket tersebut menyediakan sumber PlantUML, PNG, SVG, penjelasan perubahan, dan pemeriksaan dependensi terhadap kode Dart.
+
+Diagram terbaru mengikuti kode pada commit `7be1c23`: profil memakai kelas 1–6, checkpoint dan hasil disimpan lokal, autentikasi Google/Firebase sudah tersedia, serta sinkronisasi Firestore bersifat opsional setelah izin wali. Rancangan penuh kurikulum tetap harus dibedakan dari fitur MVP yang sudah diimplementasikan.
+
+Folder `src/`, `png/`, `svg/`, dan `target-v3-2026-10-29/` di tingkat ini dipertahankan sebagai **arsip**. Daftar dan uraian di bawah mencatat keadaan lama, termasuk perilaku yang sudah digantikan. Jangan menggunakannya sebagai spesifikasi implementasi terkini. Gambar yang tertanam dalam Word/PDF atau Figma perlu diganti dengan keluaran paket terbaru secara terpisah.
+
+## Arsip revisi 29 Oktober 2026
+
+Diagram pada `src/` mempertahankan struktur implementasi dan rancangan lama. Sebagian masih memuat perilaku kode seperti kelompok global, ambang 95, dan feedback mastery per butir; perilaku tersebut belum sesuai target kurikulum. Pada audit 29 Oktober, `target-v3-2026-10-29/` menjadi spesifikasi rancangan target. Nama kelas target sengaja dibedakan dari kelas Dart yang tersedia saat itu. Kode aplikasi belum diperbarui dalam audit tersebut.
 
 Rancangan target menambahkan usia 6–12 tahun, memisahkan bukti kemampuan dari akses materi, menyimpan respons dan checkpoint, menunda pembahasan tes sampai blok selesai, serta menetapkan siswa dan wali sebagai aktor aplikasi. Guru tetap validator di luar aplikasi selama belum ada portal guru. Klaim penguasaan seluruh Matematika SD tidak didukung cakupan MVP dua belas topik.
 

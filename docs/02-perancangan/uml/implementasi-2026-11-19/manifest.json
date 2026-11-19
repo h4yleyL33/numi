@@ -1,0 +1,65 @@
+[
+  {
+    "diagram": "activity",
+    "width": 1674,
+    "height": 2743,
+    "sha256": {
+      "png/activity.png": "c722082b5a7d788121ae71f76c595b96146317f4b59d33bce9447ad298503ef5",
+      "svg/activity.svg": "e45ad1c2867678c0d3384af2e9a5c9b05ce1773321a713e3152b4036be005173"
+    }
+  },
+  {
+    "diagram": "auth-sequence",
+    "width": 2524,
+    "height": 2721,
+    "sha256": {
+      "png/auth-sequence.png": "2c343d0592d80fcc08bdef33eba274cf0b3979dbf0d0d36e152f2b1314654000",
+      "svg/auth-sequence.svg": "47b462fd4aaff4cc50564dc8f403e0d71853f1842776a965e54ac67705b9c2a1"
+    }
+  },
+  {
+    "diagram": "classes",
+    "width": 2420,
+    "height": 1286,
+    "sha256": {
+      "png/classes.png": "d25d11eeb68aa7083dcd9173bc7cc173070daf3dc870c9916deead1592505084",
+      "svg/classes.svg": "7b001c3bef164b68ce7e80ce20fee9a8e1936b2cbe6828d3112945b878a4ec47"
+    }
+  },
+  {
+    "diagram": "erd",
+    "width": 2874,
+    "height": 1516,
+    "sha256": {
+      "png/erd.png": "66c8c928f05a3c9c39d39b9f54faa8fc7bf831d577015815eb6af8757c2ce923",
+      "svg/erd.svg": "22b9d876751d908e41e5493eb977612dd7cc85da04edb61603c06f45786976a4"
+    }
+  },
+  {
+    "diagram": "learning-sequence",
+    "width": 2177,
+    "height": 2438,
+    "sha256": {
+      "png/learning-sequence.png": "90d1fe9bc793e3011a1ce66442db0db597ac1b50626229264929485ec89a000d",
+      "svg/learning-sequence.svg": "c5cf765d5d9adb638cddaeac8c556742c55ecd48ae3f969e12ba473dfae5c132"
+    }
+  },
+  {
+    "diagram": "packages",
+    "width": 3181,
+    "height": 998,
+    "sha256": {
+      "png/packages.png": "55791f04d64edcd98555068b64d52f35e78d71ca94d13878710b162f685cd64d",
+      "svg/packages.svg": "f137915ee3f374765480520d1f1d3021b78f9d093c7f3da090f6d587a0b8699c"
+    }
+  },
+  {
+    "diagram": "usecase",
+    "width": 1976,
+    "height": 1833,
+    "sha256": {
+      "png/usecase.png": "4c9ea25cc6fb0b34748a1a18530d52622053c322aa3fa6efb762c8ee752c344a",
+      "svg/usecase.svg": "2f9be1f536eb276c48b0035c2794f7dc8d148904fe079da070ffde2f7d008469"
+    }
+  }
+]

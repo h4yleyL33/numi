@@ -1,0 +1,65 @@
+@startuml
+!include _style.iuml
+title Akun, profil dan sinkronisasi opsional Numi
+autonumber
+actor Wali
+participant "UI akun / profil\nAkunApp" as UI
+participant "FirebaseAkunRepository" as Akun
+participant "Google + Firebase Auth" as Auth
+database "LocalProfilRepository\nSembast per UID" as Lokal
+database "FirestoreProfilRepository\nCloud Firestore" as Cloud
+Wali -> UI : Masuk Google
+UI -> Akun : masukGoogle()
+Akun -> Auth : Pilih akun dan autentikasi\ncredential / popup sesuai platform
+alt Dibatalkan / gagal
+  Auth --> Akun : Pembatalan / exception
+  Akun --> UI : HasilMasuk.dibatalkan / exception
+  UI --> Wali : Pesan; tetap di layar masuk; dapat mencoba lagi
+else Berhasil / sesi sebelumnya masih sah
+  Auth -> Akun : authStateChanges: FirebaseUser
+  Akun -> UI : perubahanAkun: AkunWali(uid, nama)
+  UI -> Lokal : daftar() untuk UID aktif
+  Lokal --> UI : Profil lokal milik UID tersebut
+  UI --> Wali : Pilih / tambah profil
+  opt Profil baru atau diubah
+    Wali -> UI : Nama dan kelas 1..6
+    UI --> Wali : Periksa profil anak
+    Wali -> UI : Konfirmasi
+    UI -> Lokal : tambah(...) / ubah(...)
+    Lokal -> Lokal : Validasi; simpan transaksi lokal
+    Lokal --> UI : Profil tersimpan / galat
+  end
+  opt Wali menyetujui / menjalankan sinkronisasi
+    Wali -> UI : Sinkronisasi: Setujui / Sinkronkan sekarang
+    UI -> Lokal : aturCloud(true); sinkron(tarik: true)
+    Lokal -> Cloud : daftar() pada wali/{uid}/profil
+    Cloud --> Lokal : Snapshot + revisi; akses dibatasi UID
+    Lokal -> Lokal : Validasi per profil; cocokkan revisi dasar
+    opt Perubahan lokal dapat diunggah
+      Lokal -> Cloud : simpan(data, versiDasar) - transaksi CAS
+      Cloud --> Lokal : Commit / revisi berubah / galat
+    end
+    Lokal --> UI : selesai / tertunda / konflik / dataTidakValid
+    UI --> Wali : Status; profil sehat tetap tersedia
+    opt Konflik dipilih untuk diselesaikan
+      Wali -> UI : Pratinjau; pilih perangkat atau cloud
+      UI -> Lokal : selesaikanKonflik(...)
+      Lokal -> Lokal : Periksa revisi lagi; cadangkan kedua snapshot
+      Lokal -> Cloud : Jika pilih lokal: tulis bersyarat versi terkini
+      Lokal --> UI : Selesai / pilihan usang ditolak
+    end
+  end
+end
+opt Keluar / ganti akun
+  Wali -> UI : Keluar akun
+  UI -> UI : Tutup route dan state profil lama
+  UI -> Akun : keluar()
+  Akun -> Auth : signOut()
+  Akun -> UI : perubahanAkun: null
+end
+note over Lokal, Cloud
+  Tarik hanya dari pemilih profil ketika navigasi ditahan.
+  Selama akun aktif dan izin menyala, pengiriman dicoba tiap 30 detik.
+  Data/token autentikasi dikelola SDK, bukan snapshot belajar.
+end note
+@enduml

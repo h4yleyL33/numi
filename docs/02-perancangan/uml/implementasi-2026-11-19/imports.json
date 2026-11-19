@@ -1,0 +1,172 @@
+[
+  {
+    "from": "bootstrap",
+    "to": "core",
+    "count": 2,
+    "example": {
+      "file": "app/lib/app.dart",
+      "line": 3,
+      "import": "core/theme/app_theme.dart"
+    }
+  },
+  {
+    "from": "bootstrap",
+    "to": "data",
+    "count": 5,
+    "example": {
+      "file": "app/lib/main.dart",
+      "line": 12,
+      "import": "data/repositories/cloud_profil_repository.dart"
+    }
+  },
+  {
+    "from": "bootstrap",
+    "to": "features",
+    "count": 3,
+    "example": {
+      "file": "app/lib/app.dart",
+      "line": 5,
+      "import": "features/onboarding/splash_screen.dart"
+    }
+  },
+  {
+    "from": "bootstrap",
+    "to": "state",
+    "count": 1,
+    "example": {
+      "file": "app/lib/main.dart",
+      "line": 20,
+      "import": "state/numi_controller.dart"
+    }
+  },
+  {
+    "from": "core",
+    "to": "data",
+    "count": 1,
+    "example": {
+      "file": "app/lib/core/widgets/chip_status.dart",
+      "line": 3,
+      "import": "../../data/models/catatan_belajar.dart"
+    }
+  },
+  {
+    "from": "data",
+    "to": "core",
+    "count": 2,
+    "example": {
+      "file": "app/lib/data/content/generator_soal.dart",
+      "line": 4,
+      "import": "../../core/utils/tanggal.dart"
+    }
+  },
+  {
+    "from": "data",
+    "to": "domain",
+    "count": 1,
+    "example": {
+      "file": "app/lib/data/models/checkpoint_diagnostic.dart",
+      "line": 3,
+      "import": "../../domain/diagnostic_engine.dart"
+    }
+  },
+  {
+    "from": "domain",
+    "to": "core",
+    "count": 4,
+    "example": {
+      "file": "app/lib/domain/companion_service.dart",
+      "line": 3,
+      "import": "../core/utils/tanggal.dart"
+    }
+  },
+  {
+    "from": "domain",
+    "to": "data",
+    "count": 22,
+    "example": {
+      "file": "app/lib/domain/companion_service.dart",
+      "line": 4,
+      "import": "../data/content/kalimat_maskot.dart"
+    }
+  },
+  {
+    "from": "features",
+    "to": "bootstrap",
+    "count": 1,
+    "example": {
+      "file": "app/lib/features/account/akun_app.dart",
+      "line": 6,
+      "import": "../../app.dart"
+    }
+  },
+  {
+    "from": "features",
+    "to": "core",
+    "count": 72,
+    "example": {
+      "file": "app/lib/features/account/masuk_screen.dart",
+      "line": 3,
+      "import": "../../core/theme/app_theme.dart"
+    }
+  },
+  {
+    "from": "features",
+    "to": "data",
+    "count": 56,
+    "example": {
+      "file": "app/lib/features/account/akun_app.dart",
+      "line": 7,
+      "import": "../../data/models/data_belajar.dart"
+    }
+  },
+  {
+    "from": "features",
+    "to": "domain",
+    "count": 1,
+    "example": {
+      "file": "app/lib/features/diagnostic/diagnostic_result_screen.dart",
+      "line": 12,
+      "import": "../../domain/diagnostic_engine.dart"
+    }
+  },
+  {
+    "from": "features",
+    "to": "state",
+    "count": 13,
+    "example": {
+      "file": "app/lib/features/account/akun_app.dart",
+      "line": 13,
+      "import": "../../state/numi_controller.dart"
+    }
+  },
+  {
+    "from": "state",
+    "to": "core",
+    "count": 1,
+    "example": {
+      "file": "app/lib/state/numi_controller.dart",
+      "line": 3,
+      "import": "../core/config/app_config.dart"
+    }
+  },
+  {
+    "from": "state",
+    "to": "data",
+    "count": 13,
+    "example": {
+      "file": "app/lib/state/numi_controller.dart",
+      "line": 4,
+      "import": "../data/content/daftar_topik.dart"
+    }
+  },
+  {
+    "from": "state",
+    "to": "domain",
+    "count": 5,
+    "example": {
+      "file": "app/lib/state/numi_controller.dart",
+      "line": 17,
+      "import": "../domain/companion_service.dart"
+    }
+  }
+]

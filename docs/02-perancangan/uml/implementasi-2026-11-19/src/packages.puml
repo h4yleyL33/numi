@@ -1,0 +1,38 @@
+@startuml
+!include _style.iuml
+title Paket Numi - dependensi impor Dart yang teramati
+left to right direction
+package "bootstrap\nmain.dart, app.dart, firebase_options.dart" as Boot
+package "features/\nUI akun, profil dan belajar" as UI
+package "state/\nNumiController + provider" as App
+package "domain/\nAturan diagnostic, bukti, akses, progres" as Domain
+package "data/\nmodels, content, repositories" as Data
+package "core/\nconfig, theme, utils, widgets" as Core
+Boot ..> UI
+Boot ..> App
+Boot ..> Data
+Boot ..> Core
+UI ..> Boot
+UI ..> App
+UI ..> Domain
+UI ..> Data
+UI ..> Core
+App ..> Domain
+App ..> Data
+App ..> Core
+Domain ..> Data
+Domain ..> Core
+Data ..> Domain
+Data ..> Core
+Core ..> Data
+note bottom of Data
+  Kontrak AkunRepository, ProfilRepository,
+  NumiRepository, CloudProfilRepository berada di data/repositories.
+  Adapter aktif: Firebase Auth, Sembast dan Firestore.
+end note
+legend bottom
+  Panah putus-putus: kelompok pemakai mengimpor kelompok tujuan.
+  Ini struktur implementasi, bukan klaim Clean Architecture satu arah.
+  Impor silang data-domain, data-core dan UI-bootstrap memang ada.
+endlegend
+@enduml

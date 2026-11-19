@@ -1,0 +1,102 @@
+@startuml
+!include _style.iuml
+title ERD logis Numi - snapshot profil dan referensi konten
+hide circle
+hide empty methods
+entity "Wali (Firebase Auth)" as Wali {
+  * uid: String
+}
+entity "Snapshot profil Firestore" as Profil {
+  * uid / profilId: path
+  versi: SHA-256
+  dasar: SHA-256?
+  data.xp: int
+  data.streakLog: List
+}
+entity Siswa {
+  id: String
+  waliUid: String
+  nama: String
+  kelas: int {1..6}
+}
+entity SesiSoal {
+  id: String
+  topikId: String
+  konteks: diagnostic | lesson | mastery
+  hasil: Map?
+}
+entity Jawaban {
+  soalId: String
+  versiButir: String
+  jawaban: String
+  benar: bool
+  bantuan: int
+}
+entity BuktiSkill {
+  topikId: String
+  skillId: String
+  status: StatusBukti
+  benar / total / bantuan: int
+  sumberSesi: String
+}
+entity AksesMateri {
+  topikId: String
+  terbuka / tersedia: bool
+  alasan: String
+}
+entity LessonProgress {
+  lessonId: String
+  topikId: String
+  jumlahPercobaan: int
+  selesai: bool
+}
+entity MasteryResult {
+  topikId: String
+  skor: int
+  lulus: bool
+  waktu: DateTime
+}
+entity "Soal (salinan butir)" as Soal {
+  id: String
+  topikId: String
+  skillId: String?
+  versi: String
+  statusValidasi: String
+}
+entity "Topik (konten lokal)" as Topik {
+  id: String
+  fase: Fase
+  prasyarat: List topikId
+}
+entity "PaketKelas (konten lokal)" as Paket {
+  /id: String
+  kelas: int
+  topikAwal: String
+  /skillId / versi: String
+}
+Wali ||--o{ Profil : wali/{uid}/profil/{profilId}
+Profil ||--|| Siswa : data.siswa
+Profil ||--o{ SesiSoal : data.sesiLesson / sesiMastery / sesiDiagnostic.blok
+Profil ||--o{ BuktiSkill : data.buktiSkill
+Profil ||--o{ AksesMateri : data.aksesMateri
+Profil ||--o{ LessonProgress : data.progresLesson
+Profil ||--o{ MasteryResult : data.hasilMastery
+SesiSoal ||--|{ Soal : salinan utuh (2 atau 5 butir)
+SesiSoal ||--o{ Jawaban : jawaban[]; indeks menjadi posisi
+Soal ||--o{ Jawaban : soalId + versiButir dalam sesi
+Topik ||--o{ Soal : topikId
+Topik ||--o{ BuktiSkill : topikId; skillId jangkar
+Topik ||--o{ AksesMateri : topikId
+Paket }o--|| Topik : topikAwal
+note bottom of Profil
+  Relasi logis, bukan tabel SQL atau subkoleksi per sesi.
+  Cloud menyimpan satu DataBelajar utuh per profil; versi format JSON = 5.
+  Sembast: store wali, key UID, JSON map profil.
+  Lokal juga menyimpan metadata dasar/dikirim dan cadangan konflik.
+end note
+note bottom of Paket
+  Kelas dipilih saat diagnostic dimulai dan disimpan di checkpoint.
+  Paket pengantar dan generator belum divalidasi pendidik.
+  Belum ada entitas Subketerampilan / responseId terpisah di kode.
+end note
+@enduml
